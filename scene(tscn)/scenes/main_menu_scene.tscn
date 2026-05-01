@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://cwjcy0bcri0a5"]
+
+[ext_resource type="Script" uid="uid://di26ngxtod0t8" path="res://scripts(gd)/instance/scene_variants/main_menu.gd" id="1_akvxk"]
+[ext_resource type="Script" uid="uid://cgk0ds34wj3gt" path="res://scripts(gd)/modified/ui/button_modified.gd" id="2_lyb30"]
+[ext_resource type="LabelSettings" uid="uid://daoiht7da33pg" path="res://resource(tres)/ui/label_settings/16_white.tres" id="3_0b5q6"]
+
+[node name="MainMenuScene" type="Node" unique_id=1721459187 node_paths=PackedStringArray("focus_control")]
+script = ExtResource("1_akvxk")
+focus_control = NodePath("VBoxContainer/StartGameButton")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=533352825]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StartGameButton" type="PanelContainer" parent="VBoxContainer" unique_id=826320724]
+layout_mode = 2
+script = ExtResource("2_lyb30")
+text = "Start Game"
+label_settings = ExtResource("3_0b5q6")
+horizontal_alignment = 1
+vertical_alignment = 1
+margin_left = 4
+margin_top = 4
+margin_right = 4
+margin_bottom = 4
+metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
+
+[node name="SettingsButton" type="PanelContainer" parent="VBoxContainer" unique_id=2000300990]
+layout_mode = 2
+script = ExtResource("2_lyb30")
+text = "Settings"
+label_settings = ExtResource("3_0b5q6")
+horizontal_alignment = 1
+vertical_alignment = 1
+margin_left = 4
+margin_top = 4
+margin_right = 4
+margin_bottom = 4
+metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
+
+[node name="QuitGameButton" type="PanelContainer" parent="VBoxContainer" unique_id=1464690996]
+layout_mode = 2
+script = ExtResource("2_lyb30")
+text = "Quit Game"
+label_settings = ExtResource("3_0b5q6")
+horizontal_alignment = 1
+vertical_alignment = 1
+margin_left = 4
+margin_top = 4
+margin_right = 4
+margin_bottom = 4
+metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
+
+[connection signal="pressed" from="VBoxContainer/StartGameButton" to="." method="_on_start_game_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/QuitGameButton" to="." method="_on_quit_game_button_pressed"]

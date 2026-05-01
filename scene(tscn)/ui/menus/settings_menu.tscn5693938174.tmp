@@ -1,0 +1,274 @@
+[gd_scene format=3 uid="uid://bhnns7fdui7ft"]
+
+[ext_resource type="Script" uid="uid://cbddmq7tvt6q4" path="res://scripts(gd)/instance/menu_variants/settings_menu.gd" id="1_s5xe0"]
+[ext_resource type="Script" uid="uid://br3g7k0kqd3ij" path="res://scripts(gd)/component/menu/menu_color.gd" id="2_egqcr"]
+[ext_resource type="Script" uid="uid://dibfsf1tsejml" path="res://scripts(gd)/component/menu/menu_modulate.gd" id="3_2yvts"]
+[ext_resource type="Script" uid="uid://cevw0gom20x36" path="res://scripts(gd)/component/menu/menu_position.gd" id="4_ymw37"]
+[ext_resource type="LabelSettings" uid="uid://bs51c3p3bxw42" path="res://resource(tres)/ui/label_settings/24_white.tres" id="5_tdsgy"]
+[ext_resource type="LabelSettings" uid="uid://dw3vbxh50k0iy" path="res://resource(tres)/ui/label_settings/20_grey.tres" id="6_w1eeq"]
+[ext_resource type="LabelSettings" uid="uid://daoiht7da33pg" path="res://resource(tres)/ui/label_settings/16_white.tres" id="7_1jcq2"]
+[ext_resource type="LabelSettings" uid="uid://drlmk7hrti54h" path="res://resource(tres)/ui/label_settings/16_grey.tres" id="8_kvs8l"]
+[ext_resource type="Script" uid="uid://cgk0ds34wj3gt" path="res://scripts(gd)/modified/ui/button_modified.gd" id="9_w1eeq"]
+
+[node name="SettingsMenu" type="Control" unique_id=163548644 node_paths=PackedStringArray("bgm_slider", "bgm_slider_label", "sfx_slider", "sfx_slider_label")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_s5xe0")
+bgm_slider = NodePath("Modulate/Position/Panel/VBox/BGM/HBox/Margin2/BGMSlider")
+bgm_slider_label = NodePath("Modulate/Position/Panel/VBox/BGM/HBox/MarginContainer/BGMSliderLabel")
+sfx_slider = NodePath("Modulate/Position/Panel/VBox/SFX/HBox/Margin2/SFXSlider")
+sfx_slider_label = NodePath("Modulate/Position/Panel/VBox/SFX/HBox/MarginContainer/SFXSliderLabel")
+open_duration = 0.75
+close_duration = 0.75
+
+[node name="Color" type="ColorRect" parent="." unique_id=975700166]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.5019608)
+script = ExtResource("2_egqcr")
+invisible_color = Color(0, 0, 0, 0)
+visible_color = Color(0, 0, 0, 0.5019608)
+metadata/_custom_type_script = "uid://br3g7k0kqd3ij"
+
+[node name="Modulate" type="Control" parent="." unique_id=525983578]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_2yvts")
+invisible_color = Color(0, 0, 0, 0)
+visible_color = Color(1, 1, 1, 1)
+metadata/_custom_type_script = "uid://dibfsf1tsejml"
+
+[node name="Position" type="Control" parent="Modulate" unique_id=238543650]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("4_ymw37")
+entry_position = 4
+entry_transition = 10
+exit_position = 3
+exit_transition = 10
+metadata/_custom_type_script = "uid://cevw0gom20x36"
+
+[node name="Panel" type="PanelContainer" parent="Modulate/Position" unique_id=520414584]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.375
+anchor_top = 0.5
+anchor_right = 0.625
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Color" type="ColorRect" parent="Modulate/Position/Panel" unique_id=1584853154]
+layout_mode = 2
+color = Color(0.1254902, 0.1254902, 0.1254902, 1)
+
+[node name="VBox" type="VBoxContainer" parent="Modulate/Position/Panel" unique_id=1527852568]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Settings" type="MarginContainer" parent="Modulate/Position/Panel/VBox" unique_id=197618607]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="SettingsLabel" type="Label" parent="Modulate/Position/Panel/VBox/Settings" unique_id=2126321415]
+layout_mode = 2
+text = "Settings"
+label_settings = ExtResource("5_tdsgy")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Seperator" type="MarginContainer" parent="Modulate/Position/Panel/VBox" unique_id=381368116]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ColorRect" type="ColorRect" parent="Modulate/Position/Panel/VBox/Seperator" unique_id=1429933251]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+color = Color(0.5019608, 0.5019608, 0.5019608, 1)
+
+[node name="Audio" type="MarginContainer" parent="Modulate/Position/Panel/VBox" unique_id=1786373541]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="AudioLabel" type="Label" parent="Modulate/Position/Panel/VBox/Audio" unique_id=1149176938]
+layout_mode = 2
+text = "Audio"
+label_settings = ExtResource("6_w1eeq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BGM" type="MarginContainer" parent="Modulate/Position/Panel/VBox" unique_id=412175361]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBox" type="HBoxContainer" parent="Modulate/Position/Panel/VBox/BGM" unique_id=2040317165]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Modulate/Position/Panel/VBox/BGM/HBox" unique_id=1760363494]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="BGMLabel" type="Label" parent="Modulate/Position/Panel/VBox/BGM/HBox/Margin" unique_id=504738989]
+layout_mode = 2
+size_flags_vertical = 1
+text = "BGM:"
+label_settings = ExtResource("7_1jcq2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Margin2" type="MarginContainer" parent="Modulate/Position/Panel/VBox/BGM/HBox" unique_id=1331818014]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="BGMSlider" type="HSlider" parent="Modulate/Position/Panel/VBox/BGM/HBox/Margin2" unique_id=1732711516]
+layout_mode = 2
+size_flags_vertical = 1
+value = 50.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Modulate/Position/Panel/VBox/BGM/HBox" unique_id=151954211]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_right = 4
+
+[node name="BGMSliderLabel" type="Label" parent="Modulate/Position/Panel/VBox/BGM/HBox/MarginContainer" unique_id=1095937110]
+layout_mode = 2
+size_flags_vertical = 1
+text = "50"
+label_settings = ExtResource("8_kvs8l")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SFX" type="MarginContainer" parent="Modulate/Position/Panel/VBox" unique_id=373555571]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBox" type="HBoxContainer" parent="Modulate/Position/Panel/VBox/SFX" unique_id=821870402]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Modulate/Position/Panel/VBox/SFX/HBox" unique_id=81802920]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="SFXLabel" type="Label" parent="Modulate/Position/Panel/VBox/SFX/HBox/Margin" unique_id=1325637178]
+layout_mode = 2
+size_flags_vertical = 1
+text = "SFX"
+label_settings = ExtResource("7_1jcq2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Margin2" type="MarginContainer" parent="Modulate/Position/Panel/VBox/SFX/HBox" unique_id=2119800383]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="SFXSlider" type="HSlider" parent="Modulate/Position/Panel/VBox/SFX/HBox/Margin2" unique_id=1941987246]
+layout_mode = 2
+size_flags_vertical = 1
+value = 50.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Modulate/Position/Panel/VBox/SFX/HBox" unique_id=1538649666]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_right = 4
+
+[node name="SFXSliderLabel" type="Label" parent="Modulate/Position/Panel/VBox/SFX/HBox/MarginContainer" unique_id=1626972273]
+layout_mode = 2
+size_flags_vertical = 1
+text = "50"
+label_settings = ExtResource("8_kvs8l")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RestoreDefaultButton" type="PanelContainer" parent="Modulate/Position/Panel/VBox" unique_id=2114072889]
+layout_mode = 2
+script = ExtResource("9_w1eeq")
+text = "Restore Default"
+label_settings = ExtResource("7_1jcq2")
+horizontal_alignment = 1
+vertical_alignment = 1
+margin_left = 4
+margin_top = 4
+margin_right = 4
+margin_bottom = 4
+metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
+
+[node name="SaveAndReturnButton" type="PanelContainer" parent="Modulate/Position/Panel/VBox" unique_id=611840201]
+layout_mode = 2
+script = ExtResource("9_w1eeq")
+text = "Save and Return"
+label_settings = ExtResource("7_1jcq2")
+horizontal_alignment = 1
+vertical_alignment = 1
+margin_left = 4
+margin_top = 4
+margin_right = 4
+margin_bottom = 4
+metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
+
+[connection signal="value_changed" from="Modulate/Position/Panel/VBox/BGM/HBox/Margin2/BGMSlider" to="." method="_on_bgm_slider_value_changed"]
+[connection signal="value_changed" from="Modulate/Position/Panel/VBox/SFX/HBox/Margin2/SFXSlider" to="." method="_on_sfx_slider_value_changed"]
+[connection signal="pressed" from="Modulate/Position/Panel/VBox/RestoreDefaultButton" to="." method="_on_restore_default_button_pressed"]
+[connection signal="pressed" from="Modulate/Position/Panel/VBox/SaveAndReturnButton" to="." method="_on_save_and_return_button_pressed"]

@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="SettingsDataResource" format=3 uid="uid://b2xaps8fo6krm"]
+
+[ext_resource type="Script" uid="uid://b8jgjqejgbdn3" path="res://scripts(gd)/resource/settings/settings_data.gd" id="1_wts6j"]
+
+[resource]
+script = ExtResource("1_wts6j")
+metadata/_custom_type_script = "uid://b8jgjqejgbdn3"

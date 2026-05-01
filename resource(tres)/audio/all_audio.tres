@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="AudioDataCollectionResource" format=3 uid="uid://cqjywfurnolgw"]
+
+[ext_resource type="Script" uid="uid://iwn31vpxbqyt" path="res://scripts(gd)/resource/audio/audio_data.gd" id="1_w8oxt"]
+[ext_resource type="Script" uid="uid://b00h8euddtwq1" path="res://scripts(gd)/resource/audio/audio_data_collection.gd" id="2_c8k62"]
+[ext_resource type="AudioStream" uid="uid://j15mqvjuis15" path="res://audio(mp3,wav)/music/ball pit game test1.mp3" id="2_nuyay"]
+[ext_resource type="AudioStream" uid="uid://c6m4yik17rntg" path="res://audio(mp3,wav)/sfx/click.wav" id="3_byili"]
+
+[sub_resource type="Resource" id="Resource_usfoh"]
+script = ExtResource("1_w8oxt")
+stream = ExtResource("3_byili")
+bus = "SFX"
+metadata/_custom_type_script = "uid://iwn31vpxbqyt"
+
+[sub_resource type="Resource" id="Resource_byili"]
+script = ExtResource("1_w8oxt")
+stream = ExtResource("2_nuyay")
+bus = "Music"
+metadata/_custom_type_script = "uid://iwn31vpxbqyt"
+
+[resource]
+script = ExtResource("2_c8k62")
+audio_data_collection = Dictionary[String, ExtResource("1_w8oxt")]({
+"button_press": SubResource("Resource_usfoh"),
+"music": SubResource("Resource_byili")
+})
+metadata/_custom_type_script = "uid://b00h8euddtwq1"

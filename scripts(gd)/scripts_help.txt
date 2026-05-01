@@ -1,0 +1,30 @@
+Scripts Help
+	Files that end with .gd
+
+	Types of Scripts:
+		global
+			Scripts that are meant to be Global.
+
+		utility
+			Scripts that contain only static functions.
+
+		instance
+			Scripts that are meant to be instantiated and deleted dynamically during gameplay.
+			May also be meant to exist in large numbers (E.g. Bullets, Enemies, Etc.)
+
+			scene_variants
+				Scripts inherited from SceneInstance, each for specific scenes.
+			menu_variants
+				Scripts inherited from MenuInstance, each for specific menus.
+
+		component
+			Scripts that are meant to work as part of a larger structure.
+
+			menu
+				Components used for the Menu System's graphics.
+
+		modified
+				Modified versions of base Godot classes.
+
+		resource
+				Scripts that define resource types.

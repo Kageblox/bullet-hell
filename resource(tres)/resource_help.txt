@@ -1,0 +1,8 @@
+Resource Help
+	Files that end with .tres
+	
+	Types of Resources
+		data
+			Resources that contain data (E.g. Settings, Save Data, etc.)
+		ui
+			Resources used in the UI (E.g. Label Settings, Themes, Etc.)

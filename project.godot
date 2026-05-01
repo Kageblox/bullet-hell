@@ -1,0 +1,37 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Bullet_Hell"
+run/main_scene="uid://cwjcy0bcri0a5"
+config/features=PackedStringArray("4.6", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[audio]
+
+buses/default_bus_layout="uid://gyu1ft5xxfsk"
+
+[autoload]
+
+SceneManager="*uid://b6tre43rk5kul"
+MenuManager="*uid://c5ed6c3rdvdrv"
+InputManager="*uid://bx27oa5ftbeb4"
+AudioManager="*uid://dx1eyue1in3g0"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

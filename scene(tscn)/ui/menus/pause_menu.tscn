@@ -1,0 +1,166 @@
+[gd_scene format=3 uid="uid://bbssqb2oyxsgj"]
+
+[ext_resource type="Script" uid="uid://lrev0wrpo5ek" path="res://scripts(gd)/instance/menu_variants/pause_menu.gd" id="1_1lxh8"]
+[ext_resource type="Script" uid="uid://br3g7k0kqd3ij" path="res://scripts(gd)/component/menu/menu_color.gd" id="2_2i32k"]
+[ext_resource type="Script" uid="uid://dibfsf1tsejml" path="res://scripts(gd)/component/menu/menu_modulate.gd" id="3_tdarw"]
+[ext_resource type="Script" uid="uid://cevw0gom20x36" path="res://scripts(gd)/component/menu/menu_position.gd" id="4_8ik7v"]
+[ext_resource type="LabelSettings" uid="uid://bs51c3p3bxw42" path="res://resource(tres)/ui/label_settings/24_white.tres" id="5_b4k80"]
+[ext_resource type="LabelSettings" uid="uid://daoiht7da33pg" path="res://resource(tres)/ui/label_settings/16_white.tres" id="7_qr635"]
+[ext_resource type="Script" uid="uid://cgk0ds34wj3gt" path="res://scripts(gd)/modified/ui/button_modified.gd" id="9_6fa3q"]
+
+[node name="PauseMenu" type="Control" unique_id=230435835 node_paths=PackedStringArray("focus_control")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1lxh8")
+open_duration = 0.75
+close_duration = 0.75
+focus_control = NodePath("Modulate/Position/Panel/VBox/ResumeButton")
+
+[node name="Color" type="ColorRect" parent="." unique_id=576333100]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.5019608)
+script = ExtResource("2_2i32k")
+invisible_color = Color(0, 0, 0, 0)
+visible_color = Color(0, 0, 0, 0.5019608)
+metadata/_custom_type_script = "uid://br3g7k0kqd3ij"
+
+[node name="Modulate" type="Control" parent="." unique_id=349983577]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_tdarw")
+invisible_color = Color(0, 0, 0, 0)
+visible_color = Color(1, 1, 1, 1)
+metadata/_custom_type_script = "uid://dibfsf1tsejml"
+
+[node name="Position" type="Control" parent="Modulate" unique_id=1819607590]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("4_8ik7v")
+entry_position = 4
+entry_transition = 10
+exit_position = 3
+exit_transition = 10
+metadata/_custom_type_script = "uid://cevw0gom20x36"
+
+[node name="Panel" type="PanelContainer" parent="Modulate/Position" unique_id=720351169]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.375
+anchor_top = 0.5
+anchor_right = 0.625
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Color" type="ColorRect" parent="Modulate/Position/Panel" unique_id=2049399455]
+layout_mode = 2
+color = Color(0.1254902, 0.1254902, 0.1254902, 1)
+
+[node name="VBox" type="VBoxContainer" parent="Modulate/Position/Panel" unique_id=864498576]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Paused" type="MarginContainer" parent="Modulate/Position/Panel/VBox" unique_id=2035608433]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="SettingsLabel" type="Label" parent="Modulate/Position/Panel/VBox/Paused" unique_id=2043356046]
+layout_mode = 2
+text = "Paused"
+label_settings = ExtResource("5_b4k80")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Seperator" type="MarginContainer" parent="Modulate/Position/Panel/VBox" unique_id=1512007179]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ColorRect" type="ColorRect" parent="Modulate/Position/Panel/VBox/Seperator" unique_id=1206086169]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+color = Color(0.5019608, 0.5019608, 0.5019608, 1)
+
+[node name="SettingsButton" type="PanelContainer" parent="Modulate/Position/Panel/VBox" unique_id=514279504]
+layout_mode = 2
+script = ExtResource("9_6fa3q")
+text = "Settings"
+label_settings = ExtResource("7_qr635")
+horizontal_alignment = 1
+vertical_alignment = 1
+margin_left = 4
+margin_top = 4
+margin_right = 4
+margin_bottom = 4
+metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
+
+[node name="MainMenuButton" type="PanelContainer" parent="Modulate/Position/Panel/VBox" unique_id=1665966490]
+layout_mode = 2
+script = ExtResource("9_6fa3q")
+text = "Main Menu"
+label_settings = ExtResource("7_qr635")
+horizontal_alignment = 1
+vertical_alignment = 1
+margin_left = 4
+margin_top = 4
+margin_right = 4
+margin_bottom = 4
+metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
+
+[node name="QuitGameButton" type="PanelContainer" parent="Modulate/Position/Panel/VBox" unique_id=633762226]
+layout_mode = 2
+script = ExtResource("9_6fa3q")
+text = "Quit Game"
+label_settings = ExtResource("7_qr635")
+horizontal_alignment = 1
+vertical_alignment = 1
+margin_left = 4
+margin_top = 4
+margin_right = 4
+margin_bottom = 4
+metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
+
+[node name="ResumeButton" type="PanelContainer" parent="Modulate/Position/Panel/VBox" unique_id=831350734]
+layout_mode = 2
+script = ExtResource("9_6fa3q")
+text = "Resume"
+label_settings = ExtResource("7_qr635")
+horizontal_alignment = 1
+vertical_alignment = 1
+margin_left = 4
+margin_top = 4
+margin_right = 4
+margin_bottom = 4
+metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
+
+[connection signal="pressed" from="Modulate/Position/Panel/VBox/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="Modulate/Position/Panel/VBox/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
+[connection signal="pressed" from="Modulate/Position/Panel/VBox/QuitGameButton" to="." method="_on_quit_game_button_pressed"]
+[connection signal="pressed" from="Modulate/Position/Panel/VBox/ResumeButton" to="." method="_on_resume_button_pressed"]

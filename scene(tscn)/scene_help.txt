@@ -1,0 +1,14 @@
+Scene Help
+	Files that end with .tscn
+
+	Types of Scenes:
+		ui
+			UI Scenes
+
+			menus
+				UI elements that can be opened or closed.
+				Note: All Menus should have a MenuInstancce-derived script attached to the root.
+
+		scenes
+			Contains the actual scenes used in-game.
+			Note: All Scenes should have a SceneInstance-derived script attached to the root.

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://ctdk857ojxfvn"]
+
+[ext_resource type="Script" uid="uid://dqvv6h3f1oke1" path="res://scripts(gd)/instance/scene_variants/another_scene.gd" id="1_jukcp"]
+
+[node name="AnotherScene" type="Node" unique_id=762678232]
+script = ExtResource("1_jukcp")
+pausable = true
