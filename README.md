@@ -1,2 +1,2 @@
-# bullet-hell
+# RatMech Bullet Hell Game
 
