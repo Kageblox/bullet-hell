@@ -25,6 +25,9 @@ var _debug_controller: bool = false
 var using_controller = false
 var _timer: Timer = null
 
+## Normalized Movement Input of the Player.
+var move_input: Vector2
+
 #endregion
 
 #region Functions
@@ -56,7 +59,9 @@ func _ready() -> void:
 	MenuManager.on_any_menu_close_end.connect(update_focus)
 	
 	update_focus()
-
+	
+func _process(delta: float) -> void:
+	move_input = Input.get_vector("move_left","move_right","move_down","move_up")
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel") and not inputs_disabled:
