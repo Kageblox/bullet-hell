@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://ctdk857ojxfvn"]
 
 [ext_resource type="Script" uid="uid://dqvv6h3f1oke1" path="res://scripts(gd)/instance/scene_variants/another_scene.gd" id="1_jukcp"]
-[ext_resource type="Script" uid="uid://ckm08j36afwno" path="res://scripts(gd)/component/player/player_move.gd" id="2_hn31m"]
 [ext_resource type="Script" uid="uid://dxr012ptc6ss3" path="res://scripts(gd)/instance/player/player.gd" id="2_qllpf"]
+[ext_resource type="Script" uid="uid://b86asdwgrslnk" path="res://scripts(gd)/component/entity/entity_body.gd" id="3_5t3ln"]
 [ext_resource type="Script" uid="uid://iwoydbw108so" path="res://scripts(gd)/component/player/player_aim.gd" id="3_qllpf"]
-[ext_resource type="Curve" uid="uid://py0wxf51pa2g" path="res://resource(tres)/curves/player_accel_curve.tres" id="4_3lili"]
 [ext_resource type="Texture2D" uid="uid://p8x82sqluqm0" path="res://icon.svg" id="4_5t3ln"]
+[ext_resource type="Script" uid="uid://bxaw42agatvpg" path="res://scripts(gd)/modified/gameplay/camera_3d_modified.gd" id="6_3lili"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_d2fiw"]
 radius = 0.75
@@ -30,16 +30,15 @@ pausable = true
 
 [node name="Player" type="Node" parent="." unique_id=958170330]
 script = ExtResource("2_qllpf")
-move_speed = 7.5
+move_speed = 5.0
+move_accel = 0.75
 
 [node name="PlayerBody" type="RigidBody3D" parent="Player" unique_id=195045729]
 axis_lock_linear_y = true
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
-script = ExtResource("2_hn31m")
-accelaration = 0.5
-accel_curve = ExtResource("4_3lili")
+script = ExtResource("3_5t3ln")
 
 [node name="PlayerShape" type="CollisionShape3D" parent="Player/PlayerBody" unique_id=1632668365]
 shape = SubResource("SphereShape3D_d2fiw")
@@ -53,8 +52,10 @@ texture = ExtResource("4_5t3ln")
 
 [node name="PlayerAimTarget" type="Node3D" parent="Player" unique_id=211697496]
 
-[node name="Camera3D" type="Camera3D" parent="." unique_id=319842411]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=319842411 node_paths=PackedStringArray("focus_target")]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 8, 0)
+script = ExtResource("6_3lili")
+focus_target = NodePath("../Player/PlayerBody")
 
 [node name="Environment" type="Node" parent="." unique_id=281795323]
 
