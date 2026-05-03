@@ -25,8 +25,11 @@ var _debug_controller: bool = false
 var using_controller = false
 var _timer: Timer = null
 
-## Normalized Movement Input of the Player.
+## Normalized Movement Input.
 var move_input: Vector2
+
+## Whether the Sprint Input is currently being held down.
+var sprint_input: bool
 
 #endregion
 
@@ -62,6 +65,7 @@ func _ready() -> void:
 	
 func _process(delta: float) -> void:
 	move_input = Input.get_vector("move_left","move_right","move_down","move_up")
+	sprint_input = Input.is_action_pressed("move_sprint")
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel") and not inputs_disabled:

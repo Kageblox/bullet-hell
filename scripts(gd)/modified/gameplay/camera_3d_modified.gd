@@ -2,18 +2,13 @@ class_name Camera3DModified
 extends Camera3D
 ## Modified version of Camera3D, that incorporates simple harmonic motion
 
-
-@export var focus_target: Node3D
-@export var offset: Vector3 = Vector3(0, 8, 0)
-
 @export var angular_frequency: float = 15
 @export var damping_ratio: float = 1
 
+var target_position: Vector3
 var previous_position: Vector3
 
 func _process(delta: float) -> void:
-	var target_position = focus_target.position + offset
-	
 	var velocity = position - previous_position
 	
 	var damped_spring_motion_params = HarmonicMotionUtility.CalcDampedSpringMotionParams(

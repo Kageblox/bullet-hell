@@ -7,6 +7,9 @@
 [ext_resource type="Texture2D" uid="uid://p8x82sqluqm0" path="res://icon.svg" id="4_5t3ln"]
 [ext_resource type="Script" uid="uid://bxaw42agatvpg" path="res://scripts(gd)/modified/gameplay/camera_3d_modified.gd" id="6_3lili"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5t3ln"]
+friction = 0.0
+
 [sub_resource type="SphereShape3D" id="SphereShape3D_d2fiw"]
 radius = 0.75
 
@@ -24,38 +27,44 @@ albedo_color = Color(0.1254902, 0.1254902, 0.1254902, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_3lili"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_5t3ln"]
+size = Vector3(100, 0.1, 100)
+
 [node name="AnotherScene" type="Node" unique_id=762678232]
 script = ExtResource("1_jukcp")
 pausable = true
 
 [node name="Player" type="Node" parent="." unique_id=958170330]
 script = ExtResource("2_qllpf")
-move_speed = 5.0
-move_accel = 0.75
+normal_move_accel = 1.0
+sprinting_aim_max_distance = 1.0
+sprinting_aim_height = 7.5
 
 [node name="PlayerBody" type="RigidBody3D" parent="Player" unique_id=195045729]
 axis_lock_linear_y = true
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
+physics_material_override = SubResource("PhysicsMaterial_5t3ln")
 script = ExtResource("3_5t3ln")
 
 [node name="PlayerShape" type="CollisionShape3D" parent="Player/PlayerBody" unique_id=1632668365]
 shape = SubResource("SphereShape3D_d2fiw")
 
-[node name="PlayerAim" type="Node3D" parent="Player/PlayerBody" unique_id=656253572]
+[node name="PlayerAim" type="Node3D" parent="Player/PlayerBody" unique_id=656253572 node_paths=PackedStringArray("cam")]
 script = ExtResource("3_qllpf")
+cam = NodePath("../../../Camera3D")
+ray_collide_layers = 2
 
 [node name="PlayerGFX" type="Sprite3D" parent="Player/PlayerBody/PlayerAim" unique_id=1708653348]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
 texture = ExtResource("4_5t3ln")
 
-[node name="PlayerAimTarget" type="Node3D" parent="Player" unique_id=211697496]
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=319842411 node_paths=PackedStringArray("focus_target")]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=319842411]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 8, 0)
 script = ExtResource("6_3lili")
-focus_target = NodePath("../Player/PlayerBody")
+angular_frequency = 25.0
+damping_ratio = 2.5
 
 [node name="Environment" type="Node" parent="." unique_id=281795323]
 
@@ -67,13 +76,13 @@ transform = Transform3D(25, 0, 0, 0, 25, 0, 0, 0, 25, 0, -0.1, 0)
 mesh = SubResource("QuadMesh_3lili")
 surface_material_override/0 = SubResource("StandardMaterial3D_yyo3g")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment" unique_id=1809054042]
+[node name="Box" type="MeshInstance3D" parent="Environment" unique_id=1809054042]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
 mesh = SubResource("BoxMesh_hn31m")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Environment/MeshInstance3D" unique_id=1859791599]
+[node name="StaticBody3D" type="StaticBody3D" parent="Environment/Box" unique_id=1859791599]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/MeshInstance3D/StaticBody3D" unique_id=588201247]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/Box/StaticBody3D" unique_id=588201247]
 shape = SubResource("BoxShape3D_qllpf")
 
 [node name="Light" type="RigidBody3D" parent="Environment" unique_id=1826175464]
@@ -107,3 +116,10 @@ shape = SubResource("SphereShape3D_5t3ln")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/Heavy" unique_id=662177194]
 mesh = SubResource("SphereMesh_3lili")
+
+[node name="AimPlane" type="Area3D" parent="Environment" unique_id=2065065128]
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/AimPlane" unique_id=1538192769]
+shape = SubResource("BoxShape3D_5t3ln")

@@ -19,6 +19,7 @@ var entity: EntityInstance
 #endregion
 
 func _enter_tree() -> void:
+	
 	entity = GeneralUtility.get_nearest_parent_of_class(self, EntityInstance)
 	entity.body = self
 	
