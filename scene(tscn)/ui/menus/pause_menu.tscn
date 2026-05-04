@@ -18,6 +18,7 @@ grow_vertical = 2
 script = ExtResource("1_1lxh8")
 open_duration = 0.75
 close_duration = 0.75
+escape_closes_menu = true
 focus_control = NodePath("Modulate/Position/Panel/VBox/ResumeButton")
 
 [node name="Color" type="ColorRect" parent="." unique_id=576333100]

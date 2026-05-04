@@ -29,6 +29,9 @@ signal on_close_end()
 ## Whether clocking the background closes the menu.
 @export var background_click_closes_menu: bool = false
 
+## Whether the escape input closes the menu.
+@export var escape_closes_menu: bool = false
+
 ## Whether the menu deletes itself upon being closed. If False, it'll be hidden instead.
 @export var queue_free_on_close: bool = true
 
@@ -48,6 +51,10 @@ func _enter_tree() -> void:
 					if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed() and !InputManager.inputs_disabled:
 						close()
 					)
+
+func _input(event: InputEvent) -> void:
+	if escape_closes_menu and event.is_action_pressed("ui_cancel") and not InputManager.inputs_disabled:
+		close()
 
 ## Opens the Menu.[br]
 ## Parameters:[br]

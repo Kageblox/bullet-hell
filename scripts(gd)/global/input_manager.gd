@@ -2,6 +2,8 @@ class_name InputManagerGlobal
 extends Node
 ## Global Script in charge of Inputs.
 
+signal on_primary_fire_pressed()
+
 #region Variables
 
 const JOYSTICK_DEADZONE = 0.1
@@ -30,6 +32,12 @@ var move_input: Vector2
 
 ## Whether the Sprint Input is currently being held down.
 var sprint_input: bool
+
+## Where the cursor currently is.
+var mouse_pos: Vector2
+
+## Whether the Primary Fire Input is currently being held down.
+var primary_fire_input: bool
 
 #endregion
 
@@ -66,6 +74,11 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	move_input = Input.get_vector("move_left","move_right","move_down","move_up")
 	sprint_input = Input.is_action_pressed("move_sprint")
+	primary_fire_input = Input.is_action_pressed("primary_fire")
+	mouse_pos = get_viewport().get_mouse_position()
+	
+	if Input.is_action_just_pressed("primary_fire"):
+		on_primary_fire_pressed.emit()
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel") and not inputs_disabled:
@@ -75,6 +88,7 @@ func _input(event):
 				foremost_menu.close()
 		elif SceneManager.current_scene.pausable:
 			MenuManager.open_pause_menu()
+		
 
 
 ## Disables the Player's Inputs for a certain duration.[br]
