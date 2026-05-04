@@ -522,6 +522,14 @@ class LayoutGenerator:
 				line += grid[j][i]
 			print(line)
 
+	func ToString() -> String:
+		var s: String = ""
+		for j in range(MapHeight):
+			for i in range(MapWidth):
+				s += self.At(i,j)
+			s += "\n"
+		return s
+
 	# This function gets or sets the character, the occlusion, and the
 	#   room ownership (what character belongs to which room ID) at the given
 	#   location.
