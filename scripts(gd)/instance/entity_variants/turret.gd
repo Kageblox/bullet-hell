@@ -6,7 +6,7 @@ extends EntityInstance
 
 @export_group("Other Components")
 @export var aim_component: EntityAimComponent
-@export var health_component: EntityHealthComponent
+@export var hitbox_component: EntityHitboxComponent
 @export var spawn_component: EntitySpawnComponent
 @export var projectile_spawner_component: EntitySpawnerComponent
 @export var static_body_component: EntityStaticBodyComponent
@@ -30,7 +30,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if GameManager.player_instance:
-		var player_position = GameManager.player_instance.health_component.global_position
+		var player_position = GameManager.player_instance.hitbox_component.global_position
 		
 		aim_component.aim_position = player_position
 		if detect_obstacle(aim_component.global_position, player_position).is_empty():

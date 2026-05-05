@@ -7,7 +7,7 @@ extends EntityInstance
 @export_group("Other Components")
 @export var player_camera: ModifiedCamera3D
 @export var aim_component: EntityAimComponent
-@export var health_component: EntityHealthComponent
+@export var hitbox_component: EntityHitboxComponent
 @export var rigid_body_component: EntityRigidBodyComponent
 @export var projectile_spawner_component: EntitySpawnerComponent
 @export var state_machine_component: EntityStateMachineComponent
