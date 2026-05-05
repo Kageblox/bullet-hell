@@ -6,12 +6,17 @@ extends MenuInstance
 
 func open(_params: Array[Variant] = [])-> void:
 	AudioManager.activate_bus_effect("Music", "LowPassFilter")
+	get_tree().paused = true
 	super()
 
 
 func close() -> void:
 	AudioManager.deactivate_bus_effect("Music", "LowPassFilter")
 	super()
+	on_close_end.connect(
+		func():
+			get_tree().paused = false
+	)
 
 
 func _on_settings_button_pressed() -> void:

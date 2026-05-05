@@ -1,4 +1,4 @@
-class_name Camera3DModified
+class_name ModifiedCamera3D
 extends Camera3D
 ## Modified version of Camera3D, that incorporates simple harmonic motion
 

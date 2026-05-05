@@ -1,0 +1,10 @@
+Layers Help
+
+1 - Environment
+2 - Ground Plane
+3 - Player Body
+4 - Player Hitbox
+5 - Player Attacks
+6 - Enemy Body
+7 - Enemy Hitbox
+8 - Enemy Attacks

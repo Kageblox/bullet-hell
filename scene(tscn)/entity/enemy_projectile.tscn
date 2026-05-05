@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://cyfuw1k8ra4vk"]
+
+[ext_resource type="Script" uid="uid://qn4sxavr8hgb" path="res://scripts(gd)/instance/entity_variants/projectile.gd" id="1_tkiot"]
+[ext_resource type="Script" uid="uid://bu0ahi3j62mc3" path="res://scripts(gd)/component/entity/entity_area.gd" id="2_a8n57"]
+[ext_resource type="Texture2D" uid="uid://cgrum2y4ohx7c" path="res://images(png)/ui/icons/Button.svg" id="3_s3qbh"]
+[ext_resource type="Script" uid="uid://efl0jq731g3n" path="res://scripts(gd)/component/entity/entity_spawn.gd" id="4_ktwo4"]
+[ext_resource type="Script" uid="uid://cwss8p0mewejj" path="res://scripts(gd)/component/entity/entity_health.gd" id="5_8tnuf"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_yyo3g"]
+radius = 0.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_0sdrn"]
+radius = 0.2
+
+[node name="EnemyProjectile" type="Node3D" unique_id=1308104941 node_paths=PackedStringArray("area_component", "spawn_component", "timer")]
+script = ExtResource("1_tkiot")
+area_component = NodePath("ProjectileArea")
+spawn_component = NodePath("ProjectileSpawn")
+timer = NodePath("ProjectileTimer")
+speed = 10.0
+
+[node name="ProjectileArea" type="Area3D" parent="." unique_id=1603127291]
+collision_layer = 129
+collision_mask = 8
+script = ExtResource("2_a8n57")
+
+[node name="ProjectileAreaShape" type="CollisionShape3D" parent="ProjectileArea" unique_id=1990100157]
+shape = SubResource("SphereShape3D_yyo3g")
+
+[node name="ProjectileSprite" type="Sprite3D" parent="ProjectileArea" unique_id=1152270578]
+transform = Transform3D(2, 0, 0, 0, -8.742278e-08, 2, 0, -2, -8.742278e-08, 0, 0, 0)
+texture = ExtResource("3_s3qbh")
+
+[node name="ProjectileSpawn" type="Node" parent="." unique_id=835846428]
+script = ExtResource("4_ktwo4")
+
+[node name="ProjectileHealth" type="Area3D" parent="." unique_id=161795830]
+collision_layer = 64
+collision_mask = 16
+script = ExtResource("5_8tnuf")
+metadata/_custom_type_script = "uid://cwss8p0mewejj"
+
+[node name="ProjectileHitbox" type="CollisionShape3D" parent="ProjectileHealth" unique_id=2144891299]
+shape = SubResource("SphereShape3D_0sdrn")
+
+[node name="ProjectileTimer" type="Timer" parent="." unique_id=429171110]
+one_shot = true

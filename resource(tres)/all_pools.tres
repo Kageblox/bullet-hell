@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="SpawnPoolDictionary" format=3 uid="uid://bjh12ddccjug4"]
+
+[ext_resource type="Script" uid="uid://vrrj2lkppn4s" path="res://scripts(gd)/resource/spawn/spawn_pool_dictionary.gd" id="1_t77om"]
+[ext_resource type="Script" uid="uid://dw3k226bbl56k" path="res://scripts(gd)/resource/spawn/spawn_pool.gd" id="2_0hv3e"]
+[ext_resource type="PackedScene" uid="uid://b7rlnfkwsk0eo" path="res://scene(tscn)/entity/player_projectile.tscn" id="3_6xrf1"]
+[ext_resource type="PackedScene" uid="uid://cyfuw1k8ra4vk" path="res://scene(tscn)/entity/enemy_projectile.tscn" id="4_30wk4"]
+
+[sub_resource type="Resource" id="Resource_8fm5u"]
+script = ExtResource("2_0hv3e")
+entity_instance = ExtResource("3_6xrf1")
+metadata/_custom_type_script = "uid://dw3k226bbl56k"
+
+[sub_resource type="Resource" id="Resource_pdr6l"]
+script = ExtResource("2_0hv3e")
+entity_instance = ExtResource("4_30wk4")
+metadata/_custom_type_script = "uid://dw3k226bbl56k"
+
+[resource]
+script = ExtResource("1_t77om")
+spawn_pool_dictionary = Dictionary[String, ExtResource("2_0hv3e")]({
+"enemy_projectile": SubResource("Resource_pdr6l"),
+"player_projectile": SubResource("Resource_8fm5u")
+})
+metadata/_custom_type_script = "uid://vrrj2lkppn4s"
