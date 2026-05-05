@@ -13,8 +13,10 @@ extends Node3D
 @export var variance: int = 2
 @export var tile_size: float = 1.0
 
+var generator
+
 func _enter_tree() -> void:
-	var layout := Gen.Generator.Run(
+	generator = Gen.Generator.Run(
 		map_width,
 		map_height,
 		starting_width,
@@ -24,13 +26,25 @@ func _enter_tree() -> void:
 		max_size,
 		variance
 	)
-	# var ascii := layout.ToString()
-	# layout.Print()
+	# var ascii := generator.ToString()
+	# generator.Print()
 	# print(ascii)
-	_build_floors(layout)
-	_build_navmesh(layout)
+	_build_geometry(generator)
+	_build_navmesh(generator)
 
-func _build_floors(layout) -> void:
+func get_generator() -> Gen.Generator:
+	return generator
+
+func in_room(pos: Vector3) -> int:
+	if generator == null:
+		return 0
+	var offset_x: float = -generator.MapWidth * tile_size * 0.5
+	var offset_z: float = -generator.MapHeight * tile_size * 0.5
+	var i: int = int(floor((pos.x - offset_x) / tile_size + 0.5))
+	var j: int = int(floor((pos.z - offset_z) / tile_size + 0.5))
+	return generator.RoomIndexAt(i, j)
+
+func _build_geometry(layout) -> void:
 	var floor_mat := StandardMaterial3D.new()
 	floor_mat.albedo_color = Color(0.0, 0.3, 0.1)
 	var wall_mat := StandardMaterial3D.new()
@@ -43,7 +57,7 @@ func _build_floors(layout) -> void:
 	var column_mesh := CylinderMesh.new()
 	column_mesh.top_radius = tile_size * 0.4
 	column_mesh.bottom_radius = tile_size * 0.4
-	column_mesh.height = tile_size * 2.0
+	column_mesh.height = tile_size
 
 	var floor_st := SurfaceTool.new()
 	floor_st.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -57,14 +71,18 @@ func _build_floors(layout) -> void:
 			var ch: String = layout.At(i, j)
 			var x: float = offset_x + i * tile_size
 			var z: float = offset_z + j * tile_size
-			if ch == "." or ch == '|' or ch == '-':
+			if ch == '.':
 				floor_st.append_from(floor_mesh, 0, Transform3D(Basis(), Vector3(x, 0.0, z)))
+			elif ch == '|' or ch == '-':
+				floor_st.append_from(floor_mesh, 0, Transform3D(Basis(), Vector3(x, 0.0, z)))
+				wall_st.append_from(wall_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size * 2.5, z)))
 			elif ch == "V" or ch == "H" or ch == "#":
-				for k in range(2):
+				for k in range(3):
 					wall_st.append_from(wall_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size * (0.5 + k), z)))
 			elif ch == "P":
 				floor_st.append_from(floor_mesh, 0, Transform3D(Basis(), Vector3(x, 0.0, z)))
-				wall_st.append_from(column_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size, z)))
+				for k in range(3):
+					wall_st.append_from(column_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size * (0.5 + k), z)))
 
 	var baked := ArrayMesh.new()
 	floor_st.commit(baked)
@@ -88,7 +106,7 @@ func _build_navmesh(layout) -> void:
 	for j in range(layout.MapHeight):
 		for i in range(layout.MapWidth):
 			var ch: String = layout.At(i, j)
-			if ch != "." and ch != "|" and ch != "-":
+			if ch != ".":
 				continue
 			# CCW from +Y
 			var corners := [
