@@ -50,11 +50,11 @@ albedo_color = Color(0.1254902, 0.1254902, 0.1254902, 1)
 script = ExtResource("1_jukcp")
 pausable = true
 
-[node name="Player" type="Node3D" parent="." unique_id=1017450230 node_paths=PackedStringArray("player_camera", "aim_component", "health_component", "rigid_body_component", "projectile_spawner_component", "state_machine_component")]
+[node name="Player" type="Node3D" parent="." unique_id=1017450230 node_paths=PackedStringArray("player_camera", "aim_component", "hitbox_component", "rigid_body_component", "projectile_spawner_component", "state_machine_component")]
 script = ExtResource("2_qllpf")
 player_camera = NodePath("PlayerCamera")
 aim_component = NodePath("PlayerBody/PlayerAim")
-health_component = NodePath("PlayerBody/PlayerHealth")
+hitbox_component = NodePath("PlayerBody/PlayerHitbox")
 rigid_body_component = NodePath("PlayerBody")
 projectile_spawner_component = NodePath("PlayerBody/PlayerAim/PlayerProjectileSpawner")
 state_machine_component = NodePath("PlayerStateMachine")
@@ -87,13 +87,12 @@ texture = ExtResource("4_5t3ln")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.75)
 script = ExtResource("6_v4nif")
 
-[node name="PlayerHealth" type="Area3D" parent="Player/PlayerBody" unique_id=1973803744]
+[node name="PlayerHitbox" type="Area3D" parent="Player/PlayerBody" unique_id=1973803744]
 collision_layer = 8
 collision_mask = 128
 script = ExtResource("6_d2fiw")
-health = 100.0
 
-[node name="PlayerHitbox" type="CollisionShape3D" parent="Player/PlayerBody/PlayerHealth" unique_id=1233882938]
+[node name="PlayerHitboxShape" type="CollisionShape3D" parent="Player/PlayerBody/PlayerHitbox" unique_id=1233882938]
 shape = SubResource("SphereShape3D_3lili")
 
 [node name="PlayerStateMachine" type="Node" parent="Player" unique_id=2125271746]
@@ -164,11 +163,11 @@ transform = Transform3D(25, 0, 0, 0, 25, 0, 0, 0, 25, 0, -0.1, 0)
 mesh = SubResource("QuadMesh_3lili")
 surface_material_override/0 = SubResource("StandardMaterial3D_yyo3g")
 
-[node name="Turret" type="Node3D" parent="." unique_id=1537344505 node_paths=PackedStringArray("aim_component", "health_component", "spawn_component", "projectile_spawner_component", "static_body_component", "cooldown_timer")]
+[node name="Turret" type="Node3D" parent="." unique_id=1537344505 node_paths=PackedStringArray("aim_component", "hitbox_component", "spawn_component", "projectile_spawner_component", "static_body_component", "cooldown_timer")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
 script = ExtResource("11_u77le")
 aim_component = NodePath("TurretBody/TurretAim")
-health_component = NodePath("TurretBody/TurrentHealth")
+hitbox_component = NodePath("TurretBody/TurretHitbox")
 spawn_component = NodePath("TurretSpawn")
 projectile_spawner_component = NodePath("TurretBody/TurretAim/TurretProjectileSpawner")
 static_body_component = NodePath("TurretBody")
@@ -198,13 +197,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
 script = ExtResource("6_v4nif")
 metadata/_custom_type_script = "uid://cqx1rkg4m1ufl"
 
-[node name="TurrentHealth" type="Area3D" parent="Turret/TurretBody" unique_id=1132447921]
+[node name="TurretHitbox" type="Area3D" parent="Turret/TurretBody" unique_id=1132447921]
 collision_layer = 64
 collision_mask = 16
 script = ExtResource("6_d2fiw")
 metadata/_custom_type_script = "uid://cwss8p0mewejj"
 
-[node name="TurretHitbox" type="CollisionShape3D" parent="Turret/TurretBody/TurrentHealth" unique_id=141237912]
+[node name="TurretHitboxShape" type="CollisionShape3D" parent="Turret/TurretBody/TurretHitbox" unique_id=141237912]
 shape = SubResource("SphereShape3D_u77le")
 
 [node name="TurretSpawn" type="Node" parent="Turret" unique_id=278955912]

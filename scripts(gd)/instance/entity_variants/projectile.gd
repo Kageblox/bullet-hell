@@ -19,22 +19,23 @@ extends EntityInstance
 
 func _ready() -> void:
 	
-	area_component.body_entered.connect(
-		func(body: Node3D):
-			spawn_component.set_unused()
-	)
-	
+	# When the Projectile hits a hitbox
 	area_component.area_entered.connect(
 		func(area: Area3D):
 			spawn_component.set_unused()
 	)
-			
+	
+	# When the Projectile hits a collwwwwaasider
+	area_component.body_entered.connect(
+		func(body: Node3D):
+			spawn_component.set_unused()
+	)
+
 	spawn_component.on_set_used.connect(
 		func():
 			timer.start(lifetime)
 			)
-
-	
+			
 	timer.timeout.connect(
 		func():
 			spawn_component.set_unused()
