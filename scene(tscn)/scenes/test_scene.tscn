@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://co3h0ohocksb7"]
+
+[ext_resource type="Script" uid="uid://ckm08j36afwno" path="res://scripts(gd)/component/player/player_move.gd" id="1_6aid1"]
+[ext_resource type="Texture2D" uid="uid://p8x82sqluqm0" path="res://icon.svg" id="1_kkscp"]
+[ext_resource type="Script" uid="uid://iwoydbw108so" path="res://scripts(gd)/component/player/player_aim.gd" id="3_3lfw2"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_6aid1"]
+orientation = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3lfw2"]
+albedo_color = Color(0.1254902, 0.1254902, 0.1254902, 1)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_kkscp"]
+radius = 0.75
+
+[node name="TestScene" type="Node" unique_id=174426653]
+
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=102738172]
+transform = Transform3D(25, 0, 0, 0, 25, 0, 0, 0, 25, 0, -0.1, 0)
+mesh = SubResource("QuadMesh_6aid1")
+surface_material_override/0 = SubResource("StandardMaterial3D_3lfw2")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=887489862]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 8, 0)
+
+[node name="Player" type="Node3D" parent="." unique_id=1976917508]
+
+[node name="PlayerBody" type="RigidBody3D" parent="Player" unique_id=1373632045]
+axis_lock_linear_x = true
+axis_lock_linear_y = true
+axis_lock_linear_z = true
+axis_lock_angular_x = true
+axis_lock_angular_z = true
+script = ExtResource("1_6aid1")
+
+[node name="PlayerShape" type="CollisionShape3D" parent="Player/PlayerBody" unique_id=391761344]
+shape = SubResource("SphereShape3D_kkscp")
+
+[node name="PlayerAim" type="Node3D" parent="Player/PlayerBody" unique_id=2134237290]
+script = ExtResource("3_3lfw2")
+
+[node name="PlayerGFX" type="Sprite3D" parent="Player/PlayerBody/PlayerAim" unique_id=1899276659]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+texture = ExtResource("1_kkscp")
+
+[node name="PlayerAimTarget" type="Node3D" parent="Player" unique_id=791005766]
