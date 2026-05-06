@@ -6,7 +6,7 @@ extends MenuInstance
 
 func open(_params: Array[Variant] = [])-> void:
 	AudioManager.activate_bus_effect("Music", "LowPassFilter")
-	get_tree().paused = true
+	GameManager.pause_active = true
 	super()
 
 
@@ -15,7 +15,7 @@ func close() -> void:
 	super()
 	on_close_end.connect(
 		func():
-			get_tree().paused = false
+			GameManager.pause_active = false
 	)
 
 

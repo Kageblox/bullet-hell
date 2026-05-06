@@ -4,6 +4,7 @@ extends Node
 
 #region Signals
 
+## Emitted whenever the State Machine Component's current state changes.
 signal on_current_state_changed(new_state: EntityState)
 
 #endregion
@@ -11,7 +12,7 @@ signal on_current_state_changed(new_state: EntityState)
 #region Variables
 
 var _current_state: EntityState
-var current_state: EntityState:
+var current_state: EntityState: ## The current state of the State Machine.
 	get:
 		return _current_state
 	set(value):

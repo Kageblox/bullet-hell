@@ -1,6 +1,6 @@
 class_name EntityAreaComponent
 extends Area3D
-## Component that adds a function-calling field around the Entity.
+## Component that adds an area around the Entity.
 
 #region Variables
 

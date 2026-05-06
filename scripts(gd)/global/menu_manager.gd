@@ -35,6 +35,12 @@ var pause_menu_resource = preload("res://scene(tscn)/ui/menus/pause_menu.tscn") 
 func _enter_tree() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
+func _input(event: InputEvent) -> void:
+	var foremost_menu = get_foremost_menu()
+	if foremost_menu:
+		if  foremost_menu.escape_closes_menu and event.is_action_pressed("ui_cancel") and not InputManager.inputs_disabled:
+			foremost_menu.close()
+
 
 ## Opens the Question Menu.[br]
 ## Parameters:[br]
