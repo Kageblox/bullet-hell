@@ -42,6 +42,9 @@ func _physics_process(_delta) -> void:
 					self.room_id = room.id
 					_update_debug_label()
 				on_room_changed.emit(self.room, last_room)
+	else:
+		printerr("Actor not set")
+		return
 
 func _update_debug_label() -> void:
 	if _debug_label == null:
@@ -50,3 +53,4 @@ func _update_debug_label() -> void:
 
 func current_room() -> Gen.Room:
 	return layout.room_at(self.global_position)
+

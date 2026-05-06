@@ -7,6 +7,10 @@
 
 [sub_resource type="Environment" id="Environment_db2k5"]
 ambient_light_energy = 16.0
+fog_enabled = true
+fog_light_color = Color(0, 0, 0, 1)
+volumetric_fog_enabled = true
+volumetric_fog_albedo = Color(0.31500003, 0.6, 0.3, 1)
 
 [node name="Demo" type="Node3D" unique_id=1230420475]
 script = ExtResource("1_db2k5")
@@ -30,17 +34,19 @@ script = ExtResource("3_ssc3f")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Camera3D" unique_id=75889309]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 122.220665, 63.485844)
+light_color = Color(0.65980273, 0.59375274, 0.3608083, 1)
 light_energy = 16.0
 light_indirect_energy = 4.99
 light_size = 100.0
 omni_range = 4096.0
+omni_attenuation = 0.296
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Camera3D" unique_id=138274363]
 transform = Transform3D(1, 0, 0, 0, 0.48525223, 0.8743743, 0, -0.8743743, 0.48525223, 0, 10.961228, 5.69366)
+visible = false
 spot_range = 452.548
 spot_angle = 82.5
 
-[node name="Locator" type="Node3D" parent="Camera3D" unique_id=100866865 node_paths=PackedStringArray("player")]
+[node name="Locator" type="Node3D" parent="Camera3D" unique_id=100866865]
 script = ExtResource("4_e34e1")
-player = NodePath("..")
 metadata/_custom_type_script = "uid://dqxh8t61mkgv1"
