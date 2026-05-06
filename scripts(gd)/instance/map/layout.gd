@@ -13,7 +13,8 @@ extends Node3D
 @export var variance: int = 2
 @export var tile_size: float = 1.0
 
-var generator
+var generator: Gen.LayoutGenerator
+var room_lights: Array  # Array[Light3D]
 
 func _enter_tree() -> void:
 	generator = Gen.Generator.Run(
@@ -32,10 +33,11 @@ func _enter_tree() -> void:
 	_build_geometry(generator)
 	_build_navmesh(generator)
 
-func get_generator() -> Gen.Generator:
+func get_generator() -> Gen.LayoutGenerator:
 	return generator
 
-func in_room(pos: Vector3) -> int:
+# World space pos
+func room_index_at(pos: Vector3) -> int:
 	if generator == null:
 		return 0
 	var offset_x: float = -generator.MapWidth * tile_size * 0.5
@@ -43,6 +45,15 @@ func in_room(pos: Vector3) -> int:
 	var i: int = int(floor((pos.x - offset_x) / tile_size + 0.5))
 	var j: int = int(floor((pos.z - offset_z) / tile_size + 0.5))
 	return generator.RoomIndexAt(i, j)
+
+func room_at(pos: Vector3) -> Gen.Room:
+	if generator == null:
+		return null
+	var index: int = room_index_at(pos)
+	if index > 0:
+		return generator.rooms[index]
+	else:
+		return null
 
 func _build_geometry(layout) -> void:
 	var floor_mat := StandardMaterial3D.new()
