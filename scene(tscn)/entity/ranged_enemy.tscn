@@ -1,0 +1,84 @@
+[gd_scene format=3 uid="uid://cy7c8rh5g5wa5"]
+
+[ext_resource type="Script" uid="uid://bti5d7oc735se" path="res://scripts(gd)/instance/entity_variants/enemy_melee.gd" id="1_31yhw"]
+[ext_resource type="Script" uid="uid://b86asdwgrslnk" path="res://scripts(gd)/component/entity/entity_rigid_body.gd" id="2_8podc"]
+[ext_resource type="Script" uid="uid://cwss8p0mewejj" path="res://scripts(gd)/component/entity/entity_hitbox.gd" id="3_dpud2"]
+[ext_resource type="Script" uid="uid://dy4ooeu54ph26" path="res://scripts(gd)/component/entity/entity_pathfinder.gd" id="4_kk4h3"]
+[ext_resource type="Script" uid="uid://by1u3602we537" path="res://scripts(gd)/component/entity/entity_aim.gd" id="5_gdqqm"]
+[ext_resource type="Script" uid="uid://ouuvajle8761" path="res://scripts(gd)/instance/weapon_variants/simple_spawner.gd" id="7_mysud"]
+[ext_resource type="SpriteFrames" uid="uid://cy81g8d0ppnnk" path="res://resource(tres)/sprite_frames/test_sprite_frames.tres" id="8_31yhw"]
+[ext_resource type="Script" uid="uid://sfhrm8fpheyh" path="res://scripts(gd)/component/weapon/weapon_spawner.gd" id="8_qkoie"]
+[ext_resource type="Script" uid="uid://dy1jksmmov57f" path="res://scripts(gd)/component/entity/entity_sprite.gd" id="9_8podc"]
+[ext_resource type="Script" uid="uid://bbd8bv8gd3rmg" path="res://scripts(gd)/component/entity/entity_state_machine.gd" id="9_uabfb"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5t3ln"]
+friction = 0.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_d2fiw"]
+radius = 0.75
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_3lili"]
+radius = 0.75
+
+[node name="RangedEnemy" type="Node3D" unique_id=1899302448 node_paths=PackedStringArray("aim_component", "hitbox_component", "pathfinder_component", "rigid_body_component", "state_machine_component", "weapon", "sprite")]
+script = ExtResource("1_31yhw")
+aim_component = NodePath("EnemyBody/EnemyAim")
+hitbox_component = NodePath("EnemyBody/EnemyShape/EnemyHitbox")
+pathfinder_component = NodePath("EnemyBody/EnemyPathfinder")
+rigid_body_component = NodePath("EnemyBody")
+state_machine_component = NodePath("EnemyStateMachine")
+weapon = NodePath("EnemyBody/EnemyAim/SimpleSpawnerWeapon")
+obstacle_detect_ray_collide_layers = 1
+sprite = NodePath("EnemyBody/EnemySprite")
+pool_name = "ranged_enemy"
+health = 100.0
+
+[node name="EnemyBody" type="RigidBody3D" parent="." unique_id=1086991254]
+collision_layer = 32
+collision_mask = 37
+axis_lock_linear_y = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+physics_material_override = SubResource("PhysicsMaterial_5t3ln")
+script = ExtResource("2_8podc")
+speed = 2.5
+
+[node name="EnemyShape" type="CollisionShape3D" parent="EnemyBody" unique_id=492047186]
+shape = SubResource("SphereShape3D_d2fiw")
+
+[node name="EnemyHitbox" type="Area3D" parent="EnemyBody/EnemyShape" unique_id=1349499880]
+collision_layer = 64
+collision_mask = 16
+script = ExtResource("3_dpud2")
+
+[node name="EnemyHitboxShape" type="CollisionShape3D" parent="EnemyBody/EnemyShape/EnemyHitbox" unique_id=1728567447]
+shape = SubResource("SphereShape3D_3lili")
+
+[node name="EnemyPathfinder" type="NavigationAgent3D" parent="EnemyBody" unique_id=110634301]
+avoidance_layers = 33
+avoidance_mask = 33
+script = ExtResource("4_kk4h3")
+metadata/_custom_type_script = "uid://dy4ooeu54ph26"
+
+[node name="EnemyAim" type="Node3D" parent="EnemyBody" unique_id=873210282]
+script = ExtResource("5_gdqqm")
+
+[node name="SimpleSpawnerWeapon" type="Node3D" parent="EnemyBody/EnemyAim" unique_id=1705125662]
+script = ExtResource("7_mysud")
+fire_cooldown = 0.1
+
+[node name="WeaponSpawnerComponent" type="Node3D" parent="EnemyBody/EnemyAim/SimpleSpawnerWeapon" unique_id=60693742]
+script = ExtResource("8_qkoie")
+pool_name = "enemy_projectile"
+metadata/_custom_type_script = "uid://sfhrm8fpheyh"
+
+[node name="EnemySprite" type="AnimatedSprite3D" parent="EnemyBody" unique_id=1732345885]
+axis = 1
+sprite_frames = ExtResource("8_31yhw")
+animation = &"idle"
+script = ExtResource("9_8podc")
+
+[node name="EnemyStateMachine" type="Node" parent="." unique_id=1595434712]
+script = ExtResource("9_uabfb")
+metadata/_custom_type_script = "uid://bbd8bv8gd3rmg"

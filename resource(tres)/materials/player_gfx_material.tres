@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://vpw7inyejha6"]
+
+[ext_resource type="Shader" uid="uid://d6qlyeqlkfi1" path="res://resource(tres)/shaders/sprite_shader.gdshader" id="1_aynmc"]
+[ext_resource type="Texture2D" uid="uid://p8x82sqluqm0" path="res://icon.svg" id="2_xnd6l"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_aynmc")
+shader_parameter/color_override = Color(0, 0, 0, 0)
+shader_parameter/albedo_texture = ExtResource("2_xnd6l")

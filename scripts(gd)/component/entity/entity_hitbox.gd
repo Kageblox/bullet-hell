@@ -14,10 +14,4 @@ var entity: EntityInstance
 func _enter_tree() -> void:
 	entity = GeneralUtility.get_nearest_parent_of_class(self, EntityInstance)
 	
-	
-	
-## Called when the Entity reaches 0 HP
-func die() -> void:
-	pass
-
 #endregion

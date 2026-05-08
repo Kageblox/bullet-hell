@@ -52,10 +52,6 @@ func _enter_tree() -> void:
 						close()
 					)
 
-func _input(event: InputEvent) -> void:
-	if escape_closes_menu and event.is_action_pressed("ui_cancel") and not InputManager.inputs_disabled:
-		close()
-
 ## Opens the Menu.[br]
 ## Parameters:[br]
 ## _params: Parameters required to open the specified Menu Instance.[br]

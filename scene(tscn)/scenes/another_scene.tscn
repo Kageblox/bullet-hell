@@ -1,40 +1,25 @@
 [gd_scene format=3 uid="uid://ctdk857ojxfvn"]
 
 [ext_resource type="Script" uid="uid://dqvv6h3f1oke1" path="res://scripts(gd)/instance/scene_variants/another_scene.gd" id="1_jukcp"]
-[ext_resource type="Script" uid="uid://dxr012ptc6ss3" path="res://scripts(gd)/instance/entity_variants/player.gd" id="2_qllpf"]
-[ext_resource type="Script" uid="uid://b86asdwgrslnk" path="res://scripts(gd)/component/entity/entity_rigid_body.gd" id="3_5t3ln"]
-[ext_resource type="Texture2D" uid="uid://p8x82sqluqm0" path="res://icon.svg" id="4_5t3ln"]
-[ext_resource type="Script" uid="uid://by1u3602we537" path="res://scripts(gd)/component/entity/entity_aim.gd" id="4_d2fiw"]
-[ext_resource type="Script" uid="uid://bxaw42agatvpg" path="res://scripts(gd)/modified/gameplay/camera_3d_modified.gd" id="6_3lili"]
-[ext_resource type="Script" uid="uid://cwss8p0mewejj" path="res://scripts(gd)/component/entity/entity_health.gd" id="6_d2fiw"]
-[ext_resource type="Script" uid="uid://cqx1rkg4m1ufl" path="res://scripts(gd)/component/entity/entity_spawner.gd" id="6_v4nif"]
-[ext_resource type="Script" uid="uid://bbd8bv8gd3rmg" path="res://scripts(gd)/component/entity/entity_state_machine.gd" id="7_d2fiw"]
-[ext_resource type="Texture2D" uid="uid://cgrum2y4ohx7c" path="res://images(png)/ui/icons/Button.svg" id="7_v4nif"]
-[ext_resource type="Script" uid="uid://dyuyae1fios32" path="res://scripts(gd)/instance/entity_variants/turret.gd" id="11_u77le"]
-[ext_resource type="Script" uid="uid://d2g1sm65ya7kv" path="res://scripts(gd)/component/entity/entity_static_body.gd" id="12_qiqw2"]
-[ext_resource type="Script" uid="uid://efl0jq731g3n" path="res://scripts(gd)/component/entity/entity_spawn.gd" id="13_qiqw2"]
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5t3ln"]
-friction = 0.0
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_d2fiw"]
-radius = 0.75
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_3lili"]
-radius = 0.75
-
-[sub_resource type="BoxMesh" id="BoxMesh_hn31m"]
-size = Vector3(5, 1, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_qllpf"]
-size = Vector3(5, 1, 1)
+[ext_resource type="PackedScene" uid="uid://0xa7fqgxcppg" path="res://scene(tscn)/entity/player.tscn" id="2_47d8d"]
+[ext_resource type="PackedScene" uid="uid://cy7c8rh5g5wa5" path="res://scene(tscn)/entity/ranged_enemy.tscn" id="3_hn31m"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_5t3ln"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_3lili"]
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_d2fiw"]
+vertices = PackedVector3Array(-2.75, 0.24986887, -5, -0.75, 0.24986887, -5, -0.75, 0.24986887, -12, -12, 0.24986887, -3.75, -3, 0.24986887, -3.75, -12, 0.24986887, -12, 3, 0.24986887, -5, 3.25, 0.24986887, -4, 12, 0.24986887, -4, 12, 0.24986887, -12, -2.75, 0.24986887, -2.75, -12, 0.24986887, 12, 2.75, 0.24986887, -2.75, 12, 0.24986887, 12)
+polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(0, 4, 3), PackedInt32Array(3, 5, 0), PackedInt32Array(0, 5, 2), PackedInt32Array(6, 1, 2), PackedInt32Array(8, 7, 6), PackedInt32Array(8, 6, 9), PackedInt32Array(9, 6, 2), PackedInt32Array(4, 10, 3), PackedInt32Array(3, 10, 11), PackedInt32Array(7, 8, 12), PackedInt32Array(12, 8, 13), PackedInt32Array(10, 12, 11), PackedInt32Array(11, 12, 13)]
+
+[sub_resource type="BoxMesh" id="BoxMesh_hn31m"]
+size = Vector3(5, 5, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qllpf"]
+size = Vector3(5, 5, 1)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_5t3ln"]
-size = Vector3(100, 0.1, 100)
+size = Vector3(25, 1, 25)
 
 [sub_resource type="QuadMesh" id="QuadMesh_3lili"]
 orientation = 1
@@ -42,85 +27,23 @@ orientation = 1
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yyo3g"]
 albedo_color = Color(0.1254902, 0.1254902, 0.1254902, 1)
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_6cjme"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_u77le"]
-
 [node name="AnotherScene" type="Node" unique_id=762678232]
 script = ExtResource("1_jukcp")
 pausable = true
 
-[node name="Player" type="Node3D" parent="." unique_id=1017450230 node_paths=PackedStringArray("player_camera", "aim_component", "hitbox_component", "rigid_body_component", "projectile_spawner_component", "state_machine_component")]
-script = ExtResource("2_qllpf")
-player_camera = NodePath("PlayerCamera")
-aim_component = NodePath("PlayerBody/PlayerAim")
-hitbox_component = NodePath("PlayerBody/PlayerHitbox")
-rigid_body_component = NodePath("PlayerBody")
-projectile_spawner_component = NodePath("PlayerBody/PlayerAim/PlayerProjectileSpawner")
-state_machine_component = NodePath("PlayerStateMachine")
-sprinting_move_accel = 0.25
-sprinting_aim_max_distance = 1.0
-sprinting_aim_height = 7.5
-ray_collide_layers = 2
+[node name="Player" parent="." unique_id=1758969589 instance=ExtResource("2_47d8d")]
 
-[node name="PlayerBody" type="RigidBody3D" parent="Player" unique_id=195045729]
-collision_layer = 4
-collision_mask = 37
-axis_lock_linear_y = true
-axis_lock_angular_x = true
-axis_lock_angular_y = true
-axis_lock_angular_z = true
-physics_material_override = SubResource("PhysicsMaterial_5t3ln")
-script = ExtResource("3_5t3ln")
-
-[node name="PlayerShape" type="CollisionShape3D" parent="Player/PlayerBody" unique_id=1632668365]
-shape = SubResource("SphereShape3D_d2fiw")
-
-[node name="PlayerAim" type="Node3D" parent="Player/PlayerBody" unique_id=656253572]
-script = ExtResource("4_d2fiw")
-
-[node name="PlayerGFX" type="Sprite3D" parent="Player/PlayerBody/PlayerAim" unique_id=1708653348]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
-texture = ExtResource("4_5t3ln")
-
-[node name="PlayerProjectileSpawner" type="Node3D" parent="Player/PlayerBody/PlayerAim" unique_id=58133753]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.75)
-script = ExtResource("6_v4nif")
-
-[node name="PlayerHitbox" type="Area3D" parent="Player/PlayerBody" unique_id=1973803744]
-collision_layer = 8
-collision_mask = 128
-script = ExtResource("6_d2fiw")
-
-[node name="PlayerHitboxShape" type="CollisionShape3D" parent="Player/PlayerBody/PlayerHitbox" unique_id=1233882938]
-shape = SubResource("SphereShape3D_3lili")
-
-[node name="PlayerStateMachine" type="Node" parent="Player" unique_id=2125271746]
-script = ExtResource("7_d2fiw")
-metadata/_custom_type_script = "uid://bbd8bv8gd3rmg"
-
-[node name="PlayerCamera" type="Camera3D" parent="Player" unique_id=319842411]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 8, 0)
-script = ExtResource("6_3lili")
-angular_frequency = 25.0
-damping_ratio = 2.5
+[node name="RangedEnemy" parent="." unique_id=1899302448 instance=ExtResource("3_hn31m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
 
 [node name="Environment" type="Node" parent="." unique_id=281795323]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment" unique_id=1483954631]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
 
-[node name="Wall" type="MeshInstance3D" parent="Environment" unique_id=1809054042]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
-mesh = SubResource("BoxMesh_hn31m")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Environment/Wall" unique_id=1859791599]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/Wall/StaticBody3D" unique_id=588201247]
-shape = SubResource("BoxShape3D_qllpf")
-
 [node name="Light" type="RigidBody3D" parent="Environment" unique_id=1826175464]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.49986887, 3)
+collision_mask = 37
 axis_lock_linear_y = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/Light" unique_id=722689310]
@@ -130,7 +53,9 @@ shape = SubResource("SphereShape3D_5t3ln")
 mesh = SubResource("SphereMesh_3lili")
 
 [node name="Medium" type="RigidBody3D" parent="Environment" unique_id=2003734587]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.49986887, 3)
+collision_layer = 5
+collision_mask = 37
 axis_lock_linear_y = true
 mass = 10.0
 
@@ -141,9 +66,10 @@ shape = SubResource("SphereShape3D_5t3ln")
 mesh = SubResource("SphereMesh_3lili")
 
 [node name="Heavy" type="RigidBody3D" parent="Environment" unique_id=7237298]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.49986887, 3)
+collision_mask = 37
 axis_lock_linear_y = true
-mass = 100.0
+mass = 50.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/Heavy" unique_id=1653335400]
 shape = SubResource("SphereShape3D_5t3ln")
@@ -151,64 +77,28 @@ shape = SubResource("SphereShape3D_5t3ln")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Environment/Heavy" unique_id=662177194]
 mesh = SubResource("SphereMesh_3lili")
 
-[node name="Floor" type="StaticBody3D" parent="Environment" unique_id=105897074]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Environment" unique_id=518265770]
+navigation_mesh = SubResource("NavigationMesh_d2fiw")
+
+[node name="Wall" type="MeshInstance3D" parent="Environment/NavigationRegion3D" unique_id=1809054042]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.49986887, -4)
+mesh = SubResource("BoxMesh_hn31m")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Environment/NavigationRegion3D/Wall" unique_id=1859791599]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Environment/NavigationRegion3D/Wall/StaticBody3D" unique_id=588201247]
+shape = SubResource("BoxShape3D_qllpf")
+
+[node name="Floor" type="StaticBody3D" parent="Environment/NavigationRegion3D" unique_id=105897074]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, 0)
 collision_layer = 2
 collision_mask = 2
 
-[node name="FloorShape" type="CollisionShape3D" parent="Environment/Floor" unique_id=1538192769]
+[node name="FloorShape" type="CollisionShape3D" parent="Environment/NavigationRegion3D/Floor" unique_id=1538192769]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_5t3ln")
 
-[node name="FloorMesh" type="MeshInstance3D" parent="Environment/Floor" unique_id=1860194954]
-transform = Transform3D(25, 0, 0, 0, 25, 0, 0, 0, 25, 0, -0.1, 0)
+[node name="FloorMesh" type="MeshInstance3D" parent="Environment/NavigationRegion3D/Floor" unique_id=1860194954]
+transform = Transform3D(25, 0, 0, 0, 25, 0, 0, 0, 25, 0, 0, 0)
 mesh = SubResource("QuadMesh_3lili")
 surface_material_override/0 = SubResource("StandardMaterial3D_yyo3g")
-
-[node name="Turret" type="Node3D" parent="." unique_id=1537344505 node_paths=PackedStringArray("aim_component", "hitbox_component", "spawn_component", "projectile_spawner_component", "static_body_component", "cooldown_timer")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
-script = ExtResource("11_u77le")
-aim_component = NodePath("TurretBody/TurretAim")
-hitbox_component = NodePath("TurretBody/TurretHitbox")
-spawn_component = NodePath("TurretSpawn")
-projectile_spawner_component = NodePath("TurretBody/TurretAim/TurretProjectileSpawner")
-static_body_component = NodePath("TurretBody")
-cooldown_timer = NodePath("TurretCooldownTimer")
-ray_collide_layers = 1
-
-[node name="TurretBody" type="StaticBody3D" parent="Turret" unique_id=1157896623]
-collision_layer = 32
-collision_mask = 37
-script = ExtResource("12_qiqw2")
-metadata/_custom_type_script = "uid://d2g1sm65ya7kv"
-
-[node name="TurretShape" type="CollisionShape3D" parent="Turret/TurretBody" unique_id=764933832]
-shape = SubResource("SphereShape3D_6cjme")
-
-[node name="TurretAim" type="Node3D" parent="Turret/TurretBody" unique_id=34997791]
-script = ExtResource("4_d2fiw")
-metadata/_custom_type_script = "uid://by1u3602we537"
-
-[node name="TurretGFX" type="Sprite3D" parent="Turret/TurretBody/TurretAim" unique_id=552691389]
-transform = Transform3D(6, 0, 0, 0, -2.6226832e-07, 6, 0, -6, -2.6226832e-07, 0, 0, 0)
-texture_filter = 1
-texture = ExtResource("7_v4nif")
-
-[node name="TurretProjectileSpawner" type="Node3D" parent="Turret/TurretBody/TurretAim" unique_id=1845268541]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
-script = ExtResource("6_v4nif")
-metadata/_custom_type_script = "uid://cqx1rkg4m1ufl"
-
-[node name="TurretHitbox" type="Area3D" parent="Turret/TurretBody" unique_id=1132447921]
-collision_layer = 64
-collision_mask = 16
-script = ExtResource("6_d2fiw")
-metadata/_custom_type_script = "uid://cwss8p0mewejj"
-
-[node name="TurretHitboxShape" type="CollisionShape3D" parent="Turret/TurretBody/TurretHitbox" unique_id=141237912]
-shape = SubResource("SphereShape3D_u77le")
-
-[node name="TurretSpawn" type="Node" parent="Turret" unique_id=278955912]
-script = ExtResource("13_qiqw2")
-pool_name = "turret"
-metadata/_custom_type_script = "uid://efl0jq731g3n"
-
-[node name="TurretCooldownTimer" type="Timer" parent="Turret" unique_id=1726020238]
