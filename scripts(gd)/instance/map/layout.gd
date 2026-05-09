@@ -37,7 +37,7 @@ func _enter_tree() -> void:
 	_build_geometry(generator)
 	_build_navmesh(generator)
 	_build_lights(generator)
-	#_build_props(generator)
+	_build_props(generator)
 
 func get_generator() -> Gen.LayoutGenerator:
 	return generator
@@ -174,7 +174,7 @@ void fragment() {
 					var x: float = offset_x + i * tile_size
 					var z: float = offset_z + j * tile_size
 					var quad: int = (i & 1) | ((j & 1) << 1)
-					if ch == '.':
+					if ch == '.' or ch == 'c' or ch == 'C' or ch == 'v' or ch == 'h':
 						floor_sts[quad].append_from(floor_mesh, 0, Transform3D(Basis(), Vector3(x, floor_y_offset, z)))
 						floor_counts[quad] += 1
 					elif ch == '|' or ch == '-':
@@ -262,22 +262,41 @@ func _build_props(layout) -> void:
 	for r in layout.mainRooms.values():
 		var n: int = randi_range(props_per_room_min, props_per_room_max)
 		for k in range(n):
-			var attempts: int = 8
+			var attempts: int = 32
 			while attempts > 0:
 				var i: int = randi_range(r.x + 1, r.x + r.w - 2)
 				var j: int = randi_range(r.y + 1, r.y + r.h - 2)
-				if layout.At(i, j) == "." and not _near_door(layout, i, j, 2):
+				if layout.At(i, j) == "." and not _near_door(layout, i, j, 2) and randf() < pow(layout.occlusion[j][i], 3.0):
 					var x: float = offset_x + i * tile_size
 					var z: float = offset_z + j * tile_size
-					var s: float = randf_range(0.5, 0.9)
+					var s: float = randf_range(0.7, 1.1)
 					var mi := MeshInstance3D.new()
 					mi.mesh = crate_mesh
 					mi.scale = Vector3(s, s, s)
 					mi.position = Vector3(x, tile_size * s * 0.5, z)
 					mi.rotation.y = randf() * TAU
+					mi.add_child(_make_crate_collider())
 					add_child(mi)
+					if randf() < 0.5:
+						var s2: float = randf_range(0.5, s * 0.9)
+						var stacked := MeshInstance3D.new()
+						stacked.mesh = crate_mesh
+						stacked.scale = Vector3(s2, s2, s2)
+						stacked.position = Vector3(x, tile_size * s + tile_size * s2 * 0.5, z)
+						stacked.rotation.y = randf() * TAU
+						stacked.add_child(_make_crate_collider())
+						add_child(stacked)
 					break
 				attempts -= 1
+
+func _make_crate_collider() -> StaticBody3D:
+	var body := StaticBody3D.new()
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(tile_size, tile_size, tile_size)
+	shape.shape = box
+	body.add_child(shape)
+	return body
 
 func _near_door(layout, i: int, j: int, radius: int) -> bool:
 	for dj in range(-radius, radius + 1):
@@ -296,11 +315,12 @@ func _build_lights(layout) -> void:
 		var cz: float = offset_z + (r.y + r.h * 0.5) * tile_size
 		var extent: float = max(r.w, r.h) * 0.6 * tile_size
 		var light := OmniLight3D.new()
-		light.light_color = Color(
-			clamp(1.0 + randf_range(-0.05, 0.05), 0.0, 1.0),
-			clamp(0.95 + randf_range(-0.07, 0.05), 0.0, 1.0),
-			clamp(0.7 + randf_range(-0.1, 0.1), 0.0, 1.0)
-		)
+		var base := Color(1.0, 0.95, 0.7)
+		var base_hsv := { "h": base.h, "s": base.s, "v": base.v }
+		var hue: float = fposmod(base_hsv["h"] + randf_range(-0.35, 0.35), 1.0)
+		var sat: float = clamp(base_hsv["s"] + randf_range(-0.25, 0.35), 0.0, 1.0)
+		var val: float = clamp(base_hsv["v"] + randf_range(-0.15, 0.1), 0.0, 1.0)
+		light.light_color = Color.from_hsv(hue, sat, val)
 		light.light_energy = 32.0
 		light.light_specular = 0.0
 		light.omni_range = sqrt(height * height + extent * extent) * 2.5

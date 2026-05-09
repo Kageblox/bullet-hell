@@ -43,10 +43,10 @@ omni_attenuation = 0.296
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Camera3D" unique_id=138274363]
 transform = Transform3D(1, 0, 0, 0, 0.48525223, 0.8743743, 0, -0.8743743, 0.48525223, 0, 10.961228, 5.69366)
-visible = false
 spot_range = 452.548
 spot_angle = 82.5
 
 [node name="Locator" type="Node3D" parent="Camera3D" unique_id=100866865]
+unique_name_in_owner = true
 script = ExtResource("4_e34e1")
 metadata/_custom_type_script = "uid://dqxh8t61mkgv1"

@@ -32,7 +32,7 @@ class Generator:
 		return false
 
 	static func IsDoor(ch: String) -> bool:
-		if ch == "d" or ch == "D":
+		if ch == "-" or ch == "|":
 			return true
 		return false
 
@@ -113,69 +113,69 @@ class Generator:
 		)
 		map.Run()
 
-		# for j in range(map.MapHeight):
-		# 	for i in range(map.MapWidth):
-		# 		var ij = map.grid[j][i]
-		# 		var left = IsWall(map.At(i - 1, j))
-		# 		var right = IsWall(map.At(i + 1, j))
-		# 		var above = IsWall(map.At(i, j - 1))
-		# 		var below = IsWall(map.At(i, j + 1))
-		# 		if ij == ".":
-		# 			if left or right:
-		# 				map.grid[j][i] = "v"
-		# 			elif above or below:
-		# 				map.grid[j][i] = "h"
+		for j in range(map.MapHeight):
+			for i in range(map.MapWidth):
+				var ij = map.grid[j][i]
+				var left = IsWall(map.At(i - 1, j))
+				var right = IsWall(map.At(i + 1, j))
+				var above = IsWall(map.At(i, j - 1))
+				var below = IsWall(map.At(i, j + 1))
+				if ij == ".":
+					if left or right:
+						map.grid[j][i] = "v"
+					elif above or below:
+						map.grid[j][i] = "h"
 
-		# for j in range(map.MapHeight):
-		# 	for i in range(map.MapWidth):
-		# 		var ij = map.grid[j][i]
-		# 		var left = map.At(i - 1, j)
-		# 		var right = map.At(i + 1, j)
-		# 		var above = map.At(i, j - 1)
-		# 		var below = map.At(i, j + 1)
-		# 		var wleft = IsPerimeter(left)
-		# 		var wright = IsPerimeter(right)
-		# 		var wabove = IsPerimeter(above)
-		# 		var wbelow = IsPerimeter(below)
-		# 		if ij == "h" or ij == "v":
-		# 			if wleft and wbelow:
-		# 				map.grid[j][i] = "."
-		# 			elif wleft and wabove:
-		# 				map.grid[j][i] = "."
-		# 			elif wright and wbelow:
-		# 				map.grid[j][i] = "."
-		# 			elif wright and wabove:
-		# 				map.grid[j][i] = "."
+		for j in range(map.MapHeight):
+			for i in range(map.MapWidth):
+				var ij = map.grid[j][i]
+				var left = map.At(i - 1, j)
+				var right = map.At(i + 1, j)
+				var above = map.At(i, j - 1)
+				var below = map.At(i, j + 1)
+				var wleft = IsPerimeter(left)
+				var wright = IsPerimeter(right)
+				var wabove = IsPerimeter(above)
+				var wbelow = IsPerimeter(below)
+				if ij == "h" or ij == "v":
+					if wleft and wbelow:
+						map.grid[j][i] = "."
+					elif wleft and wabove:
+						map.grid[j][i] = "."
+					elif wright and wbelow:
+						map.grid[j][i] = "."
+					elif wright and wabove:
+						map.grid[j][i] = "."
 
-		# for j in range(map.MapHeight):
-		# 	for i in range(map.MapWidth):
-		# 		var ij = map.grid[j][i]
-		# 		var left = map.At(i - 1, j)
-		# 		var right = map.At(i + 1, j)
-		# 		var above = map.At(i, j - 1)
-		# 		var below = map.At(i, j + 1)
-		# 		if (ij == ".") and (IsPerimeter(left) or IsPerimeter(right) or IsPerimeter(above) or IsPerimeter(below)):
-		# 			if not IsWall(left) and not IsWall(right) and not IsWall(above) and not IsWall(below):
-		# 				map.grid[j][i] = "C"
+		for j in range(map.MapHeight):
+			for i in range(map.MapWidth):
+				var ij = map.grid[j][i]
+				var left = map.At(i - 1, j)
+				var right = map.At(i + 1, j)
+				var above = map.At(i, j - 1)
+				var below = map.At(i, j + 1)
+				if (ij == ".") and (IsPerimeter(left) or IsPerimeter(right) or IsPerimeter(above) or IsPerimeter(below)):
+					if not IsWall(left) and not IsWall(right) and not IsWall(above) and not IsWall(below):
+						map.grid[j][i] = "C"
 
-		# for j in range(map.MapHeight):
-		# 	for i in range(map.MapWidth):
-		# 		var ij = map.grid[j][i]
-		# 		var left = IsInnerPerimeter(map.At(i - 1, j))
-		# 		var right = IsInnerPerimeter(map.At(i + 1, j))
-		# 		var above = IsInnerPerimeter(map.At(i, j - 1))
-		# 		var below = IsInnerPerimeter(map.At(i, j + 1))
-		# 		if IsInnerPerimeter(ij):
-		# 			if left and below:
-		# 				map.grid[j][i] = "."
-		# 			elif left and above:
-		# 				map.grid[j][i] = "."
-		# 			elif right and below:
-		# 				map.grid[j][i] = "."
-		# 			elif right and above:
-		# 				map.grid[j][i] = "."
-		# 			elif left or right:
-		# 				map.grid[j][i] = "c"
+		for j in range(map.MapHeight):
+			for i in range(map.MapWidth):
+				var ij = map.grid[j][i]
+				var left = IsInnerPerimeter(map.At(i - 1, j))
+				var right = IsInnerPerimeter(map.At(i + 1, j))
+				var above = IsInnerPerimeter(map.At(i, j - 1))
+				var below = IsInnerPerimeter(map.At(i, j + 1))
+				if IsInnerPerimeter(ij):
+					if left and below:
+						map.grid[j][i] = "."
+					elif left and above:
+						map.grid[j][i] = "."
+					elif right and below:
+						map.grid[j][i] = "."
+					elif right and above:
+						map.grid[j][i] = "."
+					elif left or right:
+						map.grid[j][i] = "c"
 
 		return map;
 
@@ -486,6 +486,28 @@ class LayoutGenerator:
 						rooms[sub.id] = sub
 						subrooms[sub.id] = sub
 
+		# Remove pillars that ended up too close to a door
+		var pillar_door_radius: int = 2
+		for pj in range(MapHeight):
+			for pi in range(MapWidth):
+				if grid[pj][pi] != "P":
+					continue
+				var has_nearby_door: bool = false
+				for dj in range(-pillar_door_radius, pillar_door_radius + 1):
+					if has_nearby_door:
+						break
+					for di in range(-pillar_door_radius, pillar_door_radius + 1):
+						var ni: int = pi + di
+						var nj: int = pj + dj
+						if ni < 0 or nj < 0 or ni >= MapWidth or nj >= MapHeight:
+							continue
+						var nch: String = grid[nj][ni]
+						if nch == "|" or nch == "-":
+							has_nearby_door = true
+							break
+				if has_nearby_door:
+					grid[pj][pi] = "."
+
 		for r in mainRooms.values():
 			var eccentricity = CalculateEccentricity(r.id)
 			r.Eccentricity = eccentricity
@@ -587,6 +609,12 @@ class LayoutGenerator:
 class Room:
 	static var nextRoomId: int = 1
 
+	enum Style {
+		# INSET
+		NONE,
+		PILLARS,
+	}
+
 	# Unique room ID
 	var id: int
 
@@ -617,6 +645,8 @@ class Room:
 	var CanSplit: bool = true
 
 	var HasPillars: bool = false
+
+	var style: Style = Style.NONE
 
 	# This function draws a specific room at the given location with the given
 	#   floor character.
@@ -710,18 +740,27 @@ class Room:
 		if not result:
 			return false
 
-		# Add random doors on each given side
+		# Add random doors on each given side. Skip a door entirely when the
+		# 2nd cell would be blocked, rather than placing a single-tile door.
 		if doors != 0:
 			var xEntry: int = rand.randi_range(1, w - 3)
 			var yEntry: int = rand.randi_range(1, h - 3)
 			if (doors & Wall.LEFT) != 0:
-				self.gen.At(x, y + yEntry, "|")
+				if yEntry < h - 2 and not DoorBlocked(x, y + yEntry + 1, "|"):
+					self.gen.At(x, y + yEntry, "|")
+					self.gen.At(x, y + yEntry + 1, "|")
 			if (doors & Wall.RIGHT) != 0:
-				self.gen.At(x + w - 1, y + yEntry, "|")
+				if yEntry < h - 2 and not DoorBlocked(x + w - 1, y + yEntry + 1, "|"):
+					self.gen.At(x + w - 1, y + yEntry, "|")
+					self.gen.At(x + w - 1, y + yEntry + 1, "|")
 			if (doors & Wall.TOP) != 0:
-				self.gen.At(x + xEntry, y, "-")
+				if xEntry < w - 2 and not DoorBlocked(x + xEntry + 1, y, "-"):
+					self.gen.At(x + xEntry, y, "-")
+					self.gen.At(x + xEntry + 1, y, "-")
 			if (doors & Wall.BOTTOM) != 0:
-				self.gen.At(x + xEntry, y + h - 1, "-")
+				if xEntry < w - 2 and not DoorBlocked(x + xEntry + 1, y + h - 1, "-"):
+					self.gen.At(x + xEntry, y + h - 1, "-")
+					self.gen.At(x + xEntry + 1, y + h - 1, "-")
 
 		return result
 
@@ -768,25 +807,29 @@ class Room:
 
 		return true
 
-	func Stylize() -> bool:
+	func Stylize() -> Style:
 		var r: bool = false # If ANY part succeeds, we need to disable splits
 		if w < 8 or h < 8:
-			return false
+			return Style.NONE
 		var randomValue: float = rand.randf()
+		# if randomValue < 0.2:
+		# 	var maxInset: int = min(w, h) / 2 - 1
+		# 	var inset: int
+		# 	if maxInset <= 3:
+		# 		return false
+		# 	inset = rand.randi_range(3, maxInset - 1)
+		# 	if Cut(x + inset, y + inset, w - inset * 2, h - inset * 2):
+		# 		CanSplit = false
+		#		style = Style.INSET
+		# 		return INSET
 		if randomValue < 0.2:
-			var maxInset: int = min(w, h) / 2 - 1
-			var inset: int
-			if maxInset <= 3:
-				return false
-			inset = rand.randi_range(3, maxInset - 1)
-			if Cut(x + inset, y + inset, w - inset * 2, h - inset * 2):
-				r = true
-		elif randomValue < 0.3:
 			if MakePillars():
-				r = true
-		if r:
-			CanSplit = false
-		return r
+				CanSplit = false
+				self.style = Style.PILLARS
+				return style
+			
+		self.style = Style.NONE
+		return style
 
 	func MakePillars() -> bool:
 		if w < 7 or h < 7:
@@ -846,6 +889,9 @@ class Room:
 				return null
 			if not self.gen.CheckSpace(rx + 1, ry + 1, rw - 2, rh - 2):
 				return null
+			# Skip when a double door wouldn't fit (2nd cell would land on a wall)
+			if entry >= h - 2 or ry == ry_min:
+				return null
 			var r = Room.new(self.gen, rx, ry, rw, rh)
 			if r.Check(WALL_ALL):
 				self.gen.At(x, y + entry, "|")
@@ -853,9 +899,7 @@ class Room:
 				self.connect[dir][r.id] = r
 				if not r.Draw(false):
 					print("Drawing failed.")
-				if entry < h - 2:
-					if not DoorBlocked(x, y + entry + 1, "|"):
-						self.gen.At(x, y + entry + 1, "|")
+				self.gen.At(x, y + entry + 1, "|")
 				r.Stylize()
 				return r
 			else:
@@ -876,6 +920,8 @@ class Room:
 				return null
 			if not self.gen.CheckSpace(rx + 1, ry + 1, rw - 2, rh - 2):
 				return null
+			if entry >= h - 2 or ry == ry_min:
+				return null
 			var r = Room.new(self.gen, rx, ry, rw, rh)
 			if r.Check(WALL_ALL):
 				self.gen.At(x + w - 1, y + entry, "|")
@@ -883,9 +929,7 @@ class Room:
 				self.connect[dir][r.id] = r
 				if not r.Draw(false):
 					print("Drawing failed.")
-				if entry < h - 2:
-					if not DoorBlocked(x + w - 1, y + entry + 1, "|"):
-						self.gen.At(x + w - 1, y + entry + 1, "|")
+				self.gen.At(x + w - 1, y + entry + 1, "|")
 				r.Stylize()
 				return r
 			else:
@@ -905,6 +949,8 @@ class Room:
 				return null
 			if not self.gen.CheckSpace(rx + 1, ry + 1, rw - 2, rh - 2):
 				return null
+			if entry >= w - 2 or rx == rx_min:
+				return null
 			var r = Room.new(self.gen, rx, ry, rw, rh)
 			if r.Check(WALL_ALL):
 				self.gen.At(x + entry, y, "-")
@@ -912,9 +958,7 @@ class Room:
 				self.connect[dir][r.id] = r
 				if not r.Draw(false):
 					print("Drawing failed.")
-				if entry < w - 2:
-					if not DoorBlocked(x + entry + 1, y, "-"):
-						self.gen.At(x + entry + 1, y, "-")
+				self.gen.At(x + entry + 1, y, "-")
 				r.Stylize()
 				return r
 			else:
@@ -934,6 +978,8 @@ class Room:
 				return null
 			if not self.gen.CheckSpace(rx + 1, ry + 1, rw - 2, rh - 2):
 				return null
+			if entry >= w - 2 or rx == rx_min:
+				return null
 			var r = Room.new(self.gen, rx, ry, rw, rh)
 			if r.Check(WALL_ALL):
 				self.gen.At(x + entry, y + h - 1, "-")
@@ -941,9 +987,7 @@ class Room:
 				self.connect[dir][r.id] = r
 				if not r.Draw(false):
 					print("Drawing failed.")
-				if entry < w - 2:
-					if not DoorBlocked(x + entry + 1, y + h - 1, "|"):
-						self.gen.At(x + entry + 1, y + h - 1, "|")
+				self.gen.At(x + entry + 1, y + h - 1, "-")
 				r.Stylize()
 				return r
 			else:
@@ -962,6 +1006,11 @@ class Room:
 
 		@warning_ignore("integer_division")
 		var split_row: int = y + h / 2
+		var entry: int = rand.randi_range(1, w - 3)
+		# Skip the split when a double door wouldn't fit
+		if entry >= w - 2 or DoorBlocked(x + entry + 1, split_row, "-"):
+			return false
+
 		for i in range(w):
 			# Preserve external doors at the corners where the split meets the
 			# sub-room's outer walls.
@@ -970,8 +1019,8 @@ class Room:
 				continue
 			self.gen.At(x + i, split_row, "#")
 
-		var entry: int = rand.randi_range(1, w - 3)
 		self.gen.At(x + entry, split_row, "-")
+		self.gen.At(x + entry + 1, split_row, "-")
 		return true
 
 	# Vertically split the room in half, if possible. Add doors to the split.
@@ -981,14 +1030,18 @@ class Room:
 
 		@warning_ignore("integer_division")
 		var split_col: int = x + w / 2
+		var entry: int = rand.randi_range(1, h - 3)
+		if entry >= h - 2 or DoorBlocked(split_col, y + entry + 1, "|"):
+			return false
+
 		for j in range(h):
 			var cell = self.gen.At(split_col, y + j)
 			if cell == "|" or cell == "-":
 				continue
 			self.gen.At(split_col, y + j, "#")
 
-		var entry: int = rand.randi_range(1, h - 3)
 		self.gen.At(split_col, y + entry, "|")
+		self.gen.At(split_col, y + entry + 1, "|")
 		return true
 
 	func DoorCheck() -> bool:
