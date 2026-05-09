@@ -2,6 +2,12 @@ class_name EntitySpriteComponent
 extends AnimatedSprite3D
 ## Component Script that gives an Entity a Sprite
 
+#region Signals
+
+signal on_animation_override_end(_animation_override: String) ## Emitted upon the end of the animation override.
+
+#endregion
+
 #region Variables
 
 const flip_offset = -0.1;
@@ -15,7 +21,9 @@ enum SpriteMode {
 @export var sprite_flipped: bool = false ## Whether the sprite is flipped by default.
 	
 var current_sprite_mode = SpriteMode.INACTIVE
-	
+var animation_override: String = "" ## The current non-looping animation.
+var current_animation: String = "" ## The current looping animation.
+
 var entity: EntityInstance ## The entity this component is attached to.
 
 #endregion
@@ -41,5 +49,15 @@ func _process(delta: float) -> void:
 				pass
 		SpriteMode.INACTIVE:
 			pass
+			
+	if animation_override != "":
+		if animation != animation_override:
+			play(animation_override)
+		elif !is_playing():
+			on_animation_override_end.emit(animation_override)
+			animation_override = ""
+	else:
+		if current_animation != "" and animation != current_animation:
+			play(current_animation)
 
 #endregion

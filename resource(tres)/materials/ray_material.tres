@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://coadvr21cvjd8"]
+
+[ext_resource type="Shader" uid="uid://d6qlyeqlkfi1" path="res://resource(tres)/shaders/sprite_shader.gdshader" id="1_kwass"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_kwass")
+shader_parameter/color_override = Color(0.735357, 1, 1, 1)

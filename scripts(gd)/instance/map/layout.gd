@@ -12,9 +12,16 @@ extends Node3D
 @export var max_size: int = 22
 @export var variance: int = 2
 @export var tile_size: float = 1.0
+@export var chunk_size: int = 12
+@export var max_active_lights: int = 8
+@export var props_per_room_min: int = 2
+@export var props_per_room_max: int = 4
+
+var generator: Gen.LayoutGenerator
+var room_lights: Array[Light3D] = []
 
 func _enter_tree() -> void:
-	var layout := Gen.Generator.Run(
+	generator = Gen.Generator.Run(
 		map_width,
 		map_height,
 		starting_width,
@@ -24,59 +31,303 @@ func _enter_tree() -> void:
 		max_size,
 		variance
 	)
-	# var ascii := layout.ToString()
-	# layout.Print()
+	# var ascii := generator.ToString()
+	# generator.Print()
 	# print(ascii)
-	_build_floors(layout)
-	_build_navmesh(layout)
+	_build_geometry(generator)
+	_build_navmesh(generator)
+	_build_lights(generator)
+	_build_props(generator)
 
-func _build_floors(layout) -> void:
-	var floor_mat := StandardMaterial3D.new()
-	floor_mat.albedo_color = Color(0.0, 0.3, 0.1)
+func get_generator() -> Gen.LayoutGenerator:
+	return generator
+
+func _process(_delta: float) -> void:
+	var cam: Camera3D = get_viewport().get_camera_3d()
+	if cam == null or room_lights.is_empty():
+		return
+	var cam_pos: Vector3 = cam.global_position
+	var sorted: Array[Light3D] = room_lights.duplicate()
+	sorted.sort_custom(func(a, b):
+		return a.global_position.distance_squared_to(cam_pos) < b.global_position.distance_squared_to(cam_pos)
+	)
+	for i in range(sorted.size()):
+		sorted[i].visible = i < max_active_lights
+
+# World space pos
+func room_index_at(pos: Vector3) -> int:
+	if generator == null:
+		return 0
+	var offset_x: float = -generator.MapWidth * tile_size * 0.5
+	var offset_z: float = -generator.MapHeight * tile_size * 0.5
+	var i: int = int(floor((pos.x - offset_x) / tile_size + 0.5))
+	var j: int = int(floor((pos.z - offset_z) / tile_size + 0.5))
+	return generator.RoomIndexAt(i, j)
+
+func room_at(pos: Vector3) -> Gen.Room:
+	if generator == null:
+		return null
+	var index: int = room_index_at(pos)
+	if index > 0:
+		return generator.rooms[index]
+	else:
+		return null
+
+func _build_geometry(layout) -> void:
+	var floor_tex: Texture2D = load("res://images(png)/map/sewer_floor.png")
+	var floor_mats: Array[StandardMaterial3D] = []
+	for q in range(4):
+		var m := StandardMaterial3D.new()
+		m.albedo_texture = floor_tex
+		m.albedo_color = Color(0.13, 0.16, 0.13)
+		m.metallic_specular = 0.0
+		m.roughness = 1.0
+		m.uv1_scale = Vector3(0.5, 0.5, 1.0)
+		m.uv1_offset = Vector3(float(q & 1) * 0.5, float((q >> 1) & 1) * 0.5, 0.0)
+		floor_mats.append(m)
 	var wall_mat := StandardMaterial3D.new()
-	wall_mat.albedo_color = Color(0.4, 0.25, 0.1)
+	wall_mat.albedo_texture = floor_tex
+	wall_mat.albedo_color = Color(0.25, 0.25, 0.25)
+	wall_mat.metallic_specular = 0.0
+	wall_mat.roughness = 1.0
 
-	var floor_mesh := PlaneMesh.new()
-	floor_mesh.size = Vector2(tile_size, tile_size)
+	var wall_bottom_shader := Shader.new()
+	wall_bottom_shader.code = """
+shader_type spatial;
+uniform sampler2D albedo_tex : source_color, filter_linear;
+uniform vec3 wall_tint : source_color = vec3(0.25);
+uniform vec3 floor_tint : source_color = vec3(0.13, 0.16, 0.13);
+uniform float fade_top = 1.0;
+uniform float fade_bottom = 0.0;
+varying float world_y;
+void vertex() {
+	world_y = (MODEL_MATRIX * vec4(VERTEX, 1.0)).y;
+}
+void fragment() {
+	float t = smoothstep(fade_bottom, fade_top, world_y);
+	vec3 tint = mix(floor_tint, wall_tint, t);
+	ALBEDO = texture(albedo_tex, UV).rgb * tint;
+	METALLIC = 0.0;
+	ROUGHNESS = 1.0;
+	SPECULAR = 0.0;
+}
+"""
+	var wall_bottom_mat := ShaderMaterial.new()
+	wall_bottom_mat.shader = wall_bottom_shader
+	wall_bottom_mat.set_shader_parameter("albedo_tex", floor_tex)
+	wall_bottom_mat.set_shader_parameter("wall_tint", Vector3(0.25, 0.25, 0.25))
+	wall_bottom_mat.set_shader_parameter("floor_tint", Vector3(0.13, 0.16, 0.13))
+	wall_bottom_mat.set_shader_parameter("fade_top", tile_size)
+	wall_bottom_mat.set_shader_parameter("fade_bottom", 0.0)
+
+	var wall_top_mat := ShaderMaterial.new()
+	wall_top_mat.shader = wall_bottom_shader
+	wall_top_mat.set_shader_parameter("albedo_tex", floor_tex)
+	wall_top_mat.set_shader_parameter("wall_tint", Vector3(0.0, 0.0, 0.0))
+	wall_top_mat.set_shader_parameter("floor_tint", Vector3(0.25, 0.25, 0.25))
+	wall_top_mat.set_shader_parameter("fade_top", tile_size * 3.0)
+	wall_top_mat.set_shader_parameter("fade_bottom", tile_size * 2.0)
+
+	var floor_mesh: ArrayMesh = _make_unit_cube_mesh()
+	var floor_y_offset: float = -tile_size * 0.5
 	var wall_mesh := BoxMesh.new()
 	wall_mesh.size = Vector3(tile_size, tile_size, tile_size)
 	var column_mesh := CylinderMesh.new()
 	column_mesh.top_radius = tile_size * 0.4
 	column_mesh.bottom_radius = tile_size * 0.4
-	column_mesh.height = tile_size * 2.0
-
-	var floor_st := SurfaceTool.new()
-	floor_st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var wall_st := SurfaceTool.new()
-	wall_st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	column_mesh.height = tile_size
 
 	var offset_x: float = -layout.MapWidth * tile_size * 0.5
 	var offset_z: float = -layout.MapHeight * tile_size * 0.5
-	for j in range(layout.MapHeight):
-		for i in range(layout.MapWidth):
-			var ch: String = layout.At(i, j)
-			var x: float = offset_x + i * tile_size
-			var z: float = offset_z + j * tile_size
-			if ch == "." or ch == '|' or ch == '-':
-				floor_st.append_from(floor_mesh, 0, Transform3D(Basis(), Vector3(x, 0.0, z)))
-			elif ch == "V" or ch == "H" or ch == "#":
-				for k in range(2):
-					wall_st.append_from(wall_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size * (0.5 + k), z)))
-			elif ch == "P":
-				floor_st.append_from(floor_mesh, 0, Transform3D(Basis(), Vector3(x, 0.0, z)))
-				wall_st.append_from(column_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size, z)))
 
-	var baked := ArrayMesh.new()
-	floor_st.commit(baked)
-	wall_st.commit(baked)
-	baked.surface_set_material(0, floor_mat)
-	baked.surface_set_material(1, wall_mat)
+	@warning_ignore("integer_division")
+	var chunks_x: int = (layout.MapWidth + chunk_size - 1) / chunk_size
+	@warning_ignore("integer_division")
+	var chunks_z: int = (layout.MapHeight + chunk_size - 1) / chunk_size
 
-	var mi := MeshInstance3D.new()
-	mi.name = "Static"
-	mi.mesh = baked
-	add_child(mi)
-	mi.create_trimesh_collision()
+	for ccz in range(chunks_z):
+		for ccx in range(chunks_x):
+			var floor_sts: Array[SurfaceTool] = []
+			var floor_counts: Array[int] = [0, 0, 0, 0]
+			for q in range(4):
+				var st := SurfaceTool.new()
+				st.begin(Mesh.PRIMITIVE_TRIANGLES)
+				floor_sts.append(st)
+			var wall_st := SurfaceTool.new()
+			wall_st.begin(Mesh.PRIMITIVE_TRIANGLES)
+			var wall_count: int = 0
+			var wall_bottom_st := SurfaceTool.new()
+			wall_bottom_st.begin(Mesh.PRIMITIVE_TRIANGLES)
+			var wall_bottom_count: int = 0
+			var wall_top_st := SurfaceTool.new()
+			wall_top_st.begin(Mesh.PRIMITIVE_TRIANGLES)
+			var wall_top_count: int = 0
+
+			var i_start: int = ccx * chunk_size
+			var j_start: int = ccz * chunk_size
+			var i_end: int = min(i_start + chunk_size, layout.MapWidth)
+			var j_end: int = min(j_start + chunk_size, layout.MapHeight)
+
+			for j in range(j_start, j_end):
+				for i in range(i_start, i_end):
+					var ch: String = layout.At(i, j)
+					var x: float = offset_x + i * tile_size
+					var z: float = offset_z + j * tile_size
+					var quad: int = (i & 1) | ((j & 1) << 1)
+					if ch == '.' or ch == 'c' or ch == 'C' or ch == 'v' or ch == 'h':
+						floor_sts[quad].append_from(floor_mesh, 0, Transform3D(Basis(), Vector3(x, floor_y_offset, z)))
+						floor_counts[quad] += 1
+					elif ch == '|' or ch == '-':
+						floor_sts[quad].append_from(floor_mesh, 0, Transform3D(Basis(), Vector3(x, floor_y_offset, z)))
+						wall_top_st.append_from(wall_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size * 2.5, z)))
+						floor_counts[quad] += 1
+						wall_top_count += 1
+					elif ch == "V" or ch == "H" or ch == "#":
+						wall_bottom_st.append_from(wall_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size * 0.5, z)))
+						wall_bottom_count += 1
+						wall_st.append_from(wall_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size * 1.5, z)))
+						wall_count += 1
+						wall_top_st.append_from(wall_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size * 2.5, z)))
+						wall_top_count += 1
+					elif ch == "P":
+						floor_sts[quad].append_from(floor_mesh, 0, Transform3D(Basis(), Vector3(x, floor_y_offset, z)))
+						for k in range(3):
+							wall_st.append_from(column_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size * (0.5 + k), z)))
+						floor_counts[quad] += 1
+						wall_count += 1
+
+			var total_floor: int = floor_counts[0] + floor_counts[1] + floor_counts[2] + floor_counts[3]
+			if total_floor == 0 and wall_count == 0 and wall_bottom_count == 0 and wall_top_count == 0:
+				continue
+
+			var baked := ArrayMesh.new()
+			var surface: int = 0
+			for q in range(4):
+				if floor_counts[q] > 0:
+					floor_sts[q].commit(baked)
+					baked.surface_set_material(surface, floor_mats[q])
+					surface += 1
+			if wall_count > 0:
+				wall_st.commit(baked)
+				baked.surface_set_material(surface, wall_mat)
+				surface += 1
+			if wall_bottom_count > 0:
+				wall_bottom_st.commit(baked)
+				baked.surface_set_material(surface, wall_bottom_mat)
+				surface += 1
+			if wall_top_count > 0:
+				wall_top_st.commit(baked)
+				baked.surface_set_material(surface, wall_top_mat)
+
+			var mi := MeshInstance3D.new()
+			mi.name = "Chunk_%d_%d" % [ccx, ccz]
+			mi.mesh = baked
+			add_child(mi)
+			mi.create_trimesh_collision()
+
+func _make_unit_cube_mesh() -> ArrayMesh:
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var s: float = tile_size * 0.5
+	_add_face(st, Vector3(s, -s, s), Vector3(s, -s, -s), Vector3(s, s, -s), Vector3(s, s, s), Vector3.RIGHT)
+	_add_face(st, Vector3(-s, -s, -s), Vector3(-s, -s, s), Vector3(-s, s, s), Vector3(-s, s, -s), Vector3.LEFT)
+	_add_face(st, Vector3(-s, s, s), Vector3(s, s, s), Vector3(s, s, -s), Vector3(-s, s, -s), Vector3.UP)
+	_add_face(st, Vector3(-s, -s, -s), Vector3(s, -s, -s), Vector3(s, -s, s), Vector3(-s, -s, s), Vector3.DOWN)
+	_add_face(st, Vector3(-s, -s, s), Vector3(s, -s, s), Vector3(s, s, s), Vector3(-s, s, s), Vector3.BACK)
+	_add_face(st, Vector3(s, -s, -s), Vector3(-s, -s, -s), Vector3(-s, s, -s), Vector3(s, s, -s), Vector3.FORWARD)
+	return st.commit()
+
+func _add_face(st: SurfaceTool, p0: Vector3, p1: Vector3, p2: Vector3, p3: Vector3, n: Vector3) -> void:
+	st.set_normal(n); st.set_uv(Vector2(0, 1)); st.add_vertex(p0)
+	st.set_normal(n); st.set_uv(Vector2(0, 0)); st.add_vertex(p3)
+	st.set_normal(n); st.set_uv(Vector2(1, 0)); st.add_vertex(p2)
+	st.set_normal(n); st.set_uv(Vector2(0, 1)); st.add_vertex(p0)
+	st.set_normal(n); st.set_uv(Vector2(1, 0)); st.add_vertex(p2)
+	st.set_normal(n); st.set_uv(Vector2(1, 1)); st.add_vertex(p1)
+
+func _build_props(layout) -> void:
+	var crate_mat := StandardMaterial3D.new()
+	crate_mat.albedo_texture = load("res://images(png)/map/crate2_diff.png")
+	crate_mat.albedo_color = Color(0.2, 0.2, 0.2)
+	crate_mat.metallic_specular = 0.0
+	crate_mat.roughness = 1.0
+	crate_mat.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+
+	var crate_mesh := _make_unit_cube_mesh()
+	crate_mesh.surface_set_material(0, crate_mat)
+
+	var offset_x: float = -layout.MapWidth * tile_size * 0.5
+	var offset_z: float = -layout.MapHeight * tile_size * 0.5
+
+	for r in layout.mainRooms.values():
+		var n: int = randi_range(props_per_room_min, props_per_room_max)
+		for k in range(n):
+			var attempts: int = 32
+			while attempts > 0:
+				var i: int = randi_range(r.x + 1, r.x + r.w - 2)
+				var j: int = randi_range(r.y + 1, r.y + r.h - 2)
+				if layout.At(i, j) == "." and not _near_door(layout, i, j, 2) and randf() < pow(layout.occlusion[j][i], 3.0):
+					var x: float = offset_x + i * tile_size
+					var z: float = offset_z + j * tile_size
+					var s: float = randf_range(0.7, 1.1)
+					var mi := MeshInstance3D.new()
+					mi.mesh = crate_mesh
+					mi.scale = Vector3(s, s, s)
+					mi.position = Vector3(x, tile_size * s * 0.5, z)
+					mi.rotation.y = randf() * TAU
+					mi.add_child(_make_crate_collider())
+					add_child(mi)
+					if randf() < 0.5:
+						var s2: float = randf_range(0.5, s * 0.9)
+						var stacked := MeshInstance3D.new()
+						stacked.mesh = crate_mesh
+						stacked.scale = Vector3(s2, s2, s2)
+						stacked.position = Vector3(x, tile_size * s + tile_size * s2 * 0.5, z)
+						stacked.rotation.y = randf() * TAU
+						stacked.add_child(_make_crate_collider())
+						add_child(stacked)
+					break
+				attempts -= 1
+
+func _make_crate_collider() -> StaticBody3D:
+	var body := StaticBody3D.new()
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(tile_size, tile_size, tile_size)
+	shape.shape = box
+	body.add_child(shape)
+	return body
+
+func _near_door(layout, i: int, j: int, radius: int) -> bool:
+	for dj in range(-radius, radius + 1):
+		for di in range(-radius, radius + 1):
+			var ch: String = layout.At(i + di, j + dj)
+			if ch == "|" or ch == "-":
+				return true
+	return false
+
+func _build_lights(layout) -> void:
+	var offset_x: float = -layout.MapWidth * tile_size * 0.5
+	var offset_z: float = -layout.MapHeight * tile_size * 0.5
+	var height: float = tile_size * 2.5
+	for r in layout.mainRooms.values():
+		var cx: float = offset_x + (r.x + r.w * 0.5) * tile_size
+		var cz: float = offset_z + (r.y + r.h * 0.5) * tile_size
+		var extent: float = max(r.w, r.h) * 0.6 * tile_size
+		var light := OmniLight3D.new()
+		var base := Color(1.0, 0.95, 0.7)
+		var base_hsv := { "h": base.h, "s": base.s, "v": base.v }
+		var hue: float = fposmod(base_hsv["h"] + randf_range(-0.35, 0.35), 1.0)
+		var sat: float = clamp(base_hsv["s"] + randf_range(-0.25, 0.35), 0.0, 1.0)
+		var val: float = clamp(base_hsv["v"] + randf_range(-0.15, 0.1), 0.0, 1.0)
+		light.light_color = Color.from_hsv(hue, sat, val)
+		light.light_energy = 32.0
+		light.light_specular = 0.0
+		light.omni_range = sqrt(height * height + extent * extent) * 2.5
+		light.omni_attenuation = 0.5
+		light.position = Vector3(cx, height, cz)
+		add_child(light)
+		room_lights.append(light)
 
 func _build_navmesh(layout) -> void:
 	var vertices := PackedVector3Array()
@@ -88,7 +339,7 @@ func _build_navmesh(layout) -> void:
 	for j in range(layout.MapHeight):
 		for i in range(layout.MapWidth):
 			var ch: String = layout.At(i, j)
-			if ch != "." and ch != "|" and ch != "-":
+			if ch != ".":
 				continue
 			# CCW from +Y
 			var corners := [

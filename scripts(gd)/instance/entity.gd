@@ -15,6 +15,7 @@ signal on_death() ## Emitted when the Entity dies.
 #endregion
 
 #region Variables
+
 const hit_modulate_color = Color(1,0,0,0.5)
 const hit_vibration_distance = 0.25
 const hit_duration = 0.25
@@ -43,26 +44,27 @@ var _health: float = 100
 var invincible_modulate_debounce: bool = false
 var ongoing_hit_modulate_tween: Tween
 var invincibility_timer: float = -1
+var dying = false
 
 #endregion
 
 #region Functions
 
 func _process(delta: float) -> void:
-		if invincibility_timer > 0:
-			invincibility_timer = invincibility_timer - delta
-		else:
-			invincibility_timer = -1
-			invincible = false
-	
-		if invincible:
-			invincible_modulate_debounce = false
-			var invincible_lerp = remap(sin(Time.get_ticks_msec() * invincible_color_lerp_frequency), -1, 1, 0, 1)
-			sprite.modulate = lerp(invincible_color_1, invincible_color_2, invincible_lerp)
-		else:
-			if not invincible_modulate_debounce:
-				sprite.modulate = Color.WHITE
-				invincible_modulate_debounce = true
+	if invincibility_timer > 0:
+		invincibility_timer = invincibility_timer - delta
+	else:
+		invincibility_timer = -1
+		invincible = false
+
+	if invincible:
+		invincible_modulate_debounce = false
+		var invincible_lerp = remap(sin(Time.get_ticks_msec() * invincible_color_lerp_frequency), -1, 1, 0, 1)
+		sprite.modulate = lerp(invincible_color_1, invincible_color_2, invincible_lerp)
+	else:
+		if not invincible_modulate_debounce:
+			sprite.modulate = Color.WHITE
+			invincible_modulate_debounce = true
 
 
 func damage_entity(value: float, direction: Vector3) -> void:
@@ -98,7 +100,10 @@ func make_entity_invincible(duration: float = -1) -> void:
 
 
 func entity_die() -> void:
-	on_death.emit()
+	if not dying:
+		dying = true
+		on_death.emit()
+		set_unused()
 
 
 func set_used() -> void:

@@ -2,6 +2,9 @@ class_name GameManagerGlobal
 extends Node
 ## Global Script that manages gameplay.
 
+## Environment Layer Mask
+const environment_layer: int = 1
+
 var pause_active: bool = false
 var hitstop_active: bool = false
 

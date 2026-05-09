@@ -8,3 +8,4 @@ Layers Help
 6 - Enemy Body
 7 - Enemy Hitbox
 8 - Enemy Attacks
+9 - Collide with Nothing

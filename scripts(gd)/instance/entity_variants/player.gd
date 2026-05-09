@@ -11,7 +11,7 @@ extends EntityInstance
 @export var rigid_body_component: EntityRigidBodyComponent
 @export var state_machine_component: EntityStateMachineComponent
 @export var player_shape: CollisionShape3D
-@export var weapon: WeaponInstance
+@export var automatic_raycast_area_weapon: AutomaticRaycastAreaWeapon
 @export var hitstop_timer: Timer
 
 @export_group("States")
@@ -28,6 +28,7 @@ extends EntityInstance
 
 var aiming_state = EntityState.new(
 	func():
+		
 		sprite.current_sprite_mode = EntitySpriteComponent.SpriteMode.HORIZONTAL_FLIP_RIGIDBODY
 		
 		rigid_body_component.speed = aiming_body_speed
@@ -38,21 +39,21 @@ var aiming_state = EntityState.new(
 		aim_max_distance = aiming_aim_max_distance
 		aim_height = aiming_aim_height
 		aim_component.current_aim_state = aiming_aim_state,
+		
 	func(delta: float):
+		
 		# Link the weapon's firing to the player's fire input.
-		weapon.is_firing = InputManager.primary_fire_input 
+		automatic_raycast_area_weapon.is_firing = InputManager.primary_fire_input 
 
 		if InputManager.sprint_input:
 			state_machine_component.current_state = sprinting_state
 			
-		if sprite.animation == "hit" and sprite.is_playing():
-			return
 		if rigid_body_component.linear_velocity.length() > idle_animation_max_velocity:
-			if sprite.animation != "walk":
-				sprite.play("walk")
+			sprite.current_animation = "walk"
 		else:
-			if sprite.animation != "idle":
-				sprite.play("idle"),
+			sprite.current_animation = "idle"
+			
+		pass,
 	func(delta: float):
 		pass,
 	func():
@@ -71,7 +72,8 @@ var aiming_state = EntityState.new(
 
 var sprinting_state = EntityState.new(
 	func():
-		weapon.is_firing = false
+		
+		automatic_raycast_area_weapon.is_firing = false
 		
 		rigid_body_component.speed = sprinting_body_speed
 		rigid_body_component.acceleration = sprinting_body_accel
@@ -81,25 +83,25 @@ var sprinting_state = EntityState.new(
 		aim_max_distance = sprinting_aim_max_distance
 		aim_height = sprinting_aim_height
 		aim_component.current_aim_state = sprinting_aim_state
+		
 		pass,
 	func(delta: float):
+		
 		if not InputManager.sprint_input:
 			state_machine_component.current_state = aiming_state
 			
-		if sprite.animation == "hit" and sprite.is_playing():
-			return
 		if rigid_body_component.linear_velocity.length() > idle_animation_max_velocity:
-			if sprite.animation != "run":
-				sprite.play("run")
+			sprite.current_animation = "run"
 		else:
-			if sprite.animation != "idle":
-				sprite.play("idle"),
+			sprite.current_animation = "idle"
+			
+		pass,
 	func(delta: float):
 		pass,
 	func():
 		pass,
 	)
-	
+
 @export_group("Advanced")
 @export var aim_ray_length: float = 1000 ## How far the aim ray travels.
 @export_flags_2d_physics var aim_ray_collide_layers: int ## What layers the aim ray will collide with.
@@ -162,7 +164,7 @@ func damage_entity(value: float, direction: Vector3) -> void:
 	
 	# If not invincible, 
 	if not invincible:
-		sprite.play("hit")
+		sprite.animation_override = "pain"
 		# Trigger the player's hitstop, and make them invincible.
 		hitstop_timer.start(hitstop_duration)
 		GameManager.hitstop_active = true

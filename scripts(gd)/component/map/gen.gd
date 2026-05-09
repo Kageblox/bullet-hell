@@ -32,7 +32,7 @@ class Generator:
 		return false
 
 	static func IsDoor(ch: String) -> bool:
-		if ch == "d" or ch == "D":
+		if ch == "-" or ch == "|":
 			return true
 		return false
 
@@ -113,69 +113,69 @@ class Generator:
 		)
 		map.Run()
 
-		# for j in range(map.MapHeight):
-		# 	for i in range(map.MapWidth):
-		# 		var ij = map.grid[j][i]
-		# 		var left = IsWall(map.At(i - 1, j))
-		# 		var right = IsWall(map.At(i + 1, j))
-		# 		var above = IsWall(map.At(i, j - 1))
-		# 		var below = IsWall(map.At(i, j + 1))
-		# 		if ij == ".":
-		# 			if left or right:
-		# 				map.grid[j][i] = "v"
-		# 			elif above or below:
-		# 				map.grid[j][i] = "h"
+		for j in range(map.MapHeight):
+			for i in range(map.MapWidth):
+				var ij = map.grid[j][i]
+				var left = IsWall(map.At(i - 1, j))
+				var right = IsWall(map.At(i + 1, j))
+				var above = IsWall(map.At(i, j - 1))
+				var below = IsWall(map.At(i, j + 1))
+				if ij == ".":
+					if left or right:
+						map.grid[j][i] = "v"
+					elif above or below:
+						map.grid[j][i] = "h"
 
-		# for j in range(map.MapHeight):
-		# 	for i in range(map.MapWidth):
-		# 		var ij = map.grid[j][i]
-		# 		var left = map.At(i - 1, j)
-		# 		var right = map.At(i + 1, j)
-		# 		var above = map.At(i, j - 1)
-		# 		var below = map.At(i, j + 1)
-		# 		var wleft = IsPerimeter(left)
-		# 		var wright = IsPerimeter(right)
-		# 		var wabove = IsPerimeter(above)
-		# 		var wbelow = IsPerimeter(below)
-		# 		if ij == "h" or ij == "v":
-		# 			if wleft and wbelow:
-		# 				map.grid[j][i] = "."
-		# 			elif wleft and wabove:
-		# 				map.grid[j][i] = "."
-		# 			elif wright and wbelow:
-		# 				map.grid[j][i] = "."
-		# 			elif wright and wabove:
-		# 				map.grid[j][i] = "."
+		for j in range(map.MapHeight):
+			for i in range(map.MapWidth):
+				var ij = map.grid[j][i]
+				var left = map.At(i - 1, j)
+				var right = map.At(i + 1, j)
+				var above = map.At(i, j - 1)
+				var below = map.At(i, j + 1)
+				var wleft = IsPerimeter(left)
+				var wright = IsPerimeter(right)
+				var wabove = IsPerimeter(above)
+				var wbelow = IsPerimeter(below)
+				if ij == "h" or ij == "v":
+					if wleft and wbelow:
+						map.grid[j][i] = "."
+					elif wleft and wabove:
+						map.grid[j][i] = "."
+					elif wright and wbelow:
+						map.grid[j][i] = "."
+					elif wright and wabove:
+						map.grid[j][i] = "."
 
-		# for j in range(map.MapHeight):
-		# 	for i in range(map.MapWidth):
-		# 		var ij = map.grid[j][i]
-		# 		var left = map.At(i - 1, j)
-		# 		var right = map.At(i + 1, j)
-		# 		var above = map.At(i, j - 1)
-		# 		var below = map.At(i, j + 1)
-		# 		if (ij == ".") and (IsPerimeter(left) or IsPerimeter(right) or IsPerimeter(above) or IsPerimeter(below)):
-		# 			if not IsWall(left) and not IsWall(right) and not IsWall(above) and not IsWall(below):
-		# 				map.grid[j][i] = "C"
+		for j in range(map.MapHeight):
+			for i in range(map.MapWidth):
+				var ij = map.grid[j][i]
+				var left = map.At(i - 1, j)
+				var right = map.At(i + 1, j)
+				var above = map.At(i, j - 1)
+				var below = map.At(i, j + 1)
+				if (ij == ".") and (IsPerimeter(left) or IsPerimeter(right) or IsPerimeter(above) or IsPerimeter(below)):
+					if not IsWall(left) and not IsWall(right) and not IsWall(above) and not IsWall(below):
+						map.grid[j][i] = "C"
 
-		# for j in range(map.MapHeight):
-		# 	for i in range(map.MapWidth):
-		# 		var ij = map.grid[j][i]
-		# 		var left = IsInnerPerimeter(map.At(i - 1, j))
-		# 		var right = IsInnerPerimeter(map.At(i + 1, j))
-		# 		var above = IsInnerPerimeter(map.At(i, j - 1))
-		# 		var below = IsInnerPerimeter(map.At(i, j + 1))
-		# 		if IsInnerPerimeter(ij):
-		# 			if left and below:
-		# 				map.grid[j][i] = "."
-		# 			elif left and above:
-		# 				map.grid[j][i] = "."
-		# 			elif right and below:
-		# 				map.grid[j][i] = "."
-		# 			elif right and above:
-		# 				map.grid[j][i] = "."
-		# 			elif left or right:
-		# 				map.grid[j][i] = "c"
+		for j in range(map.MapHeight):
+			for i in range(map.MapWidth):
+				var ij = map.grid[j][i]
+				var left = IsInnerPerimeter(map.At(i - 1, j))
+				var right = IsInnerPerimeter(map.At(i + 1, j))
+				var above = IsInnerPerimeter(map.At(i, j - 1))
+				var below = IsInnerPerimeter(map.At(i, j + 1))
+				if IsInnerPerimeter(ij):
+					if left and below:
+						map.grid[j][i] = "."
+					elif left and above:
+						map.grid[j][i] = "."
+					elif right and below:
+						map.grid[j][i] = "."
+					elif right and above:
+						map.grid[j][i] = "."
+					elif left or right:
+						map.grid[j][i] = "c"
 
 		return map;
 
@@ -486,6 +486,28 @@ class LayoutGenerator:
 						rooms[sub.id] = sub
 						subrooms[sub.id] = sub
 
+		# Remove pillars that ended up too close to a door
+		var pillar_door_radius: int = 2
+		for pj in range(MapHeight):
+			for pi in range(MapWidth):
+				if grid[pj][pi] != "P":
+					continue
+				var has_nearby_door: bool = false
+				for dj in range(-pillar_door_radius, pillar_door_radius + 1):
+					if has_nearby_door:
+						break
+					for di in range(-pillar_door_radius, pillar_door_radius + 1):
+						var ni: int = pi + di
+						var nj: int = pj + dj
+						if ni < 0 or nj < 0 or ni >= MapWidth or nj >= MapHeight:
+							continue
+						var nch: String = grid[nj][ni]
+						if nch == "|" or nch == "-":
+							has_nearby_door = true
+							break
+				if has_nearby_door:
+					grid[pj][pi] = "."
+
 		for r in mainRooms.values():
 			var eccentricity = CalculateEccentricity(r.id)
 			r.Eccentricity = eccentricity
@@ -587,6 +609,12 @@ class LayoutGenerator:
 class Room:
 	static var nextRoomId: int = 1
 
+	enum Style {
+		# INSET
+		NONE,
+		PILLARS,
+	}
+
 	# Unique room ID
 	var id: int
 
@@ -605,10 +633,10 @@ class Room:
 	# Dictionary of rooms connected to this room in each direction
 	var connect: Array
 
-	# Reference to our ASCII layout generator
-	var Generator
+	# Reference to our ASCII layout gen
+	var gen
 
-	# Random number generator
+	# Random number gen
 	var rand: RandomNumberGenerator
 
 	var Eccentricity: int = 0 # calculated after generation
@@ -618,31 +646,33 @@ class Room:
 
 	var HasPillars: bool = false
 
+	var style: Style = Style.NONE
+
 	# This function draws a specific room at the given location with the given
 	#   floor character.
 	# It draws the given walls around the room, and only blits existing values
 	#   unless clobber is set.
 	# It also ignores the given walls when drawing
-	static func DrawRoom(Generator, rid: int, x: int, y: int, w: int, h: int, floor: String = ".", clobber: bool = true, walls: int = 15, ignore: int = 0) -> bool:
+	static func DrawRoom(gen, rid: int, x: int, y: int, w: int, h: int, floor: String = ".", clobber: bool = true, walls: int = 15, ignore: int = 0) -> bool:
 		for j in range(y, y + h):
 			for i in range(x, x + w):
 				if (i == x and (walls & Wall.LEFT) != 0) or \
 				   (i == x + w - 1 and (walls & Wall.RIGHT) != 0) or \
 				   (j == y and (walls & Wall.TOP) != 0) or \
 				   (j == y + h - 1 and (walls & Wall.BOTTOM) != 0):
-					if not clobber or Generator.At(i, j) == " ":
+					if not clobber or gen.At(i, j) == " ":
 						# if corner
 						if (i == x and j == y) or (i == x + w - 1 and j == y) or \
 						   (i == x and j == y + h - 1) or (i == x + w - 1 and j == y + h - 1):
-							Generator.At(i, j, "#")
+							gen.At(i, j, "#")
 						# if horizontal wall
 						elif j == y or j == y + h - 1:
-							Generator.At(i, j, "H")
+							gen.At(i, j, "H")
 						# if vertical wall
 						elif i == x or i == x + w - 1:
-							Generator.At(i, j, "V")
+							gen.At(i, j, "V")
 						else:
-							Generator.At(i, j, "#")
+							gen.At(i, j, "#")
 				elif (i == x and (ignore & Wall.LEFT) != 0) or \
 					 (i == x + w - 1 and (ignore & Wall.RIGHT) != 0) or \
 					 (j == y and (ignore & Wall.TOP) != 0) or \
@@ -652,11 +682,11 @@ class Room:
 					var dist_from_center: float = sqrt(pow(i - x - w / 2, 2) + pow(j - y - h / 2, 2))
 					var radius: float = sqrt(pow(w / 2, 2) + pow(h / 2, 2))
 					var occlusion_val: float = dist_from_center / radius
-					Generator.At(i, j, floor, occlusion_val, rid)
+					gen.At(i, j, floor, occlusion_val, rid)
 		return true
 
-	func _init(Generator, x: int, y: int, w: int, h: int, sub: bool = false, doors: int = 0):
-		self.Generator = Generator
+	func _init(gen, x: int, y: int, w: int, h: int, sub: bool = false, doors: int = 0):
+		self.gen = gen
 		# Get the next room ID
 		# Since drawing a room can fail, you can decrement this when
 		#   destroying the room you just created.
@@ -675,10 +705,10 @@ class Room:
 			connect.append({})
 
 	# This function checks if a room can be drawn at the given location
-	func CheckRoom(Generator, x: int, y: int, w: int, h: int, ignore: int = 0) -> bool:
+	func CheckRoom(gen, x: int, y: int, w: int, h: int, ignore: int = 0) -> bool:
 		for j in range(y, y + h):
 			for i in range(x, x + w):
-				var ch = Generator.At(i, j)
+				var ch = gen.At(i, j)
 				if ch == "":
 					return false
 				if (i == x and (ignore & Wall.LEFT) != 0) or \
@@ -693,7 +723,7 @@ class Room:
 	# This function checks if this room can be drawn at the given location.
 	# It ignores the given walls when checking.
 	func Check(ignore: int = 0) -> bool:
-		return CheckRoom(self.Generator, x, y, w, h, ignore)
+		return CheckRoom(self.gen, x, y, w, h, ignore)
 
 	# This function draws a specific room at the given location with the given
 	#   floor character.
@@ -702,26 +732,35 @@ class Room:
 	# It also ignores the given walls when drawing
 	func Draw(check: bool = true, walls: int = 15, ignore: int = 0, clobber: bool = true) -> bool:
 		if check:
-			if not CheckRoom(self.Generator, x, y, w, h, ignore):
+			if not CheckRoom(self.gen, x, y, w, h, ignore):
 				return false
 
 		# Attempt to draw the room
-		var result: bool = DrawRoom(self.Generator, id, x, y, w, h, floor, clobber, walls, ignore)
+		var result: bool = DrawRoom(self.gen, id, x, y, w, h, floor, clobber, walls, ignore)
 		if not result:
 			return false
 
-		# Add random doors on each given side
+		# Add random doors on each given side. Skip a door entirely when the
+		# 2nd cell would be blocked, rather than placing a single-tile door.
 		if doors != 0:
 			var xEntry: int = rand.randi_range(1, w - 3)
 			var yEntry: int = rand.randi_range(1, h - 3)
 			if (doors & Wall.LEFT) != 0:
-				self.Generator.At(x, y + yEntry, "|")
+				if yEntry < h - 2 and not DoorBlocked(x, y + yEntry + 1, "|"):
+					self.gen.At(x, y + yEntry, "|")
+					self.gen.At(x, y + yEntry + 1, "|")
 			if (doors & Wall.RIGHT) != 0:
-				self.Generator.At(x + w - 1, y + yEntry, "|")
+				if yEntry < h - 2 and not DoorBlocked(x + w - 1, y + yEntry + 1, "|"):
+					self.gen.At(x + w - 1, y + yEntry, "|")
+					self.gen.At(x + w - 1, y + yEntry + 1, "|")
 			if (doors & Wall.TOP) != 0:
-				self.Generator.At(x + xEntry, y, "-")
+				if xEntry < w - 2 and not DoorBlocked(x + xEntry + 1, y, "-"):
+					self.gen.At(x + xEntry, y, "-")
+					self.gen.At(x + xEntry + 1, y, "-")
 			if (doors & Wall.BOTTOM) != 0:
-				self.Generator.At(x + xEntry, y + h - 1, "-")
+				if xEntry < w - 2 and not DoorBlocked(x + xEntry + 1, y + h - 1, "-"):
+					self.gen.At(x + xEntry, y + h - 1, "-")
+					self.gen.At(x + xEntry + 1, y + h - 1, "-")
 
 		return result
 
@@ -732,7 +771,7 @@ class Room:
 
 		for j in range(y, y + h):
 			for i in range(x, x + w):
-				var ch = self.Generator.At(i, j)
+				var ch = self.gen.At(i, j)
 				if ch != "." and ch != "H" and ch != "V":
 					return false
 
@@ -749,52 +788,56 @@ class Room:
 			for i in range(x, x + w):
 				# corners
 				if i == x and j == y:
-					self.Generator.At(i, j, "#")
+					self.gen.At(i, j, "#")
 				elif i == x + w - 1 and j == y:
-					self.Generator.At(i, j, "#")
+					self.gen.At(i, j, "#")
 				elif i == x and j == y + h - 1:
-					self.Generator.At(i, j, "#")
+					self.gen.At(i, j, "#")
 				elif i == x + w - 1 and j == y + h - 1:
-					self.Generator.At(i, j, "#")
+					self.gen.At(i, j, "#")
 				# vertical wall
 				elif i == x or i == x + w - 1:
-					self.Generator.At(i, j, "V")
+					self.gen.At(i, j, "V")
 				# horizontal wall
 				elif j == y or j == y + h - 1:
-					self.Generator.At(i, j, "H")
+					self.gen.At(i, j, "H")
 				# enclosed space (do not draw here)
 				else:
-					self.Generator.At(i, j, mid)
+					self.gen.At(i, j, mid)
 
 		return true
 
-	func Stylize() -> bool:
+	func Stylize() -> Style:
 		var r: bool = false # If ANY part succeeds, we need to disable splits
 		if w < 8 or h < 8:
-			return false
+			return Style.NONE
 		var randomValue: float = rand.randf()
+		# if randomValue < 0.2:
+		# 	var maxInset: int = min(w, h) / 2 - 1
+		# 	var inset: int
+		# 	if maxInset <= 3:
+		# 		return false
+		# 	inset = rand.randi_range(3, maxInset - 1)
+		# 	if Cut(x + inset, y + inset, w - inset * 2, h - inset * 2):
+		# 		CanSplit = false
+		#		style = Style.INSET
+		# 		return INSET
 		if randomValue < 0.2:
-			var maxInset: int = min(w, h) / 2 - 1
-			var inset: int
-			if maxInset <= 3:
-				return false
-			inset = rand.randi_range(3, maxInset - 1)
-			if Cut(x + inset, y + inset, w - inset * 2, h - inset * 2):
-				r = true
-		elif randomValue < 0.3:
 			if MakePillars():
-				r = true
-		if r:
-			CanSplit = false
-		return r
+				CanSplit = false
+				self.style = Style.PILLARS
+				return style
+			
+		self.style = Style.NONE
+		return style
 
 	func MakePillars() -> bool:
 		if w < 7 or h < 7:
 			return false
-		self.Generator.At(x + 2, y + 2, "P")
-		self.Generator.At(x + w - 3, y + 2, "P")
-		self.Generator.At(x + 2, y + h - 3, "P")
-		self.Generator.At(x + w - 3, y + h - 3, "P")
+		self.gen.At(x + 2, y + 2, "P")
+		self.gen.At(x + w - 3, y + 2, "P")
+		self.gen.At(x + 2, y + h - 3, "P")
+		self.gen.At(x + w - 3, y + h - 3, "P")
 		CanSplit = false
 		HasPillars = true
 		return true
@@ -802,8 +845,8 @@ class Room:
 	# This function returns a random size for a new room, given the current
 	#  room's size and the global min/max size and variance.
 	func RandomSize() -> Array:
-		var w: int = rand.randi_range(self.Generator.MinSize, self.Generator.MaxSize - 1)
-		var h: int = rand.randi_range(self.Generator.MinSize, self.Generator.MaxSize - 1)
+		var w: int = rand.randi_range(self.gen.MinSize, self.gen.MaxSize - 1)
+		var h: int = rand.randi_range(self.gen.MinSize, self.gen.MaxSize - 1)
 		# Variance works by gradually adjust the size of the new room by a
 		#   specific amount within the range of the variance.
 		return [w, h]
@@ -811,17 +854,17 @@ class Room:
 	func DoorBlocked(i: int, j: int, ch: String) -> bool:
 		var g
 		if ch == "|":
-			g = self.Generator.At(i - 1, j)
+			g = self.gen.At(i - 1, j)
 			if g != "." and g != " ":
 				return true
-			g = self.Generator.At(i + 1, j)
+			g = self.gen.At(i + 1, j)
 			if g != "." and g != " ":
 				return true
 		elif ch == "-":
-			g = self.Generator.At(i, j - 1)
+			g = self.gen.At(i, j - 1)
 			if g != "." and g != " ":
 				return true
-			g = self.Generator.At(i, j + 1)
+			g = self.gen.At(i, j + 1)
 			if g != "." and g != " ":
 				return true
 		return false
@@ -842,20 +885,21 @@ class Room:
 			var ry_min: int = y + entry - rh + 2
 			var ry_max: int = y + entry - 1
 			var ry: int = rand.randi_range(ry_min, ry_max - 1)
-			if not self.Generator.InBounds(rx, ry, rw, rh):
+			if not self.gen.InBounds(rx, ry, rw, rh):
 				return null
-			if not self.Generator.CheckSpace(rx + 1, ry + 1, rw - 2, rh - 2):
+			if not self.gen.CheckSpace(rx + 1, ry + 1, rw - 2, rh - 2):
 				return null
-			var r = Room.new(self.Generator, rx, ry, rw, rh)
+			# Skip when a double door wouldn't fit (2nd cell would land on a wall)
+			if entry >= h - 2 or ry == ry_min:
+				return null
+			var r = Room.new(self.gen, rx, ry, rw, rh)
 			if r.Check(WALL_ALL):
-				self.Generator.At(x, y + entry, "|")
+				self.gen.At(x, y + entry, "|")
 				r.connect[Direction.RIGHT][id] = self
 				self.connect[dir][r.id] = r
 				if not r.Draw(false):
 					print("Drawing failed.")
-				if entry < h - 2:
-					if not DoorBlocked(x, y + entry + 1, "|"):
-						self.Generator.At(x, y + entry + 1, "|")
+				self.gen.At(x, y + entry + 1, "|")
 				r.Stylize()
 				return r
 			else:
@@ -872,20 +916,20 @@ class Room:
 			var ry_min: int = y + entry - rh + 2
 			var ry_max: int = y + entry - 1
 			var ry: int = rand.randi_range(ry_min, ry_max - 1)
-			if not self.Generator.InBounds(rx, ry, rw, rh):
+			if not self.gen.InBounds(rx, ry, rw, rh):
 				return null
-			if not self.Generator.CheckSpace(rx + 1, ry + 1, rw - 2, rh - 2):
+			if not self.gen.CheckSpace(rx + 1, ry + 1, rw - 2, rh - 2):
 				return null
-			var r = Room.new(self.Generator, rx, ry, rw, rh)
+			if entry >= h - 2 or ry == ry_min:
+				return null
+			var r = Room.new(self.gen, rx, ry, rw, rh)
 			if r.Check(WALL_ALL):
-				self.Generator.At(x + w - 1, y + entry, "|")
+				self.gen.At(x + w - 1, y + entry, "|")
 				r.connect[Direction.LEFT][id] = self
 				self.connect[dir][r.id] = r
 				if not r.Draw(false):
 					print("Drawing failed.")
-				if entry < h - 2:
-					if not DoorBlocked(x + w - 1, y + entry + 1, "|"):
-						self.Generator.At(x + w - 1, y + entry + 1, "|")
+				self.gen.At(x + w - 1, y + entry + 1, "|")
 				r.Stylize()
 				return r
 			else:
@@ -901,20 +945,20 @@ class Room:
 			var rx_min: int = x + entry - rw + 2
 			var rx_max: int = x + entry - 1
 			var rx: int = rand.randi_range(rx_min, rx_max - 1)
-			if not self.Generator.InBounds(rx, ry, rw, rh):
+			if not self.gen.InBounds(rx, ry, rw, rh):
 				return null
-			if not self.Generator.CheckSpace(rx + 1, ry + 1, rw - 2, rh - 2):
+			if not self.gen.CheckSpace(rx + 1, ry + 1, rw - 2, rh - 2):
 				return null
-			var r = Room.new(self.Generator, rx, ry, rw, rh)
+			if entry >= w - 2 or rx == rx_min:
+				return null
+			var r = Room.new(self.gen, rx, ry, rw, rh)
 			if r.Check(WALL_ALL):
-				self.Generator.At(x + entry, y, "-")
+				self.gen.At(x + entry, y, "-")
 				r.connect[Direction.DOWN][id] = self
 				self.connect[dir][r.id] = r
 				if not r.Draw(false):
 					print("Drawing failed.")
-				if entry < w - 2:
-					if not DoorBlocked(x + entry + 1, y, "-"):
-						self.Generator.At(x + entry + 1, y, "-")
+				self.gen.At(x + entry + 1, y, "-")
 				r.Stylize()
 				return r
 			else:
@@ -930,20 +974,20 @@ class Room:
 			var rx_min: int = x + entry - rw + 2
 			var rx_max: int = x + entry - 1
 			var rx: int = rand.randi_range(rx_min, rx_max - 1)
-			if not self.Generator.InBounds(rx, ry, rw, rh):
+			if not self.gen.InBounds(rx, ry, rw, rh):
 				return null
-			if not self.Generator.CheckSpace(rx + 1, ry + 1, rw - 2, rh - 2):
+			if not self.gen.CheckSpace(rx + 1, ry + 1, rw - 2, rh - 2):
 				return null
-			var r = Room.new(self.Generator, rx, ry, rw, rh)
+			if entry >= w - 2 or rx == rx_min:
+				return null
+			var r = Room.new(self.gen, rx, ry, rw, rh)
 			if r.Check(WALL_ALL):
-				self.Generator.At(x + entry, y + h - 1, "-")
+				self.gen.At(x + entry, y + h - 1, "-")
 				r.connect[Direction.UP][id] = self
 				self.connect[dir][r.id] = r
 				if not r.Draw(false):
 					print("Drawing failed.")
-				if entry < w - 2:
-					if not DoorBlocked(x + entry + 1, y + h - 1, "|"):
-						self.Generator.At(x + entry + 1, y + h - 1, "|")
+				self.gen.At(x + entry + 1, y + h - 1, "-")
 				r.Stylize()
 				return r
 			else:
@@ -960,11 +1004,23 @@ class Room:
 		if h < 6:
 			return false
 
-		for i in range(w):
-			self.Generator.At(x + i, y + h / 2, "#")
-
+		@warning_ignore("integer_division")
+		var split_row: int = y + h / 2
 		var entry: int = rand.randi_range(1, w - 3)
-		self.Generator.At(x + entry, y + h / 2, "-")
+		# Skip the split when a double door wouldn't fit
+		if entry >= w - 2 or DoorBlocked(x + entry + 1, split_row, "-"):
+			return false
+
+		for i in range(w):
+			# Preserve external doors at the corners where the split meets the
+			# sub-room's outer walls.
+			var cell = self.gen.At(x + i, split_row)
+			if cell == "|" or cell == "-":
+				continue
+			self.gen.At(x + i, split_row, "#")
+
+		self.gen.At(x + entry, split_row, "-")
+		self.gen.At(x + entry + 1, split_row, "-")
 		return true
 
 	# Vertically split the room in half, if possible. Add doors to the split.
@@ -972,11 +1028,20 @@ class Room:
 		if w < 6:
 			return false
 
-		for j in range(h):
-			self.Generator.At(x + w / 2, y + j, "#")
-
+		@warning_ignore("integer_division")
+		var split_col: int = x + w / 2
 		var entry: int = rand.randi_range(1, h - 3)
-		self.Generator.At(x + w / 2, y + entry, "|")
+		if entry >= h - 2 or DoorBlocked(split_col, y + entry + 1, "|"):
+			return false
+
+		for j in range(h):
+			var cell = self.gen.At(split_col, y + j)
+			if cell == "|" or cell == "-":
+				continue
+			self.gen.At(split_col, y + j, "#")
+
+		self.gen.At(split_col, y + entry, "|")
+		self.gen.At(split_col, y + entry + 1, "|")
 		return true
 
 	func DoorCheck() -> bool:
@@ -985,15 +1050,15 @@ class Room:
 		for j in range(y, y + h):
 			for i in range(x, x + w):
 				if i == x or i == x + w - 1 or j == y or j == y + h - 1:
-					if self.Generator.At(i, j) == "|":
+					if self.gen.At(i, j) == "|":
 						# check on both sides of door for '.'
-						if self.Generator.At(i - 1, j) != "." or self.Generator.At(i + 1, j) != ".":
+						if self.gen.At(i - 1, j) != "." or self.gen.At(i + 1, j) != ".":
 							print("Door to nowhere! (h)")
 							fail = true
 						has_door = true
-					if self.Generator.At(i, j) == "-":
+					if self.gen.At(i, j) == "-":
 						# check on both sides of door for '.'
-						if self.Generator.At(i, j - 1) != "." or self.Generator.At(i, j + 1) != ".":
+						if self.gen.At(i, j - 1) != "." or self.gen.At(i, j + 1) != ".":
 							print("Door to nowhere! (v)")
 							fail = true
 						has_door = true
@@ -1002,8 +1067,8 @@ class Room:
 		return has_door and not fail
 
 	func InBounds() -> bool:
-		if x < 0 or x + w >= self.Generator.MapWidth:
+		if x < 0 or x + w >= self.gen.MapWidth:
 			return false
-		if y < 0 or y + h >= self.Generator.MapHeight:
+		if y < 0 or y + h >= self.gen.MapHeight:
 			return false
 		return true

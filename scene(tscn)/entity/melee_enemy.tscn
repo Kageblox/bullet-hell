@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://buqj58rw7dcf7"]
+
+[ext_resource type="Script" uid="uid://bti5d7oc735se" path="res://scripts(gd)/instance/entity_variants/melee_enemy.gd" id="1_3gotm"]
+[ext_resource type="Script" uid="uid://b86asdwgrslnk" path="res://scripts(gd)/component/entity/entity_rigid_body.gd" id="2_tlk1t"]
+[ext_resource type="Script" uid="uid://cwss8p0mewejj" path="res://scripts(gd)/component/entity/entity_hitbox.gd" id="3_da8ot"]
+[ext_resource type="Script" uid="uid://dy4ooeu54ph26" path="res://scripts(gd)/component/entity/entity_pathfinder.gd" id="4_6173e"]
+[ext_resource type="Script" uid="uid://by1u3602we537" path="res://scripts(gd)/component/entity/entity_aim.gd" id="5_eb8a7"]
+[ext_resource type="Script" uid="uid://ch4bt6673irm0" path="res://scripts(gd)/instance/weapon_variants/chargable_area_weapon.gd" id="7_3gotm"]
+[ext_resource type="Script" uid="uid://6npcukmkjimk" path="res://scripts(gd)/component/weapon/weapon_area.gd" id="7_v7yuc"]
+[ext_resource type="Shader" uid="uid://dw2lls6eq1sne" path="res://resource(tres)/shaders/box_attack_indicator_shader.gdshader" id="8_mq1ff"]
+[ext_resource type="Script" uid="uid://dt24tqrhdktd3" path="res://scripts(gd)/component/weapon/chargable_weapon_indicator.gd" id="9_3gotm"]
+[ext_resource type="SpriteFrames" uid="uid://cy81g8d0ppnnk" path="res://resource(tres)/sprite_frames/test_sprite_frames.tres" id="10_ukort"]
+[ext_resource type="Script" uid="uid://dy1jksmmov57f" path="res://scripts(gd)/component/entity/entity_sprite.gd" id="11_aflc7"]
+[ext_resource type="Script" uid="uid://bbd8bv8gd3rmg" path="res://scripts(gd)/component/entity/entity_state_machine.gd" id="12_vjrhm"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5t3ln"]
+friction = 0.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_d2fiw"]
+radius = 0.75
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_3lili"]
+radius = 0.75
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qiqw2"]
+size = Vector3(1.5, 1, 2)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6cjme"]
+render_priority = 0
+shader = ExtResource("8_mq1ff")
+shader_parameter/predicted_color = Color(1, 0, 0, 0.25)
+shader_parameter/charge_color = Color(1, 0, 0, 0.5)
+shader_parameter/charge = 0.5
+shader_parameter/smoothing = 0.001
+
+[sub_resource type="QuadMesh" id="QuadMesh_8sshd"]
+orientation = 1
+
+[node name="MeleeEnemy" type="Node3D" unique_id=1743485898 node_paths=PackedStringArray("aim_component", "hitbox_component", "pathfinder_component", "rigid_body_component", "state_machine_component", "chargable_area_weapon", "sprite")]
+script = ExtResource("1_3gotm")
+aim_component = NodePath("EnemyBody/EnemyAim")
+hitbox_component = NodePath("EnemyBody/EnemyShape/EnemyHitbox")
+pathfinder_component = NodePath("EnemyBody/EnemyPathfinder")
+rigid_body_component = NodePath("EnemyBody")
+state_machine_component = NodePath("EnemyStateMachine")
+chargable_area_weapon = NodePath("EnemyBody/EnemyAim/ChargableAreaWeapon")
+sprite = NodePath("EnemyBody/EnemySprite")
+pool_name = "melee_enemy"
+health = 100.0
+
+[node name="EnemyBody" type="RigidBody3D" parent="." unique_id=1979212634]
+collision_layer = 32
+collision_mask = 37
+axis_lock_linear_y = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+physics_material_override = SubResource("PhysicsMaterial_5t3ln")
+script = ExtResource("2_tlk1t")
+speed = 2.5
+
+[node name="EnemyShape" type="CollisionShape3D" parent="EnemyBody" unique_id=890413995]
+shape = SubResource("SphereShape3D_d2fiw")
+
+[node name="EnemyHitbox" type="Area3D" parent="EnemyBody/EnemyShape" unique_id=474999681]
+collision_layer = 64
+collision_mask = 16
+script = ExtResource("3_da8ot")
+
+[node name="EnemyHitboxShape" type="CollisionShape3D" parent="EnemyBody/EnemyShape/EnemyHitbox" unique_id=1311698564]
+shape = SubResource("SphereShape3D_3lili")
+
+[node name="EnemyPathfinder" type="NavigationAgent3D" parent="EnemyBody" unique_id=1592748779]
+avoidance_layers = 33
+avoidance_mask = 33
+script = ExtResource("4_6173e")
+metadata/_custom_type_script = "uid://dy4ooeu54ph26"
+
+[node name="EnemyAim" type="Node3D" parent="EnemyBody" unique_id=1627931383]
+script = ExtResource("5_eb8a7")
+
+[node name="ChargableAreaWeapon" type="Node3D" parent="EnemyBody/EnemyAim" unique_id=70456461 node_paths=PackedStringArray("area_component", "indicator_component")]
+script = ExtResource("7_3gotm")
+area_component = NodePath("WeaponAreaComponent")
+indicator_component = NodePath("WeaponIndicator")
+
+[node name="WeaponAreaComponent" type="Area3D" parent="EnemyBody/EnemyAim/ChargableAreaWeapon" unique_id=650782995]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+collision_layer = 256
+collision_mask = 24
+monitorable = false
+script = ExtResource("7_v7yuc")
+
+[node name="WeaponAreaComponentShape" type="CollisionShape3D" parent="EnemyBody/EnemyAim/ChargableAreaWeapon/WeaponAreaComponent" unique_id=2041612651]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+shape = SubResource("BoxShape3D_qiqw2")
+
+[node name="WeaponIndicator" type="MeshInstance3D" parent="EnemyBody/EnemyAim/ChargableAreaWeapon" unique_id=1426588433]
+transform = Transform3D(-8.742278e-08, 0, -1.5, 0, 1.5, 0, 2, 0, -6.556708e-08, 0, 0, -1.5)
+visible = false
+layers = 256
+material_override = SubResource("ShaderMaterial_6cjme")
+mesh = SubResource("QuadMesh_8sshd")
+script = ExtResource("9_3gotm")
+
+[node name="EnemySprite" type="AnimatedSprite3D" parent="EnemyBody" unique_id=68324231]
+axis = 1
+sprite_frames = ExtResource("10_ukort")
+animation = &"idle"
+script = ExtResource("11_aflc7")
+
+[node name="EnemyStateMachine" type="Node" parent="." unique_id=418073013]
+script = ExtResource("12_vjrhm")
+metadata/_custom_type_script = "uid://bbd8bv8gd3rmg"

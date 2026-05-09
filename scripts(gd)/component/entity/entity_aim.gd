@@ -47,6 +47,7 @@ func _process(delta: float) -> void:
 					_target_angle = forward_vector.signed_angle_to(entity.rigid_body_component.linear_velocity, Vector3.UP)
 		
 		AimState.INACTIVE: # The Entity does not aim towards anything.
+			_target_angle = 0
 			pass
 
 	# Calculate the allowed turn for this frame,
