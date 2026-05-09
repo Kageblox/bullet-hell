@@ -1,0 +1,198 @@
+[gd_scene format=3 uid="uid://0xa7fqgxcppg"]
+
+[ext_resource type="Script" uid="uid://dxr012ptc6ss3" path="res://scripts(gd)/instance/entity_variants/player.gd" id="1_kbl78"]
+[ext_resource type="Script" uid="uid://b86asdwgrslnk" path="res://scripts(gd)/component/entity/entity_rigid_body.gd" id="2_0q38j"]
+[ext_resource type="Script" uid="uid://by1u3602we537" path="res://scripts(gd)/component/entity/entity_aim.gd" id="3_yd36o"]
+[ext_resource type="Script" uid="uid://d1gsxjkhrkpst" path="res://scripts(gd)/instance/weapon_variants/automatic_raycast_area_weapon.gd" id="4_0q38j"]
+[ext_resource type="Script" uid="uid://6gikc25n2w6v" path="res://scripts(gd)/component/weapon/weapon_raycast.gd" id="5_yd36o"]
+[ext_resource type="Script" uid="uid://6npcukmkjimk" path="res://scripts(gd)/component/weapon/weapon_area.gd" id="6_2fyw6"]
+[ext_resource type="Script" uid="uid://cwss8p0mewejj" path="res://scripts(gd)/component/entity/entity_hitbox.gd" id="6_so3tq"]
+[ext_resource type="SpriteFrames" uid="uid://k2ssd4i0lxf5" path="res://resource(tres)/sprite_frames/rat_sprite_frames.tres" id="7_2fyw6"]
+[ext_resource type="Script" uid="uid://bbd8bv8gd3rmg" path="res://scripts(gd)/component/entity/entity_state_machine.gd" id="7_kh7kf"]
+[ext_resource type="Texture2D" uid="uid://8wd7bxygkndh" path="res://images(png)/gameplay/entities/bullet/bullet_explosion.png" id="7_so3tq"]
+[ext_resource type="Script" uid="uid://dy1jksmmov57f" path="res://scripts(gd)/component/entity/entity_sprite.gd" id="7_yd36o"]
+[ext_resource type="Script" uid="uid://d1pu3lpb73s35" path="res://scripts(gd)/component/weapon/weapon_sprite.gd" id="8_kh7kf"]
+[ext_resource type="Script" uid="uid://bxaw42agatvpg" path="res://scripts(gd)/modified/gameplay/camera_3d_modified.gd" id="8_qhnqe"]
+[ext_resource type="Material" uid="uid://coadvr21cvjd8" path="res://resource(tres)/materials/ray_material.tres" id="9_kh7kf"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5t3ln"]
+friction = 0.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_d2fiw"]
+radius = 0.75
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_2imew"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qhnqe"]
+atlas = ExtResource("7_so3tq")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hn71w"]
+atlas = ExtResource("7_so3tq")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_afujl"]
+atlas = ExtResource("7_so3tq")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8f2ef"]
+atlas = ExtResource("7_so3tq")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k3qaw"]
+atlas = ExtResource("7_so3tq")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8yxhp"]
+atlas = ExtResource("7_so3tq")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5hisg"]
+atlas = ExtResource("7_so3tq")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u2kf3"]
+atlas = ExtResource("7_so3tq")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_l3e8u"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qhnqe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hn71w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_afujl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8f2ef")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k3qaw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8yxhp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5hisg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u2kf3")
+}],
+"loop": false,
+"name": &"beam",
+"speed": 24.0
+}]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_so3tq"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_3lili"]
+radius = 0.75
+
+[node name="Player" type="Node3D" unique_id=1758969589 node_paths=PackedStringArray("player_camera", "aim_component", "hitbox_component", "rigid_body_component", "state_machine_component", "player_shape", "automatic_raycast_area_weapon", "hitstop_timer", "sprite")]
+script = ExtResource("1_kbl78")
+player_camera = NodePath("PlayerCamera")
+aim_component = NodePath("PlayerBody/PlayerShape/PlayerAim")
+hitbox_component = NodePath("PlayerBody/PlayerShape/PlayerHitbox")
+rigid_body_component = NodePath("PlayerBody")
+state_machine_component = NodePath("PlayerStateMachine")
+player_shape = NodePath("PlayerBody/PlayerShape")
+automatic_raycast_area_weapon = NodePath("PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon")
+hitstop_timer = NodePath("HitstopTimer")
+sprinting_aim_max_distance = 1.0
+sprinting_aim_height = 7.5
+aim_ray_collide_layers = 2
+sprite = NodePath("PlayerBody/PlayerShape/PlayerSprite")
+pool_name = "player"
+health = 100.0
+invincible = true
+
+[node name="PlayerBody" type="RigidBody3D" parent="." unique_id=1403539515]
+collision_layer = 4
+collision_mask = 37
+axis_lock_linear_y = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+physics_material_override = SubResource("PhysicsMaterial_5t3ln")
+script = ExtResource("2_0q38j")
+
+[node name="PlayerShape" type="CollisionShape3D" parent="PlayerBody" unique_id=2132732701]
+shape = SubResource("SphereShape3D_d2fiw")
+
+[node name="PlayerAim" type="Node3D" parent="PlayerBody/PlayerShape" unique_id=630180277]
+script = ExtResource("3_yd36o")
+
+[node name="AutomaticRaycastAreaWeapon" type="Node3D" parent="PlayerBody/PlayerShape/PlayerAim" unique_id=376520647 node_paths=PackedStringArray("area_component", "raycast_component", "sprite_component", "ray_node")]
+script = ExtResource("4_0q38j")
+area_component = NodePath("WeaponAreaComponent")
+raycast_component = NodePath("WeaponRaycastComponent")
+sprite_component = NodePath("WeaponAreaComponent/WeaponSpriteComponent")
+ray_node = NodePath("WeaponAreaComponent/RayNode")
+cooldown = 0.1
+metadata/_custom_type_script = "uid://bdil1kw7dxxwg"
+
+[node name="WeaponRaycastComponent" type="RayCast3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon" unique_id=1394689491]
+target_position = Vector3(0, 0, -5)
+collision_mask = 193
+hit_back_faces = false
+collide_with_areas = true
+debug_shape_custom_color = Color(1, 0, 0, 1)
+script = ExtResource("5_yd36o")
+metadata/_custom_type_script = "uid://6gikc25n2w6v"
+
+[node name="WeaponAreaComponent" type="Area3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon" unique_id=1057159007]
+top_level = true
+collision_layer = 16
+collision_mask = 193
+script = ExtResource("6_2fyw6")
+metadata/_custom_type_script = "uid://6npcukmkjimk"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon/WeaponAreaComponent" unique_id=852583422]
+shape = SubResource("SphereShape3D_2imew")
+
+[node name="WeaponSpriteComponent" type="AnimatedSprite3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon/WeaponAreaComponent" unique_id=277513712]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+sprite_frames = SubResource("SpriteFrames_l3e8u")
+animation = &"beam"
+script = ExtResource("8_kh7kf")
+metadata/_custom_type_script = "uid://d1pu3lpb73s35"
+
+[node name="RayNode" type="Node3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon/WeaponAreaComponent" unique_id=1822786682]
+
+[node name="RayMesh" type="MeshInstance3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon/WeaponAreaComponent/RayNode" unique_id=1025150450]
+transform = Transform3D(0.025, 0, 0, 0, -2.1855694e-08, 0.025, 0, -0.5, -1.0927848e-09, 0, 0, 0)
+material_override = ExtResource("9_kh7kf")
+mesh = SubResource("CylinderMesh_so3tq")
+
+[node name="PlayerHitbox" type="Area3D" parent="PlayerBody/PlayerShape" unique_id=614805099]
+collision_layer = 8
+collision_mask = 128
+script = ExtResource("6_so3tq")
+
+[node name="PlayerHitboxShape" type="CollisionShape3D" parent="PlayerBody/PlayerShape/PlayerHitbox" unique_id=1183933376]
+shape = SubResource("SphereShape3D_3lili")
+
+[node name="PlayerSprite" type="AnimatedSprite3D" parent="PlayerBody/PlayerShape" unique_id=1553281956]
+axis = 1
+sprite_frames = ExtResource("7_2fyw6")
+animation = &"walk"
+script = ExtResource("7_yd36o")
+
+[node name="PlayerStateMachine" type="Node" parent="." unique_id=309160079]
+script = ExtResource("7_kh7kf")
+metadata/_custom_type_script = "uid://bbd8bv8gd3rmg"
+
+[node name="PlayerCamera" type="Camera3D" parent="." unique_id=217769326]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 8, 0)
+script = ExtResource("8_qhnqe")
+angular_frequency = 25.0
+damping_ratio = 2.5
+
+[node name="HitstopTimer" type="Timer" parent="." unique_id=476547132]
+process_mode = 3
+one_shot = true
+ignore_time_scale = true

@@ -6,7 +6,7 @@ extends Node
 
 const unused_position: Vector3 = Vector3(1000,1000,1000)
 
-var all_pools: SpawnPoolDictionary = preload("res://resource(tres)/all_pools.tres") as SpawnPoolDictionary
+var all_pools: PackedScenePoolDictionaryResource = preload("res://resource(tres)/all_pools.tres") as PackedScenePoolDictionaryResource
 
 func _ready() -> void:
 	initialize_pools()
@@ -15,8 +15,8 @@ func initialize_pools() -> void:
 	for child in get_children():
 		child.queue_free()
 	
-	for pool_name in all_pools.spawn_pool_dictionary.keys():
-		var pool_value = all_pools.spawn_pool_dictionary[pool_name]
+	for pool_name in all_pools.packed_scene_pool_dictionary.keys():
+		var pool_value = all_pools.packed_scene_pool_dictionary[pool_name]
 		
 		var new_pool = Node.new()
 		new_pool.name = pool_name
@@ -31,36 +31,61 @@ func initialize_pools() -> void:
 		new_pool.add_child(new_pool_used)
 		
 		for i in pool_value.initial_count:
-			var new_instance = pool_value.entity_instance.instantiate()
+			var new_instance = pool_value.packed_scene.instantiate()
 			if new_instance is EntityInstance:
-				if new_instance.spawn_component:
-					new_instance.spawn_component.pool_name = pool_name
-					new_instance.spawn_component.set_unused()
+				new_instance.pool_name = pool_name
+				new_instance.set_unused()
 					
 			new_pool_unused.add_child(new_instance)
 			
 			new_instance.global_position = unused_position
+
+func return_to_pool(pool_object: Node3D, pool_name: String) -> void:
+	if all_pools.packed_scene_pool_dictionary.has(pool_name):
+		pool_object.call_deferred("reparent", SpawnManager.get_node(pool_name + "/unused"))
+		return
+	else:
+		if pool_object.scene_file_path:
+			all_pools.packed_scene_pool_dictionary[pool_name] = PackedScenePoolResource.new(load(pool_object.scene_file_path))
+		else:
+			push_error("Unable to create new pool.")
+			return
 			
-			
-func get_unused_instances(pool_name: String, count: int = 1) -> Array[Variant]:
-	
-	var to_be_used = []
+		var new_pool = Node.new()
+		new_pool.name = pool_name
+		add_child(new_pool)
+		
+		var new_pool_unused = Node.new()
+		new_pool_unused.name = "unused"
+		new_pool.add_child(new_pool_unused)
+		
+		var new_pool_used = Node.new()
+		new_pool_used.name = "used"
+		new_pool.add_child(new_pool_used)
+		
+		pool_object.call_deferred("reparent", new_pool_unused)
+
+## Returns a pooled object from the specified pool.[br][br]
+## Parameters:[br]
+## - pool_name: The name of the pool the object is to be retrieved from.[br]
+func get_from_pool(pool_name: String) -> Variant:
+	if not all_pools.packed_scene_pool_dictionary.keys().has(pool_name):
+		push_error("Pool of the given pool name does not exist.")
+
 	var unused_pool = get_node(pool_name + "/unused")
 	var used_pool = get_node(pool_name + "/used")
+	var pooled_object = null
 
-	if count > unused_pool.get_child_count():
-		var entity_instance = all_pools.spawn_pool_dictionary[pool_name].entity_instance
-		while unused_pool.get_child_count() < count:
-			var new_instance = entity_instance.instantiate()
-			unused_pool.add_child(new_instance)
+	if unused_pool.get_child_count() == 0:
+		var packed_scene = all_pools.packed_scene_pool_dictionary[pool_name].packed_scene
+		var new_instance = packed_scene.instantiate()
+		unused_pool.add_child(new_instance)
+		pooled_object = new_instance
+	else:
+		pooled_object = unused_pool.get_child(0)
 
-	for i in count:
-		var to_be_used_instance = unused_pool.get_child(0)
-		to_be_used_instance.reparent(used_pool)
-		to_be_used.append(to_be_used_instance)
-		if to_be_used_instance is EntityInstance:
-			if to_be_used_instance.spawn_component:
-				to_be_used_instance.spawn_component.pool_name = pool_name
-				to_be_used_instance.spawn_component.set_used()
+	if pooled_object is EntityInstance:
+		pooled_object.reparent(used_pool)
+		pooled_object.set_used()
 
-	return to_be_used
+	return pooled_object

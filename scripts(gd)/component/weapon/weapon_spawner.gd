@@ -1,0 +1,27 @@
+class_name WeaponSpawnerComponent
+extends Node3D
+## Component Script that spawns an Entity.
+
+#region Variables
+
+## The weapon this component is attached to.
+var weapon: WeaponInstance
+
+#endregion
+
+#region Functions
+
+func _enter_tree() -> void:
+	weapon = GeneralUtility.get_nearest_parent_of_class(self, WeaponInstance)
+
+
+func spawn_entity(pool_name: String) -> Variant:
+	# Retrieve an object from the specified pool,
+	var spawned = SpawnManager.get_from_pool(pool_name)
+	
+	# And update its global transform to match the spawner.
+	spawned.global_transform = global_transform
+	
+	return spawned
+
+#endregion

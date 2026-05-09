@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://qn4sxavr8hgb" path="res://scripts(gd)/instance/entity_variants/projectile.gd" id="1_wn50o"]
 [ext_resource type="Script" uid="uid://bu0ahi3j62mc3" path="res://scripts(gd)/component/entity/entity_area.gd" id="2_do5ex"]
-[ext_resource type="Texture2D" uid="uid://cgrum2y4ohx7c" path="res://images(png)/ui/icons/Button.svg" id="3_0mkx0"]
-[ext_resource type="Script" uid="uid://efl0jq731g3n" path="res://scripts(gd)/component/entity/entity_spawn.gd" id="4_dsi4u"]
-[ext_resource type="Script" uid="uid://cwss8p0mewejj" path="res://scripts(gd)/component/entity/entity_health.gd" id="5_hjy3w"]
+[ext_resource type="SpriteFrames" uid="uid://cjglhog7r0bu2" path="res://resource(tres)/sprite_frames/bullet_sprite_frames.tres" id="4_680ip"]
+[ext_resource type="Script" uid="uid://cwss8p0mewejj" path="res://scripts(gd)/component/entity/entity_hitbox.gd" id="5_hjy3w"]
+[ext_resource type="Script" uid="uid://dy1jksmmov57f" path="res://scripts(gd)/component/entity/entity_sprite.gd" id="5_wn50o"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_yyo3g"]
 radius = 0.2
@@ -12,12 +12,16 @@ radius = 0.2
 [sub_resource type="SphereShape3D" id="SphereShape3D_0sdrn"]
 radius = 0.2
 
-[node name="PlayerProjectile" type="Node3D" unique_id=1308104941 node_paths=PackedStringArray("area_component", "spawn_component", "timer")]
+[node name="PlayerProjectile" type="Node3D" unique_id=1308104941 node_paths=PackedStringArray("area_component", "hitbox_component", "sprite")]
 script = ExtResource("1_wn50o")
 area_component = NodePath("ProjectileArea")
-spawn_component = NodePath("ProjectileSpawn")
-timer = NodePath("ProjectileTimer")
+hitbox_component = NodePath("ProjectileHealth")
 speed = 10.0
+damage = 1.0
+sprite = NodePath("BulletSprite")
+pool_name = "player_projectile"
+health = 1.0
+max_health = 1.0
 
 [node name="ProjectileArea" type="Area3D" parent="." unique_id=1603127291]
 collision_layer = 16
@@ -27,21 +31,21 @@ script = ExtResource("2_do5ex")
 [node name="ProjectileAreaShape" type="CollisionShape3D" parent="ProjectileArea" unique_id=1990100157]
 shape = SubResource("SphereShape3D_yyo3g")
 
-[node name="ProjectileSprite" type="Sprite3D" parent="ProjectileArea" unique_id=1152270578]
-transform = Transform3D(2, 0, 0, 0, -8.742278e-08, 2, 0, -2, -8.742278e-08, 0, 0, 0)
-texture = ExtResource("3_0mkx0")
-
-[node name="ProjectileSpawn" type="Node" parent="." unique_id=835846428]
-script = ExtResource("4_dsi4u")
-
 [node name="ProjectileHealth" type="Area3D" parent="." unique_id=161795830]
 collision_layer = 8
 collision_mask = 128
+monitoring = false
 script = ExtResource("5_hjy3w")
 metadata/_custom_type_script = "uid://cwss8p0mewejj"
 
 [node name="ProjectileHitbox" type="CollisionShape3D" parent="ProjectileHealth" unique_id=2144891299]
 shape = SubResource("SphereShape3D_0sdrn")
 
-[node name="ProjectileTimer" type="Timer" parent="." unique_id=429171110]
-one_shot = true
+[node name="BulletSprite" type="AnimatedSprite3D" parent="." unique_id=554734676]
+pixel_size = 0.03
+axis = 1
+texture_filter = 0
+sprite_frames = ExtResource("4_680ip")
+animation = &"bullet_normal"
+speed_scale = 2.0
+script = ExtResource("5_wn50o")
