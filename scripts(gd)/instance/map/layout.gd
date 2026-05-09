@@ -200,30 +200,41 @@ void fragment() {
 			if total_floor == 0 and wall_count == 0 and wall_bottom_count == 0 and wall_top_count == 0:
 				continue
 
-			var baked := ArrayMesh.new()
-			var surface: int = 0
-			for q in range(4):
-				if floor_counts[q] > 0:
-					floor_sts[q].commit(baked)
-					baked.surface_set_material(surface, floor_mats[q])
-					surface += 1
-			if wall_count > 0:
-				wall_st.commit(baked)
-				baked.surface_set_material(surface, wall_mat)
-				surface += 1
-			if wall_bottom_count > 0:
-				wall_bottom_st.commit(baked)
-				baked.surface_set_material(surface, wall_bottom_mat)
-				surface += 1
-			if wall_top_count > 0:
-				wall_top_st.commit(baked)
-				baked.surface_set_material(surface, wall_top_mat)
+			if total_floor > 0:
+				var floor_baked := ArrayMesh.new()
+				var floor_surface: int = 0
+				for q in range(4):
+					if floor_counts[q] > 0:
+						floor_sts[q].commit(floor_baked)
+						floor_baked.surface_set_material(floor_surface, floor_mats[q])
+						floor_surface += 1
+				var floor_mi := MeshInstance3D.new()
+				floor_mi.name = "ChunkFloor_%d_%d" % [ccx, ccz]
+				floor_mi.mesh = floor_baked
+				add_child(floor_mi)
+				floor_mi.create_trimesh_collision()
+				_set_collision_layer(floor_mi, 2)
 
-			var mi := MeshInstance3D.new()
-			mi.name = "Chunk_%d_%d" % [ccx, ccz]
-			mi.mesh = baked
-			add_child(mi)
-			mi.create_trimesh_collision()
+			if wall_count > 0 or wall_bottom_count > 0 or wall_top_count > 0:
+				var walls_baked := ArrayMesh.new()
+				var walls_surface: int = 0
+				if wall_count > 0:
+					wall_st.commit(walls_baked)
+					walls_baked.surface_set_material(walls_surface, wall_mat)
+					walls_surface += 1
+				if wall_bottom_count > 0:
+					wall_bottom_st.commit(walls_baked)
+					walls_baked.surface_set_material(walls_surface, wall_bottom_mat)
+					walls_surface += 1
+				if wall_top_count > 0:
+					wall_top_st.commit(walls_baked)
+					walls_baked.surface_set_material(walls_surface, wall_top_mat)
+				var walls_mi := MeshInstance3D.new()
+				walls_mi.name = "ChunkWalls_%d_%d" % [ccx, ccz]
+				walls_mi.mesh = walls_baked
+				add_child(walls_mi)
+				walls_mi.create_trimesh_collision()
+				_set_collision_layer(walls_mi, 1)
 
 func _make_unit_cube_mesh() -> ArrayMesh:
 	var st := SurfaceTool.new()
@@ -291,12 +302,19 @@ func _build_props(layout) -> void:
 
 func _make_crate_collider() -> StaticBody3D:
 	var body := StaticBody3D.new()
+	body.collision_layer = 1
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
 	box.size = Vector3(tile_size, tile_size, tile_size)
 	shape.shape = box
 	body.add_child(shape)
 	return body
+
+func _set_collision_layer(mi: MeshInstance3D, layer_mask: int) -> void:
+	for child in mi.get_children():
+		if child is StaticBody3D:
+			(child as StaticBody3D).collision_layer = layer_mask
+			return
 
 func _near_door(layout, i: int, j: int, radius: int) -> bool:
 	for dj in range(-radius, radius + 1):
