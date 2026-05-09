@@ -1,6 +1,6 @@
-class_name EnemyRangedEntity
+class_name EnemyDrone
 extends EntityInstance
-## Instance Script that oversees a ranged enemy.
+## Entity Script that defines an Enemy Drone.
 
 #region Variables
 
@@ -8,136 +8,142 @@ extends EntityInstance
 @export var aim_component: EntityAimComponent
 @export var hitbox_component: EntityHitboxComponent
 @export var pathfinder_component: EntityPathfinderComponent
+@export var raycast_component: EntityRaycastComponent
 @export var rigid_body_component: EntityRigidBodyComponent
 @export var state_machine_component: EntityStateMachineComponent
-@export var weapon: WeaponInstance
+@export var automatic_spawner_weapon: AutomaticSpawnerWeapon
 
-@export_group("States")
-@export_subgroup("Idle")
-@export var idle_range: float = 10 ## How far away the Enemy can detect the player.
+@export_group("Basic")
+@export var detection_distance: float = 10 ## How far away the Enemy can detect the player.
+
+@export var comfortable_attacking_distance: float = 5
+@export var min_attacking_distance: float = 3
+@export var max_attacking_distance: float = 7
+
+@export var comfortable_attacking_angle: float = 5
+
+@export_group("Advanced")
+@export var idle_animation_max_velocity: float = 0.1 ## The velocity needed for the sprite to exit its idle animation.
+@export var fleeing_distance: float = 5 ## How far away the target fleeing position is.
+var charging_timer: float = 0
+var cooldown_timer: float = 0
+
 
 var idle_state = EntityState.new(
 	func(): # on_enter
+		
 		sprite.current_sprite_mode = EntitySpriteComponent.SpriteMode.HORIZONTAL_FLIP_RIGIDBODY
 		aim_component.current_aim_state = aim_component.AimState.VELOCITY
-		weapon.is_firing = false
+		
 		pass,
 	func(delta: float): # on_process
-		if get_distance_to_player() < idle_range:
-			state_machine_component.current_state = chasing_state
 		
-		if sprite.animation == "hit" and sprite.is_playing():
-			return
-		if sprite.animation != "idle":
-			sprite.play("idle")
+		if get_distance_to_player() < detection_distance:
+			state_machine_component.current_state = chasing_state
+			
+		sprite.current_animation = "idle"
+		
 		pass,
 	func(delta: float): # on_physics_process
+		
 		stand_still()
+		
 		pass,
 	func(): # on_exit
 		pass,
 )
-
-@export_subgroup("Chasing")
-@export var attacking_range: float = 5 ## How closely the Enemy will approach the player before attacking.
 
 var chasing_state = EntityState.new(
 	func(): # on_enter
+		
+		sprite.current_sprite_mode = EntitySpriteComponent.SpriteMode.HORIZONTAL_FLIP_RIGIDBODY
 		aim_component.current_aim_state = aim_component.AimState.VELOCITY
-		weapon.is_firing = false
+		
 		pass,
 	func(delta: float): # on_process
+		
 		var distance_to_player = get_distance_to_player()
 		if is_player_visible():
-			if distance_to_player < attacking_range:
+			if distance_to_player < comfortable_attacking_distance:
 				state_machine_component.current_state = attacking_state
-			elif distance_to_player > idle_range:
+			elif distance_to_player > detection_distance:
 				state_machine_component.current_state = idle_state
 		
-		if sprite.animation == "hit" and sprite.is_playing():
-			return
-		if rigid_body_component.linear_velocity.length() > idle_animation_max_velocity:
-			if sprite.animation != "run":
-				sprite.play("run")
-		else:
-			if sprite.animation != "idle":
-				sprite.play("idle")
+		sprite.current_animation = "idle"
+			
 		pass,
 	func(delta: float): # on_physics_process
+		
 		chase_player()
+		
 		pass,
 	func(): # on_exit
 		pass,
 )
 
-@export_subgroup("Attacking")
-@export var chasing_range: float = 7
-
 var attacking_state = EntityState.new(
 	func(): # on_enter
+		
+		sprite.current_sprite_mode = EntitySpriteComponent.SpriteMode.HORIZONTAL_FLIP_RIGIDBODY
 		aim_component.current_aim_state = aim_component.AimState.POSITION
-		weapon.is_firing = true
+		
 		pass,
 	func(delta: float): # on_process
 		
 		aim_component.aim_position = GameManager.player.hitbox_component.global_position
+		
 		var distance_to_player = get_distance_to_player()
+		
 		if is_player_visible():
-			if distance_to_player < fleeing_range:
-				state_machine_component.current_state = fleeing_state
-			elif distance_to_player > chasing_range:
+			if distance_to_player > max_attacking_distance:
 				state_machine_component.current_state = chasing_state
+			elif distance_to_player < min_attacking_distance:
+				state_machine_component.current_state = fleeing_state
+			elif get_angle_to_player() < comfortable_attacking_angle:
+				automatic_spawner_weapon.is_firing = true
+			else:
+				automatic_spawner_weapon.is_firing = false
 		else:
 			state_machine_component.current_state = chasing_state
-		
-		if sprite.animation == "hit" and sprite.is_playing():
-			return
-		if rigid_body_component.linear_velocity.length() > idle_animation_max_velocity:
-			if sprite.animation != "run":
-				sprite.play("run")
-		else:
-			if sprite.animation != "idle":
-				sprite.play("idle")
+
+		sprite.current_animation = "idle"
+
 		pass,
 	func(delta: float): # on_physics_process
+
 		stand_still()
+
 		pass,
 	func(): # on_exit
+		
+		automatic_spawner_weapon.is_firing = false
+		
 		pass,
 )
 
-@export_subgroup("Fleeing")
-@export var fleeing_range: float = 3
-	
 var fleeing_state = EntityState.new(
 	func(): # on_enter
+		
+		sprite.current_sprite_mode = EntitySpriteComponent.SpriteMode.HORIZONTAL_FLIP_RIGIDBODY
 		aim_component.current_aim_state = aim_component.AimState.VELOCITY
-		weapon.is_firing = false
+		
 		pass,
 	func(delta: float): # on_process
-		if get_distance_to_player() > attacking_range:
+	
+		if get_distance_to_player() > comfortable_attacking_distance:
 			state_machine_component.current_state = attacking_state
-		
-		if sprite.animation == "hit" and sprite.is_playing():
-			return
-		if rigid_body_component.linear_velocity.length() > idle_animation_max_velocity:
-			if sprite.animation != "run":
-				sprite.play("run")
-		else:
-			if sprite.animation != "idle":
-				sprite.play("idle")
 
+		sprite.current_animation = "idle"
+			
 		pass,
 	func(delta: float): # on_physics_process
+		
 		flee_from_player()
+		
 		pass,
 	func(): # on_exit
 		pass,
 )
-
-@export_group("Advanced")	
-@export_flags_2d_physics var obstacle_detect_ray_collide_layers: int
-@export var idle_animation_max_velocity: float = 0.1 ## The velocity needed for the sprite to exit its idle animation.
 
 #endregion
 
@@ -145,32 +151,28 @@ var fleeing_state = EntityState.new(
 
 func _ready() -> void:
 	state_machine_component.current_state = idle_state
+	
+	automatic_spawner_weapon.on_fired.connect(
+		func():
+			sprite.animation_override = "attack"
+			sprite.play("attack")
+			)
+
 
 func damage_entity(value: float, direction: Vector3) -> void:
 	super(value, direction)
 	
 	# If not invincible, 
-	if not invincible:
-		sprite.play("hit")
+	pass
 
-
-func entity_die() -> void:
-	set_unused()
 
 func get_distance_to_player() -> float:
 	return (GameManager.player.rigid_body_component.global_position - rigid_body_component.global_position).length()
 
 
 func is_player_visible() -> bool:
-	var space_state = get_world_3d().direct_space_state
-	var query = PhysicsRayQueryParameters3D.create(
-		GameManager.player.rigid_body_component.global_position, 
-		rigid_body_component.global_position, 
-		obstacle_detect_ray_collide_layers)
-		
-	var result = space_state.intersect_ray(query)
-
-	return result.is_empty()
+	var result = raycast_component.get_obstacle(GameManager.player.hitbox_component.global_position)
+	return result["collider"] == null
 
 
 func stand_still() -> void:
@@ -184,6 +186,14 @@ func chase_player() -> void:
 
 
 func flee_from_player() -> void:
-	rigid_body_component.target_velocity = (rigid_body_component.global_position - GameManager.player.rigid_body_component.global_position).normalized() * rigid_body_component.speed
+	pathfinder_component.target_position = GameManager.player.rigid_body_component.global_position.direction_to(rigid_body_component.global_position) * fleeing_distance
+	var next_path_position = pathfinder_component.get_next_path_position()
+	rigid_body_component.target_velocity = rigid_body_component.global_position.direction_to(next_path_position) * rigid_body_component.speed
+
+
+func get_angle_to_player() -> float:
+	var forward_vector = -aim_component.global_basis.z
+	var signed_rad_angle = forward_vector.signed_angle_to(GameManager.player.hitbox_component.global_position - aim_component.global_position, Vector3.UP)
+	return rad_to_deg(abs(signed_rad_angle))
 
 #endregion

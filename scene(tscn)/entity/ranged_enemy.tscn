@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://cy7c8rh5g5wa5"]
 
-[ext_resource type="Script" uid="uid://bti5d7oc735se" path="res://scripts(gd)/instance/entity_variants/enemy_melee.gd" id="1_31yhw"]
+[ext_resource type="Script" uid="uid://pjxfbct805xc" path="res://scripts(gd)/instance/entity_variants/ranged_enemy.gd" id="1_8podc"]
 [ext_resource type="Script" uid="uid://b86asdwgrslnk" path="res://scripts(gd)/component/entity/entity_rigid_body.gd" id="2_8podc"]
 [ext_resource type="Script" uid="uid://cwss8p0mewejj" path="res://scripts(gd)/component/entity/entity_hitbox.gd" id="3_dpud2"]
 [ext_resource type="Script" uid="uid://dy4ooeu54ph26" path="res://scripts(gd)/component/entity/entity_pathfinder.gd" id="4_kk4h3"]
 [ext_resource type="Script" uid="uid://by1u3602we537" path="res://scripts(gd)/component/entity/entity_aim.gd" id="5_gdqqm"]
-[ext_resource type="Script" uid="uid://ouuvajle8761" path="res://scripts(gd)/instance/weapon_variants/simple_spawner.gd" id="7_mysud"]
+[ext_resource type="Script" uid="uid://b8xerksguvivv" path="res://scripts(gd)/instance/weapon_variants/automatic_spawner_weapon.gd" id="6_8podc"]
 [ext_resource type="SpriteFrames" uid="uid://cy81g8d0ppnnk" path="res://resource(tres)/sprite_frames/test_sprite_frames.tres" id="8_31yhw"]
 [ext_resource type="Script" uid="uid://sfhrm8fpheyh" path="res://scripts(gd)/component/weapon/weapon_spawner.gd" id="8_qkoie"]
 [ext_resource type="Script" uid="uid://dy1jksmmov57f" path="res://scripts(gd)/component/entity/entity_sprite.gd" id="9_8podc"]
@@ -20,15 +20,14 @@ radius = 0.75
 [sub_resource type="SphereShape3D" id="SphereShape3D_3lili"]
 radius = 0.75
 
-[node name="RangedEnemy" type="Node3D" unique_id=1899302448 node_paths=PackedStringArray("aim_component", "hitbox_component", "pathfinder_component", "rigid_body_component", "state_machine_component", "weapon", "sprite")]
-script = ExtResource("1_31yhw")
+[node name="RangedEnemy" type="Node3D" unique_id=1899302448 node_paths=PackedStringArray("aim_component", "hitbox_component", "pathfinder_component", "rigid_body_component", "state_machine_component", "automatic_spawner_weapon", "sprite")]
+script = ExtResource("1_8podc")
 aim_component = NodePath("EnemyBody/EnemyAim")
 hitbox_component = NodePath("EnemyBody/EnemyShape/EnemyHitbox")
 pathfinder_component = NodePath("EnemyBody/EnemyPathfinder")
 rigid_body_component = NodePath("EnemyBody")
 state_machine_component = NodePath("EnemyStateMachine")
-weapon = NodePath("EnemyBody/EnemyAim/SimpleSpawnerWeapon")
-obstacle_detect_ray_collide_layers = 1
+automatic_spawner_weapon = NodePath("EnemyBody/EnemyAim/AutomaticSpawnerWeapon")
 sprite = NodePath("EnemyBody/EnemySprite")
 pool_name = "ranged_enemy"
 health = 100.0
@@ -64,13 +63,17 @@ metadata/_custom_type_script = "uid://dy4ooeu54ph26"
 [node name="EnemyAim" type="Node3D" parent="EnemyBody" unique_id=873210282]
 script = ExtResource("5_gdqqm")
 
-[node name="SimpleSpawnerWeapon" type="Node3D" parent="EnemyBody/EnemyAim" unique_id=1705125662]
-script = ExtResource("7_mysud")
-fire_cooldown = 0.1
+[node name="AutomaticSpawnerWeapon" type="Node3D" parent="EnemyBody/EnemyAim" unique_id=1705125662 node_paths=PackedStringArray("spawner_component")]
+script = ExtResource("6_8podc")
+spawner_component = NodePath("WeaponSpawnerComponent")
+projectile_pool_name = "enemy_projectile"
+projectile_speed = 10.0
+projectile_lifetime = 2.0
+cooldown = 0.1
 
-[node name="WeaponSpawnerComponent" type="Node3D" parent="EnemyBody/EnemyAim/SimpleSpawnerWeapon" unique_id=60693742]
+[node name="WeaponSpawnerComponent" type="Node3D" parent="EnemyBody/EnemyAim/AutomaticSpawnerWeapon" unique_id=60693742]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 script = ExtResource("8_qkoie")
-pool_name = "enemy_projectile"
 metadata/_custom_type_script = "uid://sfhrm8fpheyh"
 
 [node name="EnemySprite" type="AnimatedSprite3D" parent="EnemyBody" unique_id=1732345885]

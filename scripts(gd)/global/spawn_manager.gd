@@ -77,7 +77,7 @@ func get_from_pool(pool_name: String) -> Variant:
 	var pooled_object = null
 
 	if unused_pool.get_child_count() == 0:
-		var packed_scene = all_pools.spawn_pool_dictionary[pool_name].packed_scene
+		var packed_scene = all_pools.packed_scene_pool_dictionary[pool_name].packed_scene
 		var new_instance = packed_scene.instantiate()
 		unused_pool.add_child(new_instance)
 		pooled_object = new_instance

@@ -2,18 +2,28 @@ class_name WeaponInstance
 extends Node3D
 ## Instance Script that defines a single weapon.
 
+#region Signals
+
 signal on_fired()
 
+#endregion
+
+#region Variables
+
 @export_group("Basic")
-@export var fire_cooldown: float = 1 ## How often the weapon fires.
+@export var damage: float = 1
 
-var is_firing: bool = false ## Whether the weapon is currently being fired.
-var _cooldown_timer: float = 0
+## The weapon this component is attached to.
+var entity: EntityInstance
 
-func _process(delta: float) -> void:
-	if _cooldown_timer > 0:
-		_cooldown_timer = _cooldown_timer - delta
-	else:
-		if is_firing:
-			on_fired.emit()
-			_cooldown_timer = fire_cooldown
+#endregion
+
+#region Functions
+
+func _enter_tree() -> void:
+	entity = GeneralUtility.get_nearest_parent_of_class(self, EntityInstance) as EntityInstance
+
+func fire() -> void:
+	on_fired.emit()
+
+#endregion

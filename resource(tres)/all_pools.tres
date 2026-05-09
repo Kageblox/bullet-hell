@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dw3k226bbl56k" path="res://scripts(gd)/resource/spawn/packed_scene_pool.gd" id="1_6xrf1"]
 [ext_resource type="PackedScene" uid="uid://b7rlnfkwsk0eo" path="res://scene(tscn)/entity/player_projectile.tscn" id="3_6xrf1"]
 [ext_resource type="Script" uid="uid://vrrj2lkppn4s" path="res://scripts(gd)/resource/spawn/packed_scene_pool_dictionary.gd" id="4_8fm5u"]
-[ext_resource type="PackedScene" uid="uid://cyfuw1k8ra4vk" path="res://scene(tscn)/entity/enemy_projectile.tscn" id="4_30wk4"]
+[ext_resource type="PackedScene" uid="uid://bixguvucjlg40" path="res://scene(tscn)/entity/enemy_projectile.tscn" id="4_30wk4"]
 
 [sub_resource type="Resource" id="Resource_gkd4d"]
 script = ExtResource("1_6xrf1")

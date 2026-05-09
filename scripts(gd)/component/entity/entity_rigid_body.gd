@@ -8,7 +8,7 @@ const force_multi = 1000 ## A flat force multiplier.
 
 @export var speed: float = 7.5 ## The speed at which this Rigid Body Component moves
 @export var acceleration: float = 0.5 ## How quickly this Rigid Body Component's velocity changes.
-@export var target_velocity: Vector3 ## The direction and speed this Entity should be moving at.
+var target_velocity: Vector3 ## The direction and speed this Entity should be moving at.
 
 ## Curve that determines the acceleration of the Entity, based on the difference between the current and target velocity direction.
 var accel_curve: Curve = preload("res://resource(tres)/curves/entity_body_accel_curve.tres") as Curve

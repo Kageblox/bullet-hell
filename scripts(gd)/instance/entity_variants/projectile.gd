@@ -27,28 +27,29 @@ func _ready() -> void:
 		func(area: Area3D):
 			if area is EntityHitboxComponent:
 				area.entity.damage_entity(damage, area.global_position - area_component.global_position)
-			play_bullet_explosion()
+				entity_die()
 	)
 	
 	# When the Projectile hits a collider
 	area_component.body_entered.connect(
 		func(body: Node3D):
-			play_bullet_explosion()
+			entity_die()
 	)
 	
-	sprite.animation_finished.connect(
-		func():
-			if sprite.animation == "bullet_explosion":
+	sprite.on_animation_override_end.connect(
+		func(_animation_override: String):
+			if _animation_override == "bullet_explosion":
+				on_death.emit()
 				set_unused()
-			)
-			
+	)
+
+
 func _process(delta: float) -> void:
 	super(delta)
 	if _lifetime_timer > 0:
 		_lifetime_timer = _lifetime_timer - delta
 	else:
-		if SpawnManager:
-			set_unused()
+		entity_die()
 
 
 func set_used() -> void:
@@ -59,17 +60,19 @@ func set_used() -> void:
 	hitbox_component.set_deferred("process_mode", Node.PROCESS_MODE_INHERIT)
 	
 	moving = true
+	dying = false
 	
-	sprite.play("bullet_normal")
+	sprite.animation = "bullet_normal"
 
-func play_bullet_explosion() -> void:
-	
-	area_component.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
-	hitbox_component.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
-	
-	moving = false
-	
-	sprite.play("bullet_explosion")
+func entity_die() -> void:
+	if not dying:
+		dying = true
+		area_component.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
+		hitbox_component.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
+
+		moving = false
+
+		sprite.animation_override = "bullet_explosion"
 	
 func _physics_process(delta: float) -> void:
 	if moving:
