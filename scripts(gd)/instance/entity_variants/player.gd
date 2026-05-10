@@ -5,7 +5,7 @@ extends EntityInstance
 #region Variables
 
 @export_group("Other Components")
-@export var player_camera: ModifiedCamera3D
+@export var player_camera: NewCamera
 @export var aim_component: EntityAimComponent
 @export var hitbox_component: EntityHitboxComponent
 @export var rigid_body_component: EntityRigidBodyComponent
@@ -137,26 +137,34 @@ func _process(delta: float) -> void:
 	# Set the Rigid Body Component's Velocity, based on the Player's move input.
 	rigid_body_component.target_velocity = Vector3(InputManager.move_input.x, 0.0, -InputManager.move_input.y) * rigid_body_component.speed
 
-	# Raycast from the camera to the aimed position.
+	# Raycast from the camera through the mouse to find what the player is aiming at.
 	var camera_raycast = raycast_from_camera()
-	
-	# If the ray hit anything,
 	if camera_raycast:
+
+	# Raycast from the camera to the aimed position.
+	# var camera_raycast = raycast_from_camera()
+	
+	# # If the ray hit anything,
+	# if camera_raycast:
 		
-		# Clamp the aimed positon to the max aim distance,
-		var raw_aim_vector = raycast_from_camera()["position"] - aim_component.global_position # The vector that points from the player to the aimed position.
+	# 	# Clamp the aimed positon to the max aim distance,
+	# 	var raw_aim_vector = raycast_from_camera()["position"] - aim_component.global_position # The vector that points from the player to the aimed position.
+	# 	var clamped_aim_vector = raw_aim_vector.limit_length(aim_max_distance)
+	# 	var aim_position = clamped_aim_vector + aim_component.global_position
+		
+	# 	# And update the Aim Component's aim_position.
+	# 	aim_component.aim_position = aim_position
+		
+	# 	# Update the Camera's target position based on the player's curernt position, their aimed position, and the aim distance curve.
+	# 	var aim_lerp = aim_distance_curve.sample(clamped_aim_vector.length()/aim_max_distance)
+	# 	player_camera.target_position = lerp(aim_component.global_position, aim_position, aim_lerp) + Vector3(0, aim_height, 0)
+	# else:
+	# 	# Else, focus on the player.
+	# 	player_camera.target_position = aim_component.global_position + Vector3(0, aim_height, 0)
+
+		var raw_aim_vector = camera_raycast["position"] - aim_component.global_position
 		var clamped_aim_vector = raw_aim_vector.limit_length(aim_max_distance)
-		var aim_position = clamped_aim_vector + aim_component.global_position
-		
-		# And update the Aim Component's aim_position.
-		aim_component.aim_position = aim_position
-		
-		# Update the Camera's target position based on the player's curernt position, their aimed position, and the aim distance curve.
-		var aim_lerp = aim_distance_curve.sample(clamped_aim_vector.length()/aim_max_distance)
-		player_camera.target_position = lerp(aim_component.global_position, aim_position, aim_lerp) + Vector3(0, aim_height, 0)
-	else:
-		# Else, focus on the player.
-		player_camera.target_position = aim_component.global_position + Vector3(0, aim_height, 0)
+		aim_component.aim_position = clamped_aim_vector + aim_component.global_position
 
 
 func damage_entity(value: float, direction: Vector3) -> void:

@@ -12,7 +12,6 @@
 [ext_resource type="Texture2D" uid="uid://8wd7bxygkndh" path="res://images(png)/gameplay/entities/bullet/bullet_explosion.png" id="7_so3tq"]
 [ext_resource type="Script" uid="uid://dy1jksmmov57f" path="res://scripts(gd)/component/entity/entity_sprite.gd" id="7_yd36o"]
 [ext_resource type="Script" uid="uid://d1pu3lpb73s35" path="res://scripts(gd)/component/weapon/weapon_sprite.gd" id="8_kh7kf"]
-[ext_resource type="Script" uid="uid://bxaw42agatvpg" path="res://scripts(gd)/modified/gameplay/camera_3d_modified.gd" id="8_qhnqe"]
 [ext_resource type="Material" uid="uid://coadvr21cvjd8" path="res://resource(tres)/materials/ray_material.tres" id="9_kh7kf"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5t3ln"]
@@ -94,7 +93,7 @@ radius = 0.75
 
 [node name="Player" type="Node3D" unique_id=1758969589 node_paths=PackedStringArray("player_camera", "aim_component", "hitbox_component", "rigid_body_component", "state_machine_component", "player_shape", "automatic_raycast_area_weapon", "hitstop_timer", "sprite")]
 script = ExtResource("1_kbl78")
-player_camera = NodePath("PlayerCamera")
+player_camera = NodePath("")
 aim_component = NodePath("PlayerBody/PlayerShape/PlayerAim")
 hitbox_component = NodePath("PlayerBody/PlayerShape/PlayerHitbox")
 rigid_body_component = NodePath("PlayerBody")
@@ -124,6 +123,7 @@ script = ExtResource("2_0q38j")
 shape = SubResource("SphereShape3D_d2fiw")
 
 [node name="PlayerAim" type="Node3D" parent="PlayerBody/PlayerShape" unique_id=630180277]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70378125, 0)
 script = ExtResource("3_yd36o")
 
 [node name="AutomaticRaycastAreaWeapon" type="Node3D" parent="PlayerBody/PlayerShape/PlayerAim" unique_id=376520647 node_paths=PackedStringArray("area_component", "raycast_component", "sprite_component", "ray_node")]
@@ -177,6 +177,7 @@ script = ExtResource("6_so3tq")
 shape = SubResource("SphereShape3D_3lili")
 
 [node name="PlayerSprite" type="AnimatedSprite3D" parent="PlayerBody/PlayerShape" unique_id=1553281956]
+transform = Transform3D(1, 0, 0, 0, 0.9077775, -0.4194521, 0, 0.4194521, 0.9077775, 0, 0.41631448, 0)
 axis = 1
 sprite_frames = ExtResource("7_2fyw6")
 animation = &"walk"
@@ -185,12 +186,6 @@ script = ExtResource("7_yd36o")
 [node name="PlayerStateMachine" type="Node" parent="." unique_id=309160079]
 script = ExtResource("7_kh7kf")
 metadata/_custom_type_script = "uid://bbd8bv8gd3rmg"
-
-[node name="PlayerCamera" type="Camera3D" parent="." unique_id=217769326]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 8, 0)
-script = ExtResource("8_qhnqe")
-angular_frequency = 25.0
-damping_ratio = 2.5
 
 [node name="HitstopTimer" type="Timer" parent="." unique_id=476547132]
 process_mode = 3

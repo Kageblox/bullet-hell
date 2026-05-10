@@ -13,12 +13,24 @@ extends Node3D
 @export var variance: int = 2
 @export var tile_size: float = 1.0
 @export var chunk_size: int = 12
-@export var max_active_lights: int = 8
-@export var props_per_room_min: int = 2
-@export var props_per_room_max: int = 4
+@export var props_per_room_min: int = 3
+@export var props_per_room_max: int = 8
+@export var prop_min_occlusion: float = 0.5
+@export var crate_scale: float = 1.0
+@export var trash_scale: float = 1.0
+@export var barrel_scale: float = 0.5
+
+@export var player_tint_strength: float = 0.9
+@export var player_tint_smooth_speed: float = 5.0
 
 var generator: Gen.LayoutGenerator
-var room_lights: Array[Light3D] = []
+var room_nodes: Dictionary = {}
+var room_neighbors: Dictionary = {}
+var room_light_colors: Dictionary = {}
+var _last_active_rooms: Dictionary = {}
+var _last_known_room: int = 0
+var _player_tint: Color = Color.WHITE
+var _player_sprite: AnimatedSprite3D = null
 
 func _enter_tree() -> void:
 	generator = Gen.Generator.Run(
@@ -31,28 +43,68 @@ func _enter_tree() -> void:
 		max_size,
 		variance
 	)
-	# var ascii := generator.ToString()
-	# generator.Print()
-	# print(ascii)
 	_build_geometry(generator)
 	_build_navmesh(generator)
+	_build_rooms(generator)
 	_build_lights(generator)
+	_build_doors(generator)
 	_build_props(generator)
 
 func get_generator() -> Gen.LayoutGenerator:
 	return generator
 
-func _process(_delta: float) -> void:
-	var cam: Camera3D = get_viewport().get_camera_3d()
-	if cam == null or room_lights.is_empty():
+func _build_rooms(layout) -> void:
+	for r in layout.rooms.values():
+		var room_node := Node3D.new()
+		room_node.name = "Room_" + str(r.id)
+		add_child(room_node)
+		room_nodes[r.id] = room_node
+		room_neighbors[r.id] = []
+
+func _process(delta: float) -> void:
+	var player_pos: Vector3 = _get_player_position()
+	if player_pos == Vector3.INF:
 		return
-	var cam_pos: Vector3 = cam.global_position
-	var sorted: Array[Light3D] = room_lights.duplicate()
-	sorted.sort_custom(func(a, b):
-		return a.global_position.distance_squared_to(cam_pos) < b.global_position.distance_squared_to(cam_pos)
-	)
-	for i in range(sorted.size()):
-		sorted[i].visible = i < max_active_lights
+	var current: int = room_index_at(player_pos)
+	if current > 0:
+		_last_known_room = current
+	_apply_player_tint(_last_known_room, delta)
+	if current <= 0:
+		return
+	var active: Dictionary = {current: true}
+	if room_neighbors.has(current):
+		for n in room_neighbors[current]:
+			active[n] = true
+	if active == _last_active_rooms:
+		return
+	for id in room_nodes:
+		var node: Node3D = room_nodes[id]
+		var on: bool = active.has(id)
+		if node.visible != on:
+			node.visible = on
+			node.process_mode = Node.PROCESS_MODE_INHERIT if on else Node.PROCESS_MODE_DISABLED
+	_last_active_rooms = active
+
+func _apply_player_tint(room_id: int, delta: float) -> void:
+	var target: Color = Color.WHITE
+	if room_light_colors.has(room_id):
+		target = Color.WHITE.lerp(room_light_colors[room_id], player_tint_strength)
+	var t: float = clamp(player_tint_smooth_speed * delta, 0.0, 1.0)
+	_player_tint = _player_tint.lerp(target, t)
+	if _player_sprite == null or not is_instance_valid(_player_sprite):
+		var p = GameManager.player
+		if p != null and "sprite" in p and p.sprite is AnimatedSprite3D:
+			_player_sprite = p.sprite
+	if _player_sprite != null:
+		_player_sprite.modulate = _player_tint
+
+func _get_player_position() -> Vector3:
+	var player = GameManager.player
+	if player == null:
+		return Vector3.INF
+	if "rigid_body_component" in player and player.rigid_body_component != null:
+		return player.rigid_body_component.global_position
+	return player.global_position
 
 # World space pos
 func room_index_at(pos: Vector3) -> int:
@@ -256,6 +308,88 @@ func _add_face(st: SurfaceTool, p0: Vector3, p1: Vector3, p2: Vector3, p3: Vecto
 	st.set_normal(n); st.set_uv(Vector2(1, 0)); st.add_vertex(p2)
 	st.set_normal(n); st.set_uv(Vector2(1, 1)); st.add_vertex(p1)
 
+const MapDoorScript = preload("res://scripts(gd)/component/map/door.gd")
+
+func _build_doors(layout) -> void:
+	var door_mat := StandardMaterial3D.new()
+	door_mat.albedo_color = Color(0.04, 0.025, 0.015)
+	door_mat.metallic_specular = 0.0
+	door_mat.roughness = 1.0
+	door_mat.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	door_mat.emission_enabled = false
+
+	var offset_x: float = -layout.MapWidth * tile_size * 0.5
+	var offset_z: float = -layout.MapHeight * tile_size * 0.5
+
+	for j in range(layout.MapHeight):
+		for i in range(layout.MapWidth):
+			var ch: String = layout.At(i, j)
+			if ch == "-":
+				var left_ch: String = layout.At(i - 1, j) if i > 0 else "#"
+				var right_ch: String = layout.At(i + 1, j) if i + 1 < layout.MapWidth else "#"
+				if left_ch != "-" and right_ch == "-":
+					var cx: float = offset_x + (i + 0.5) * tile_size
+					var cz: float = offset_z + j * tile_size
+					var room_a: int = layout.RoomIndexAt(i, j - 1)
+					var room_b: int = layout.RoomIndexAt(i, j + 1)
+					_register_room_pair(room_a, room_b)
+					_place_door(ch, cx, cz, door_mat, room_a if room_a > 0 else room_b)
+			elif ch == "|":
+				var above_ch: String = layout.At(i, j - 1) if j > 0 else "#"
+				var below_ch: String = layout.At(i, j + 1) if j + 1 < layout.MapHeight else "#"
+				if above_ch != "|" and below_ch == "|":
+					var cx: float = offset_x + i * tile_size
+					var cz: float = offset_z + (j + 0.5) * tile_size
+					var room_a: int = layout.RoomIndexAt(i - 1, j)
+					var room_b: int = layout.RoomIndexAt(i + 1, j)
+					_register_room_pair(room_a, room_b)
+					_place_door(ch, cx, cz, door_mat, room_a if room_a > 0 else room_b)
+
+func _register_room_pair(a: int, b: int) -> void:
+	if a <= 0 or b <= 0 or a == b:
+		return
+	if not room_nodes.has(a) or not room_nodes.has(b):
+		return
+	if not room_neighbors[a].has(b):
+		room_neighbors[a].append(b)
+	if not room_neighbors[b].has(a):
+		room_neighbors[b].append(a)
+
+func _place_door(ch: String, x: float, z: float, mat: StandardMaterial3D, room_id: int) -> void:
+	var door_thickness: float = tile_size * 0.12
+	var half_width: float = tile_size * 0.99
+	var door_height: float = tile_size * 2.0
+
+	var door = MapDoorScript.new()
+	door.position = Vector3(x, 0.0, z)
+	if ch == "|":
+		door.rotation.y = PI * 0.5
+
+	var left_hinge := _make_door_half(half_width, door_height, door_thickness, mat, true)
+	left_hinge.position = Vector3(-tile_size, 0.0, 0.0)
+	var right_hinge := _make_door_half(half_width, door_height, door_thickness, mat, false)
+	right_hinge.position = Vector3(tile_size, 0.0, 0.0)
+
+	door.add_child(left_hinge)
+	door.add_child(right_hinge)
+	door.left_hinge = left_hinge
+	door.right_hinge = right_hinge
+
+	var parent: Node = room_nodes.get(room_id, self)
+	parent.add_child(door)
+
+func _make_door_half(half_width: float, height: float, thickness: float, mat: StandardMaterial3D, extends_positive_x: bool) -> Node3D:
+	var hinge := Node3D.new()
+	var box_mesh := BoxMesh.new()
+	box_mesh.size = Vector3(half_width, height, thickness)
+	var mi := MeshInstance3D.new()
+	mi.mesh = box_mesh
+	mi.set_surface_override_material(0, mat)
+	var x_off: float = half_width * 0.5 if extends_positive_x else -half_width * 0.5
+	mi.position = Vector3(x_off, height * 0.5, 0)
+	hinge.add_child(mi)
+	return hinge
+
 func _build_props(layout) -> void:
 	var crate_mat := StandardMaterial3D.new()
 	crate_mat.albedo_texture = load("res://images(png)/map/crate2_diff.png")
@@ -263,12 +397,41 @@ func _build_props(layout) -> void:
 	crate_mat.metallic_specular = 0.0
 	crate_mat.roughness = 1.0
 	crate_mat.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	crate_mat.emission_enabled = false
 
 	var crate_mesh := _make_unit_cube_mesh()
 	crate_mesh.surface_set_material(0, crate_mat)
 
+	var trash_mat := _make_prop_material("res://scene(tscn)/props/TrashBag_TrashBag.png", Color(0.2, 0.2, 0.2))
+	var trash_meshes: Array[Mesh] = [
+		load("res://scene(tscn)/props/TrashBag_Cube_002.res"),
+		load("res://scene(tscn)/props/TrashBag_Cube_003.res"),
+		load("res://scene(tscn)/props/TrashBag_Cube_004.res"),
+	]
+
+	var barrel_mat := _make_prop_material("res://scene(tscn)/props/Barrels_Barrels.png", Color(0.2, 0.2, 0.2))
+	var barrel_meshes: Array[Mesh] = [
+		load("res://scene(tscn)/props/Barrels_Cylinder.res"),
+		load("res://scene(tscn)/props/Barrels_Cylinder_001.res"),
+	]
+
 	var offset_x: float = -layout.MapWidth * tile_size * 0.5
 	var offset_z: float = -layout.MapHeight * tile_size * 0.5
+
+	var mesh_table: Dictionary = {
+		"crate": crate_mesh,
+		"trash_0": trash_meshes[0],
+		"trash_1": trash_meshes[1],
+		"trash_2": trash_meshes[2],
+		"barrel_0": barrel_meshes[0],
+		"barrel_1": barrel_meshes[1],
+	}
+	var material_table: Dictionary = {
+		"trash_0": trash_mat, "trash_1": trash_mat, "trash_2": trash_mat,
+		"barrel_0": barrel_mat, "barrel_1": barrel_mat,
+	}
+
+	var placed: Array = []
 
 	for r in layout.mainRooms.values():
 		var n: int = randi_range(props_per_room_min, props_per_room_max)
@@ -277,38 +440,126 @@ func _build_props(layout) -> void:
 			while attempts > 0:
 				var i: int = randi_range(r.x + 1, r.x + r.w - 2)
 				var j: int = randi_range(r.y + 1, r.y + r.h - 2)
-				if layout.At(i, j) == "." and not _near_door(layout, i, j, 2) and randf() < pow(layout.occlusion[j][i], 3.0):
+				if layout.At(i, j) == "." and not _near_door(layout, i, j, 2) and layout.occlusion[j][i] >= prop_min_occlusion and randf() < pow(layout.occlusion[j][i], 3.0):
 					var x: float = offset_x + i * tile_size
 					var z: float = offset_z + j * tile_size
-					var s: float = randf_range(0.7, 1.1)
-					var mi := MeshInstance3D.new()
-					mi.mesh = crate_mesh
-					mi.scale = Vector3(s, s, s)
-					mi.position = Vector3(x, tile_size * s * 0.5, z)
-					mi.rotation.y = randf() * TAU
-					mi.add_child(_make_crate_collider())
-					add_child(mi)
-					if randf() < 0.5:
-						var s2: float = randf_range(0.5, s * 0.9)
-						var stacked := MeshInstance3D.new()
-						stacked.mesh = crate_mesh
-						stacked.scale = Vector3(s2, s2, s2)
-						stacked.position = Vector3(x, tile_size * s + tile_size * s2 * 0.5, z)
-						stacked.rotation.y = randf() * TAU
-						stacked.add_child(_make_crate_collider())
-						add_child(stacked)
+					match randi() % 3:
+						0:
+							_record_crate(crate_mesh, x, z, crate_scale, placed)
+						1:
+							var idx: int = randi() % trash_meshes.size()
+							_record_mesh_prop(trash_meshes[idx], "trash_" + str(idx), x, z, 0.8, 1.1, trash_scale, placed)
+						2:
+							var idx2: int = randi() % barrel_meshes.size()
+							_record_mesh_prop(barrel_meshes[idx2], "barrel_" + str(idx2), x, z, 0.9, 1.1, barrel_scale, placed)
 					break
 				attempts -= 1
 
-func _make_crate_collider() -> StaticBody3D:
-	var body := StaticBody3D.new()
-	body.collision_layer = 1
-	var shape := CollisionShape3D.new()
-	var box := BoxShape3D.new()
-	box.size = Vector3(tile_size, tile_size, tile_size)
-	shape.shape = box
-	body.add_child(shape)
-	return body
+	var kept: Array = _filter_overlapping_props(placed)
+	_spawn_prop_multimeshes(kept, mesh_table, material_table)
+
+func _filter_overlapping_props(placed: Array) -> Array:
+	var kept: Array = []
+	for entry in placed:
+		var entry_aabb: AABB = entry["aabb"]
+		var overlaps: bool = false
+		for k in kept:
+			if entry_aabb.intersects(k["aabb"]):
+				overlaps = true
+				break
+		if not overlaps:
+			kept.append(entry)
+	return kept
+
+func _spawn_prop_multimeshes(kept: Array, mesh_table: Dictionary, material_table: Dictionary) -> void:
+	var transforms_by_key: Dictionary = {}
+	var props_body := StaticBody3D.new()
+	props_body.collision_layer = 1
+	add_child(props_body)
+
+	for entry in kept:
+		for c in entry["contributions"]:
+			var key: String = c["mesh_key"]
+			if not transforms_by_key.has(key):
+				transforms_by_key[key] = []
+			transforms_by_key[key].append(c["mesh_transform"])
+
+			var cs := CollisionShape3D.new()
+			cs.shape = c["collider_shape"]
+			cs.transform = c["collider_transform"]
+			props_body.add_child(cs)
+
+	for key in transforms_by_key:
+		var transforms: Array = transforms_by_key[key]
+		if transforms.is_empty():
+			continue
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = mesh_table[key]
+		mm.instance_count = transforms.size()
+		for i in range(transforms.size()):
+			mm.set_instance_transform(i, transforms[i])
+		var mmi := MultiMeshInstance3D.new()
+		mmi.multimesh = mm
+		if material_table.has(key):
+			mmi.material_override = material_table[key]
+		mmi.gi_mode = GeometryInstance3D.GI_MODE_STATIC
+		add_child(mmi)
+
+func _record_crate(crate_mesh: Mesh, x: float, z: float, scale_factor: float, placed: Array) -> void:
+	var s: float = randf_range(0.7, 1.1) * scale_factor
+	var rot_y: float = randf() * TAU
+	var aabb_local: AABB = crate_mesh.get_aabb()
+	var contributions: Array = [_make_prop_contribution("crate", aabb_local, Vector3(x, tile_size * s * 0.5, z), rot_y, s)]
+
+	var base_half: float = tile_size * s * 0.5
+	var stack_height: float = tile_size * s
+
+	if randf() < 0.5:
+		var s2: float = randf_range(0.5, 0.9) * s
+		var rot2: float = randf() * TAU
+		contributions.append(_make_prop_contribution("crate", aabb_local, Vector3(x, tile_size * s + tile_size * s2 * 0.5, z), rot2, s2))
+		stack_height = tile_size * s + tile_size * s2
+
+	placed.append({
+		"contributions": contributions,
+		"aabb": AABB(Vector3(x - base_half, 0.0, z - base_half), Vector3(tile_size * s, stack_height, tile_size * s)),
+	})
+
+func _record_mesh_prop(mesh: Mesh, mesh_key: String, x: float, z: float, scale_min: float, scale_max: float, scale_factor: float, placed: Array) -> void:
+	var s: float = randf_range(scale_min, scale_max) * scale_factor
+	var rot_y: float = randf() * TAU
+	var aabb_local: AABB = mesh.get_aabb()
+	var mesh_pos: Vector3 = Vector3(x, -aabb_local.position.y * s, z)
+	var contributions: Array = [_make_prop_contribution(mesh_key, aabb_local, mesh_pos, rot_y, s)]
+	placed.append({
+		"contributions": contributions,
+		"aabb": AABB(Vector3(aabb_local.position.x * s + x, 0.0, aabb_local.position.z * s + z), aabb_local.size * s),
+	})
+
+func _make_prop_contribution(mesh_key: String, aabb_local: AABB, mesh_pos: Vector3, rot_y: float, s: float) -> Dictionary:
+	var rot_basis: Basis = Basis(Vector3.UP, rot_y)
+	var mesh_transform: Transform3D = Transform3D(rot_basis.scaled(Vector3.ONE * s), mesh_pos)
+	var aabb_local_center: Vector3 = aabb_local.position + aabb_local.size * 0.5
+	var collider_world_center: Vector3 = mesh_pos + rot_basis * (aabb_local_center * s)
+	var collider_shape := BoxShape3D.new()
+	collider_shape.size = aabb_local.size * s
+	return {
+		"mesh_key": mesh_key,
+		"mesh_transform": mesh_transform,
+		"collider_shape": collider_shape,
+		"collider_transform": Transform3D(rot_basis, collider_world_center),
+	}
+
+func _make_prop_material(texture_path: String, tint: Color = Color(0.2, 0.2, 0.2)) -> StandardMaterial3D:
+	var mat := StandardMaterial3D.new()
+	mat.albedo_texture = load(texture_path)
+	mat.albedo_color = tint
+	mat.metallic_specular = 0.0
+	mat.roughness = 1.0
+	mat.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	mat.emission_enabled = false
+	return mat
 
 func _set_collision_layer(mi: MeshInstance3D, layer_mask: int) -> void:
 	for child in mi.get_children():
@@ -344,8 +595,9 @@ func _build_lights(layout) -> void:
 		light.omni_range = sqrt(height * height + extent * extent) * 2.5
 		light.omni_attenuation = 0.5
 		light.position = Vector3(cx, height, cz)
-		add_child(light)
-		room_lights.append(light)
+		var parent: Node = room_nodes.get(r.id, self)
+		parent.add_child(light)
+		room_light_colors[r.id] = light.light_color
 
 func _build_navmesh(layout) -> void:
 	var vertices := PackedVector3Array()
