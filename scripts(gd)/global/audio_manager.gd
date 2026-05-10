@@ -111,6 +111,11 @@ func play_sfx(sfx_name: String) -> void:
 	sfx_player.play()
 
 
+func stop_sfx(sfx_name: String) -> void:
+	var sfx_player = get_node("SFX/Players/" + sfx_name) as ModifiedAudioStreamPlayerInstance
+	sfx_player.stop()
+
+
 func activate_bus_effect(bus_name: String, effect_name: String, fade_duration: float = 1.0) -> void:
 	var effect_controller = get_node(bus_name + "/Effects/" + effect_name) as AudioEffectControllerInstance
 	effect_controller.activate(fade_duration)
@@ -119,5 +124,9 @@ func activate_bus_effect(bus_name: String, effect_name: String, fade_duration: f
 func deactivate_bus_effect(bus_name: String, effect_name: String, fade_duration: float = 1.0) -> void:
 	var effect_controller = get_node(bus_name + "/Effects/" + effect_name) as AudioEffectControllerInstance
 	effect_controller.deactivate(fade_duration)
+
+func is_playing_sfx(sfx_name: String) -> bool:
+	var sfx_player = get_node("SFX/Players/" + sfx_name) as ModifiedAudioStreamPlayerInstance
+	return sfx_player.playing
 
 #endregion

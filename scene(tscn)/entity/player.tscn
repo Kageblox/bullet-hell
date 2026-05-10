@@ -91,9 +91,8 @@ animations = [{
 [sub_resource type="SphereShape3D" id="SphereShape3D_3lili"]
 radius = 0.75
 
-[node name="Player" type="Node3D" unique_id=1758969589 node_paths=PackedStringArray("player_camera", "aim_component", "hitbox_component", "rigid_body_component", "state_machine_component", "player_shape", "automatic_raycast_area_weapon", "hitstop_timer", "sprite")]
+[node name="Player" type="Node3D" unique_id=1758969589 node_paths=PackedStringArray("aim_component", "hitbox_component", "rigid_body_component", "state_machine_component", "player_shape", "automatic_raycast_area_weapon", "hitstop_timer", "sprite")]
 script = ExtResource("1_kbl78")
-player_camera = NodePath("")
 aim_component = NodePath("PlayerBody/PlayerShape/PlayerAim")
 hitbox_component = NodePath("PlayerBody/PlayerShape/PlayerHitbox")
 rigid_body_component = NodePath("PlayerBody")
