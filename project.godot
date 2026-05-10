@@ -28,6 +28,11 @@ AudioManager="*uid://dx1eyue1in3g0"
 SpawnManager="*uid://c3opnuky6gwaw"
 GameManager="*uid://bt8rtmbp1xl28"
 
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+
 [input]
 
 move_up={
