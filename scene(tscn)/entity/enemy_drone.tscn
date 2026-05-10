@@ -45,6 +45,7 @@ transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0
 shape = SubResource("CapsuleShape3D_ib5rv")
 
 [node name="DroneSprite" type="AnimatedSprite3D" parent="DroneBody" unique_id=855058196]
+transform = Transform3D(1, 0, 0, 0, 0.9077775, -0.4194521, 0, 0.4194521, 0.9077775, 0, 0.41631448, 0)
 axis = 1
 sprite_frames = ExtResource("3_6fg4m")
 animation = &"attack"

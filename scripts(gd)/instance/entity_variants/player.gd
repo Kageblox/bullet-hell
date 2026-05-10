@@ -120,6 +120,8 @@ var aim_distance_curve: Curve = preload("res://resource(tres)/curves/player_aim_
 
 var aim_max_distance: float = 10.0 ## The current max distance the player can aim.
 var aim_height: float = 10.0 ## The current target height of the camera.
+var _self_rids: Array[RID] = []
+var _initial_y: float = 0.0
 
 #endregion
 
@@ -130,54 +132,75 @@ func _ready() -> void:
 
 	# Upon being loaded, update the player state machine's current state.
 	state_machine_component.current_state = aiming_state
-	
+
 	# And set up the hitstop timer, such that the game resumes after the timer ends.
 	hitstop_timer.timeout.connect(
 		func():
 			GameManager.hitstop_active = false
 			)
 
+	_collect_self_rids(self)
+	_initial_y = rigid_body_component.global_position.y
+
+func _collect_self_rids(node: Node) -> void:
+	if node is CollisionObject3D:
+		_self_rids.append((node as CollisionObject3D).get_rid())
+	for c in node.get_children():
+		_collect_self_rids(c)
+
 
 func _process(delta: float) -> void:
 	super(delta)
-	
+
 	# Set the Rigid Body Component's Velocity, based on the Player's move input.
 	rigid_body_component.target_velocity = Vector3(InputManager.move_input.x, 0.0, -InputManager.move_input.y) * rigid_body_component.speed
 
+	var pos: Vector3 = rigid_body_component.global_position
+	if pos.y != _initial_y:
+		pos.y = _initial_y
+		rigid_body_component.global_position = pos
+	if rigid_body_component.linear_velocity.y != 0.0:
+		var v: Vector3 = rigid_body_component.linear_velocity
+		v.y = 0.0
+		rigid_body_component.linear_velocity = v
+
 	# Raycast from the camera through the mouse to find what the player is aiming at.
 	var camera_raycast = raycast_from_camera()
-	if camera_raycast:
+	# if camera_raycast:
 
 	# Raycast from the camera to the aimed position.
 	# var camera_raycast = raycast_from_camera()
 	
 	# # If the ray hit anything,
-	# if camera_raycast:
+	if camera_raycast:
 		
-	# 	# Clamp the aimed positon to the max aim distance,
-	# 	var raw_aim_vector = raycast_from_camera()["position"] - aim_component.global_position # The vector that points from the player to the aimed position.
-	# 	var clamped_aim_vector = raw_aim_vector.limit_length(aim_max_distance)
-	# 	var aim_position = clamped_aim_vector + aim_component.global_position
-		
-	# 	# And update the Aim Component's aim_position.
-	# 	aim_component.aim_position = aim_position
-		
-	# 	# Update the Camera's target position based on the player's curernt position, their aimed position, and the aim distance curve.
-	# 	var aim_lerp = aim_distance_curve.sample(clamped_aim_vector.length()/aim_max_distance)
-	# 	player_camera.target_position = lerp(aim_component.global_position, aim_position, aim_lerp) + Vector3(0, aim_height, 0)
-	# else:
-	# 	# Else, focus on the player.
-	# 	player_camera.target_position = aim_component.global_position + Vector3(0, aim_height, 0)
-
-		var raw_aim_vector = camera_raycast["position"] - aim_component.global_position
+		# Clamp the aimed positon to the max aim distance,
+		var raw_aim_vector = raycast_from_camera()["position"] - aim_component.global_position # The vector that points from the player to the aimed position.
 		var clamped_aim_vector = raw_aim_vector.limit_length(aim_max_distance)
-		aim_component.aim_position = clamped_aim_vector + aim_component.global_position
+		var aim_position = clamped_aim_vector + aim_component.global_position
+		
+		# And update the Aim Component's aim_position.
+		aim_component.aim_position = aim_position
+		
+		# Update the Camera's target position based on the player's curernt position, their aimed position, and the aim distance curve.
+		var aim_lerp = aim_distance_curve.sample(clamped_aim_vector.length()/aim_max_distance)
+		player_camera.target_position = lerp(aim_component.global_position, aim_position, aim_lerp) + Vector3(0, aim_height, 0)
+	else:
+		# Else, focus on the player.
+		player_camera.target_position = aim_component.global_position + Vector3(0, aim_height, 0)
+
+	# var raw_aim_vector = camera_raycast["position"] - aim_component.global_position
+	# var clamped_aim_vector = raw_aim_vector.limit_length(aim_max_distance)
+	# aim_component.aim_position = clamped_aim_vector + aim_component.global_position
 
 
 func damage_entity(value: float, direction: Vector3) -> void:
-	super(value, direction)
-	
-	# If not invincible, 
+	var horizontal: Vector3 = Vector3(direction.x, 0.0, direction.z)
+	if horizontal.length_squared() > 0.0:
+		horizontal = horizontal.normalized()
+	super(value, horizontal)
+
+	# If not invincible,
 	if not invincible:
 		sprite.animation_override = "pain"
 		AudioManager.play_sfx("hit")
@@ -195,6 +218,7 @@ func raycast_from_camera() -> Dictionary:
 	var end = origin + player_camera.project_ray_normal(InputManager.mouse_pos) * aim_ray_length
 	var query = PhysicsRayQueryParameters3D.create(origin, end, aim_ray_collide_layers)
 	query.collide_with_areas = true
+	query.exclude = _self_rids
 
 	return space_state.intersect_ray(query)
 
