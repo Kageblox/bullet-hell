@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://do7iy5uxmghpo" path="res://scripts(gd)/instance/map/layout.gd" id="2_vtadh"]
 [ext_resource type="PackedScene" uid="uid://c5aycmoa1y1u0" path="res://scene(tscn)/entity/enemy_drone.tscn" id="3_vtadh"]
 [ext_resource type="Script" uid="uid://dqxh8t61mkgv1" path="res://scripts(gd)/instance/map/locator.gd" id="4_ggdqm"]
+[ext_resource type="Script" uid="uid://r01tuxyq2gj3" path="res://scripts(gd)/component/map/director.gd" id="4_ilviu"]
 
 [sub_resource type="Environment" id="Environment_vtadh"]
 background_mode = 1
@@ -49,6 +50,11 @@ script = ExtResource("2_vtadh")
 map_height = 80
 min_size = 10
 metadata/_custom_type_script = "uid://do7iy5uxmghpo"
+
+[node name="Director" type="Node3D" parent="." unique_id=502213093]
+unique_name_in_owner = true
+script = ExtResource("4_ilviu")
+metadata/_custom_type_script = "uid://r01tuxyq2gj3"
 
 [node name="Player" parent="." unique_id=1758969589 node_paths=PackedStringArray("player_camera") instance=ExtResource("2_0cwwu")]
 unique_name_in_owner = true

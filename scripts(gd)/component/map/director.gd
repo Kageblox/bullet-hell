@@ -28,12 +28,12 @@ func _room_enter(room_id: int) -> void:
 			# Spawn enemy
 			var drone: Node3D = SpawnManager.get_from_pool("enemy_drone")
 			# Random position from room AABB
-			drone.global_position: Vector3 = Vector3(
+			drone.global_position = Vector3(
 				randf_range(aabb.position.x, aabb.position.x + aabb.size.x),
 				aabb.position.y,
 				randf_range(aabb.position.z, aabb.position.z + aabb.size.z)
 			)
-			get_tree().add_child(drone)
+			get_tree().root.add_child(drone)
 
 func _room_leave(_last_room: int) -> void:
 	pass
