@@ -46,8 +46,8 @@ script = ExtResource("2_ggdqm")
 [node name="Map" type="Node3D" parent="." unique_id=2100942894]
 unique_name_in_owner = true
 script = ExtResource("2_vtadh")
-map_width = 50
-map_height = 50
+map_height = 80
+min_size = 10
 metadata/_custom_type_script = "uid://do7iy5uxmghpo"
 
 [node name="Player" parent="." unique_id=1758969589 node_paths=PackedStringArray("player_camera") instance=ExtResource("2_0cwwu")]
@@ -130,13 +130,19 @@ mesh = SubResource("QuadMesh_3lili")
 surface_material_override/0 = SubResource("StandardMaterial3D_yyo3g")
 
 [node name="EnemyDrone" parent="." unique_id=1173266395 instance=ExtResource("3_vtadh")]
+process_mode = 4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+visible = false
 
 [node name="EnemyDrone2" parent="." unique_id=1749523273 instance=ExtResource("3_vtadh")]
+process_mode = 4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 1)
+visible = false
 
 [node name="EnemyDrone3" parent="." unique_id=1112514092 instance=ExtResource("3_vtadh")]
+process_mode = 4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+visible = false
 
 [node name="EnemyDrone4" parent="." unique_id=970012985 instance=ExtResource("3_vtadh")]
 process_mode = 4

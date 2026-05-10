@@ -163,6 +163,7 @@ func damage_entity(value: float, direction: Vector3) -> void:
 	super(value, direction)
 	
 	# If not invincible, 
+	AudioManager.play_sfx("hit")
 	pass
 
 

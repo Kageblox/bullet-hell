@@ -9,11 +9,11 @@ var room_id: int = 0
 var room: Gen.Room
 var _debug_label: Label
 
-signal on_room_changed(room: int, last_room: int)
+signal on_room_changed(room_id: int, last_room_id: int)
 
 
 func _ready() -> void:
-	self.actor = get_parent()
+	self.actor = %Player.get_node("PlayerBody")
 	self.layout = %Map
 	self.generator = self.layout.generator
 

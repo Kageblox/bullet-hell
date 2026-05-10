@@ -191,6 +191,7 @@ func damage_entity(value: float, direction: Vector3) -> void:
 	# If not invincible, 
 	if not invincible:
 		sprite.animation_override = "hit"
+		AudioManager.play_sfx("hit")
 
 
 func get_distance_to_player() -> float:

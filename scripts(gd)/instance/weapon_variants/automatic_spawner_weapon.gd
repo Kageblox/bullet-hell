@@ -13,6 +13,21 @@ extends AutomaticWeapon
 func fire() -> void:
 	super()
 	
+	var random_sound = randi() % 5 # Range 0 - 4
+	match random_sound:
+		0:
+			AudioManager.play_sfx("lazer_shot_1")
+		1:
+			AudioManager.play_sfx("lazer_shot_2")
+		2:
+			AudioManager.play_sfx("lazer_shot_3")
+		3:
+			AudioManager.play_sfx("lazer_shot_4")
+		4:
+			AudioManager.play_sfx("lazer_shot_5")
+		_:
+			AudioManager.play_sfx("lazer_shot_1")
+	
 	var spawned = spawner_component.spawn_entity(projectile_pool_name)
 	
 	if spawned is ProjectileEntity:

@@ -25,6 +25,7 @@ func _process(delta: float) -> void:
 		swing_dir = signf(local_p.z)
 		if swing_dir == 0.0:
 			swing_dir = 1.0
+		AudioManager.play_sfx("open_door")
 	elif is_open and dist > close_radius:
 		is_open = false
 	var target_left: float = open_angle * swing_dir if is_open else 0.0
