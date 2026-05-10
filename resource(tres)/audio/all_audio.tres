@@ -13,6 +13,8 @@
 [ext_resource type="AudioStream" uid="uid://bx5s7qo7x6ywn" path="res://audio(mp3,wav)/sfx/metal-bowl-hit-with-wooden-spoon-01.wav" id="11_gehws"]
 [ext_resource type="AudioStream" uid="uid://dc07sklsox61" path="res://audio(mp3,wav)/sfx/dash-sound-effect.wav" id="12_4ry38"]
 [ext_resource type="AudioStream" uid="uid://c4m4phkooisjl" path="res://audio(mp3,wav)/sfx/walking-on-metal-loop.wav" id="12_meh5n"]
+[ext_resource type="AudioStream" uid="uid://c48y2a4145t8i" path="res://audio(mp3,wav)/sfx/hit-by-metal-baseball-bat.wav" id="13_meh5n"]
+[ext_resource type="AudioStream" uid="uid://b3td8oddh4vxh" path="res://audio(mp3,wav)/sfx/futuristic-city-terminal.wav" id="14_6fo6r"]
 
 [sub_resource type="Resource" id="Resource_usfoh"]
 script = ExtResource("1_w8oxt")
@@ -20,10 +22,16 @@ stream = ExtResource("3_byili")
 bus = "SFX"
 metadata/_custom_type_script = "uid://iwn31vpxbqyt"
 
-[sub_resource type="Resource" id="Resource_byili"]
+[sub_resource type="Resource" id="Resource_meh5n"]
 script = ExtResource("1_w8oxt")
-stream = ExtResource("3_nuyay")
-bus = "Music"
+stream = ExtResource("12_4ry38")
+bus = "SFX"
+metadata/_custom_type_script = "uid://iwn31vpxbqyt"
+
+[sub_resource type="Resource" id="Resource_4ry38"]
+script = ExtResource("1_w8oxt")
+stream = ExtResource("11_gehws")
+bus = "SFX"
 metadata/_custom_type_script = "uid://iwn31vpxbqyt"
 
 [sub_resource type="Resource" id="Resource_o7gne"]
@@ -62,22 +70,27 @@ stream = ExtResource("10_3v1l2")
 bus = "SFX"
 metadata/_custom_type_script = "uid://iwn31vpxbqyt"
 
-[sub_resource type="Resource" id="Resource_4ry38"]
+[sub_resource type="Resource" id="Resource_byili"]
 script = ExtResource("1_w8oxt")
-stream = ExtResource("11_gehws")
-bus = "SFX"
-metadata/_custom_type_script = "uid://iwn31vpxbqyt"
-
-[sub_resource type="Resource" id="Resource_meh5n"]
-script = ExtResource("1_w8oxt")
-stream = ExtResource("12_4ry38")
-bus = "SFX"
+stream = ExtResource("3_nuyay")
+bus = "Music"
 metadata/_custom_type_script = "uid://iwn31vpxbqyt"
 
 [sub_resource type="Resource" id="Resource_6fo6r"]
 script = ExtResource("1_w8oxt")
 stream = ExtResource("12_meh5n")
 bus = "SFX"
+metadata/_custom_type_script = "uid://iwn31vpxbqyt"
+
+[sub_resource type="Resource" id="Resource_3v1l2"]
+script = ExtResource("1_w8oxt")
+stream = ExtResource("13_meh5n")
+bus = "SFX"
+metadata/_custom_type_script = "uid://iwn31vpxbqyt"
+
+[sub_resource type="Resource" id="Resource_xyd5f"]
+script = ExtResource("1_w8oxt")
+stream = ExtResource("14_6fo6r")
 metadata/_custom_type_script = "uid://iwn31vpxbqyt"
 
 [resource]
@@ -91,8 +104,10 @@ audio_data_collection = Dictionary[String, ExtResource("1_w8oxt")]({
 "lazer_shot_3": SubResource("Resource_c3u16"),
 "lazer_shot_4": SubResource("Resource_7tmkf"),
 "lazer_shot_5": SubResource("Resource_vhej0"),
+"melee": SubResource("Resource_3v1l2"),
 "mole_dig": SubResource("Resource_xefqb"),
 "music": SubResource("Resource_byili"),
+"open_door": SubResource("Resource_xyd5f"),
 "walk": SubResource("Resource_6fo6r")
 })
 metadata/_custom_type_script = "uid://b00h8euddtwq1"
