@@ -45,6 +45,8 @@ var invincible_modulate_debounce: bool = false
 var ongoing_hit_modulate_tween: Tween
 var invincibility_timer: float = -1
 var dying = false
+var _sprite_initial_position: Vector3 = Vector3.ZERO
+var _sprite_initial_captured: bool = false
 
 #endregion
 
@@ -70,21 +72,25 @@ func _process(delta: float) -> void:
 func damage_entity(value: float, direction: Vector3) -> void:
 	if not invincible:
 		health = clamp(health - value, 0, max_health)
-		
+
 		if health == 0:
 			entity_die()
 			return
-		
+
+		if not _sprite_initial_captured:
+			_sprite_initial_position = sprite.position
+			_sprite_initial_captured = true
+
 		if ongoing_hit_modulate_tween and ongoing_hit_modulate_tween.is_running():
 			ongoing_hit_modulate_tween.kill()
-		
+
 		sprite.modulate = hit_modulate_color
-		sprite.global_position = sprite.global_position + direction.normalized() * hit_vibration_distance
+		sprite.position = _sprite_initial_position + direction.normalized() * hit_vibration_distance
 		ongoing_hit_modulate_tween = create_tween().set_parallel(true)
 		ongoing_hit_modulate_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 		ongoing_hit_modulate_tween.tween_property(sprite, "modulate", Color.WHITE, hit_duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SPRING)
-		ongoing_hit_modulate_tween.tween_property(sprite, "position", Vector3.ZERO, hit_duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SPRING)
-		
+		ongoing_hit_modulate_tween.tween_property(sprite, "position", _sprite_initial_position, hit_duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SPRING)
+
 		on_damaged.emit(value)
 
 

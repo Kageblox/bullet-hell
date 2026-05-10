@@ -20,6 +20,7 @@ func _enter_tree() -> void:
 
 
 func get_hit() -> Dictionary:
+	force_raycast_update()
 	var result = {
 		"entity" : null,
 		"point": null,

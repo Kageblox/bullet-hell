@@ -22,11 +22,14 @@ extends Node3D
 
 @export var player_tint_strength: float = 0.9
 @export var player_tint_smooth_speed: float = 5.0
+@export var light_fade_speed: float = 4.0
 
 var generator: Gen.LayoutGenerator
 var room_nodes: Dictionary = {}
 var room_neighbors: Dictionary = {}
+var room_lights: Dictionary = {}
 var room_light_colors: Dictionary = {}
+var room_light_base_energy: Dictionary = {}
 var _last_active_rooms: Dictionary = {}
 var _last_known_room: int = 0
 var _player_tint: Color = Color.WHITE
@@ -69,21 +72,30 @@ func _process(delta: float) -> void:
 	if current > 0:
 		_last_known_room = current
 	_apply_player_tint(_last_known_room, delta)
-	if current <= 0:
-		return
-	var active: Dictionary = {current: true}
-	if room_neighbors.has(current):
-		for n in room_neighbors[current]:
-			active[n] = true
-	if active == _last_active_rooms:
-		return
-	for id in room_nodes:
-		var node: Node3D = room_nodes[id]
-		var on: bool = active.has(id)
-		if node.visible != on:
-			node.visible = on
-			node.process_mode = Node.PROCESS_MODE_INHERIT if on else Node.PROCESS_MODE_DISABLED
-	_last_active_rooms = active
+
+	var active: Dictionary = _last_active_rooms
+	if current > 0:
+		active = {current: true}
+		if room_neighbors.has(current):
+			for n in room_neighbors[current]:
+				active[n] = true
+		if active != _last_active_rooms:
+			for id in room_nodes:
+				var node: Node3D = room_nodes[id]
+				var on: bool = active.has(id)
+				if node.visible != on:
+					node.visible = on
+					node.process_mode = Node.PROCESS_MODE_INHERIT if on else Node.PROCESS_MODE_DISABLED
+			_last_active_rooms = active
+	_apply_light_fade(active, delta)
+
+func _apply_light_fade(active: Dictionary, delta: float) -> void:
+	var t: float = clamp(light_fade_speed * delta, 0.0, 1.0)
+	for id in room_lights:
+		var light: Light3D = room_lights[id]
+		var target: float = room_light_base_energy.get(id, 0.0) if active.has(id) else 0.0
+		light.light_energy = lerp(light.light_energy, target, t)
+		light.visible = light.light_energy > 0.01
 
 func _apply_player_tint(room_id: int, delta: float) -> void:
 	var target: Color = Color.WHITE
@@ -595,9 +607,12 @@ func _build_lights(layout) -> void:
 		light.omni_range = sqrt(height * height + extent * extent) * 2.5
 		light.omni_attenuation = 0.5
 		light.position = Vector3(cx, height, cz)
-		var parent: Node = room_nodes.get(r.id, self)
-		parent.add_child(light)
+		add_child(light)
+		room_lights[r.id] = light
+		room_light_base_energy[r.id] = light.light_energy
 		room_light_colors[r.id] = light.light_color
+		light.light_energy = 0.0
+		light.visible = false
 
 func _build_navmesh(layout) -> void:
 	var vertices := PackedVector3Array()

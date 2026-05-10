@@ -104,6 +104,7 @@ mesh = SubResource("QuadMesh_8sshd")
 script = ExtResource("9_3gotm")
 
 [node name="EnemySprite" type="AnimatedSprite3D" parent="EnemyBody" unique_id=68324231]
+transform = Transform3D(1, 0, 0, 0, 0.9077775, -0.4194521, 0, 0.4194521, 0.9077775, 0, 0.41631448, 0)
 axis = 1
 sprite_frames = ExtResource("10_ukort")
 animation = &"idle"
