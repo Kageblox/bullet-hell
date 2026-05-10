@@ -33,7 +33,7 @@ var aiming_state = EntityState.new(
 		
 		rigid_body_component.speed = aiming_body_speed
 		rigid_body_component.acceleration = aiming_body_accel
-		player_shape.scale = Vector3(aiming_body_size, aiming_body_size, aiming_body_size)
+		_target_body_size = aiming_body_size
 		rigid_body_component.mass = aiming_body_mass
 		
 		aim_max_distance = aiming_aim_max_distance
@@ -82,7 +82,7 @@ var sprinting_state = EntityState.new(
 		
 		rigid_body_component.speed = sprinting_body_speed
 		rigid_body_component.acceleration = sprinting_body_accel
-		player_shape.scale = Vector3(sprinting_body_size, sprinting_body_size, sprinting_body_size)
+		_target_body_size = sprinting_body_size
 		rigid_body_component.mass = sprinting_body_mass
 		
 		aim_max_distance = sprinting_aim_max_distance
@@ -122,6 +122,8 @@ var aim_max_distance: float = 10.0 ## The current max distance the player can ai
 var aim_height: float = 10.0 ## The current target height of the camera.
 var _self_rids: Array[RID] = []
 var _initial_y: float = 0.0
+var _target_body_size: float = 1.0
+@export var body_size_smooth_speed: float = 18.0
 
 #endregion
 
@@ -154,6 +156,12 @@ func _process(delta: float) -> void:
 
 	# Set the Rigid Body Component's Velocity, based on the Player's move input.
 	rigid_body_component.target_velocity = Vector3(InputManager.move_input.x, 0.0, -InputManager.move_input.y) * rigid_body_component.speed
+
+	# Smoothly animate body scale toward target.
+	var s_t: float = clamp(body_size_smooth_speed * delta, 0.0, 1.0)
+	var current_s: float = player_shape.scale.x
+	var new_s: float = lerp(current_s, _target_body_size, s_t)
+	player_shape.scale = Vector3(new_s, new_s, new_s)
 
 	var pos: Vector3 = rigid_body_component.global_position
 	if pos.y != _initial_y:

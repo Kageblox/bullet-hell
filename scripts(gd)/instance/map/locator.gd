@@ -9,7 +9,7 @@ var room_id: int = 0
 var room: Gen.Room
 var _debug_label: Label
 
-signal on_room_changed(room: Gen.Room, last_room: Gen.Room)
+signal on_room_changed(room: int, last_room: int)
 
 
 func _ready() -> void:
@@ -33,15 +33,18 @@ func _physics_process(_delta) -> void:
 	if self.actor != null:
 		if self.generator == null:
 			return
-		self.room = self.current_room()
+		var last_room: Gen.Room = self.room  # may be null
+		var last_room_id := 0
+		if last_room != null:
+			last_room_id = last_room.id
+		self.room = self.current_room()  # may be null
 		if self.room != null:
-			var last_room: Gen.Room = self.room
 			if self.room.id > 0:
-				if room.id != self.room_id:
+				if self.room.id != last_room_id:
 					self.room = room
 					self.room_id = room.id
 					_update_debug_label()
-				on_room_changed.emit(self.room, last_room)
+					on_room_changed.emit(room.id, last_room_id)
 	else:
 		printerr("Actor not set")
 		return

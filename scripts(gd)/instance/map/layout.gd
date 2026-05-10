@@ -53,6 +53,18 @@ func _enter_tree() -> void:
 	_build_doors(generator)
 	_build_props(generator)
 
+func get_room_aabb(room_id: int) -> AABB:
+	if generator == null or not generator.rooms.has(room_id):
+		return AABB()
+	var r = generator.rooms[room_id]
+	var offset_x: float = -generator.MapWidth * tile_size * 0.5
+	var offset_z: float = -generator.MapHeight * tile_size * 0.5
+	var min_x: float = offset_x + r.x * tile_size - tile_size * 0.5
+	var min_z: float = offset_z + r.y * tile_size - tile_size * 0.5
+	var size_x: float = r.w * tile_size
+	var size_z: float = r.h * tile_size
+	return AABB(Vector3(min_x, 0.0, min_z), Vector3(size_x, tile_size * 2.0, size_z))
+
 func get_generator() -> Gen.LayoutGenerator:
 	return generator
 
@@ -118,7 +130,7 @@ func _get_player_position() -> Vector3:
 		return player.rigid_body_component.global_position
 	return player.global_position
 
-# World space pos
+# World space position -> room
 func room_index_at(pos: Vector3) -> int:
 	if generator == null:
 		return 0
