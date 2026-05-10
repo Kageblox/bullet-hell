@@ -50,8 +50,13 @@ var aiming_state = EntityState.new(
 			
 		if rigid_body_component.linear_velocity.length() > idle_animation_max_velocity:
 			sprite.current_animation = "walk"
+			if !AudioManager.is_playing_sfx("walk"):
+				AudioManager.play_sfx("walk")
+		
 		else:
 			sprite.current_animation = "idle"
+			if AudioManager.is_playing_sfx("walk"):
+				AudioManager.stop_sfx("walk")
 			
 		pass,
 	func(delta: float):
@@ -83,6 +88,8 @@ var sprinting_state = EntityState.new(
 		aim_max_distance = sprinting_aim_max_distance
 		aim_height = sprinting_aim_height
 		aim_component.current_aim_state = sprinting_aim_state
+		
+		AudioManager.play_sfx("dash")
 		
 		pass,
 	func(delta: float):
@@ -196,6 +203,7 @@ func damage_entity(value: float, direction: Vector3) -> void:
 	# If not invincible,
 	if not invincible:
 		sprite.animation_override = "pain"
+		AudioManager.play_sfx("hit")
 		# Trigger the player's hitstop, and make them invincible.
 		hitstop_timer.start(hitstop_duration)
 		GameManager.hitstop_active = true
