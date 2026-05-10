@@ -27,6 +27,7 @@ extends Node3D
 var generator: Gen.LayoutGenerator
 var room_nodes: Dictionary = {}
 var room_neighbors: Dictionary = {}
+var room_doors: Dictionary = {}
 var room_lights: Dictionary = {}
 var room_light_colors: Dictionary = {}
 var room_light_base_energy: Dictionary = {}
@@ -75,6 +76,10 @@ func _build_rooms(layout) -> void:
 		add_child(room_node)
 		room_nodes[r.id] = room_node
 		room_neighbors[r.id] = []
+		room_doors[r.id] = []
+
+func get_room_doors(room_id: int) -> Array:
+	return room_doors.get(room_id, [])
 
 func _process(delta: float) -> void:
 	var player_pos: Vector3 = _get_player_position()
@@ -357,7 +362,7 @@ func _build_doors(layout) -> void:
 					var room_a: int = layout.RoomIndexAt(i, j - 1)
 					var room_b: int = layout.RoomIndexAt(i, j + 1)
 					_register_room_pair(room_a, room_b)
-					_place_door(ch, cx, cz, door_mat, room_a if room_a > 0 else room_b)
+					_place_door(ch, cx, cz, door_mat, room_a, room_b)
 			elif ch == "|":
 				var above_ch: String = layout.At(i, j - 1) if j > 0 else "#"
 				var below_ch: String = layout.At(i, j + 1) if j + 1 < layout.MapHeight else "#"
@@ -367,7 +372,7 @@ func _build_doors(layout) -> void:
 					var room_a: int = layout.RoomIndexAt(i - 1, j)
 					var room_b: int = layout.RoomIndexAt(i + 1, j)
 					_register_room_pair(room_a, room_b)
-					_place_door(ch, cx, cz, door_mat, room_a if room_a > 0 else room_b)
+					_place_door(ch, cx, cz, door_mat, room_a, room_b)
 
 func _register_room_pair(a: int, b: int) -> void:
 	if a <= 0 or b <= 0 or a == b:
@@ -379,7 +384,7 @@ func _register_room_pair(a: int, b: int) -> void:
 	if not room_neighbors[b].has(a):
 		room_neighbors[b].append(a)
 
-func _place_door(ch: String, x: float, z: float, mat: StandardMaterial3D, room_id: int) -> void:
+func _place_door(ch: String, x: float, z: float, mat: StandardMaterial3D, room_a: int, room_b: int) -> void:
 	var door_thickness: float = tile_size * 0.12
 	var half_width: float = tile_size * 0.99
 	var door_height: float = tile_size * 2.0
@@ -399,8 +404,26 @@ func _place_door(ch: String, x: float, z: float, mat: StandardMaterial3D, room_i
 	door.left_hinge = left_hinge
 	door.right_hinge = right_hinge
 
-	var parent: Node = room_nodes.get(room_id, self)
+	var body := StaticBody3D.new()
+	body.collision_layer = 1
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(tile_size * 2.0, door_height, door_thickness)
+	shape.shape = box
+	shape.position = Vector3(0.0, door_height * 0.5, 0.0)
+	shape.disabled = true
+	body.add_child(shape)
+	door.add_child(body)
+	door.collider = shape
+
+	var parent_id: int = room_a if room_a > 0 else room_b
+	var parent: Node = room_nodes.get(parent_id, self)
 	parent.add_child(door)
+
+	if room_a > 0 and room_doors.has(room_a):
+		room_doors[room_a].append(door)
+	if room_b > 0 and room_doors.has(room_b) and room_b != room_a:
+		room_doors[room_b].append(door)
 
 func _make_door_half(half_width: float, height: float, thickness: float, mat: StandardMaterial3D, extends_positive_x: bool) -> Node3D:
 	var hinge := Node3D.new()

@@ -9,25 +9,35 @@ extends Node3D
 
 var left_hinge: Node3D
 var right_hinge: Node3D
+var collider: CollisionShape3D
 var is_open: bool = false
+var locked: bool = false
 var swing_dir: float = 0.0
+
+func set_locked(value: bool) -> void:
+	locked = value
+	if collider != null:
+		collider.disabled = not locked
 
 func _process(delta: float) -> void:
 	if left_hinge == null or right_hinge == null:
 		return
-	var player_pos: Vector3 = _get_player_position()
-	if player_pos == Vector3.INF:
-		return
-	var dist: float = global_position.distance_to(player_pos)
-	if not is_open and dist < open_radius:
-		is_open = true
-		var local_p: Vector3 = to_local(player_pos)
-		swing_dir = signf(local_p.z)
-		if swing_dir == 0.0:
-			swing_dir = 1.0
-		AudioManager.play_sfx("open_door")
-	elif is_open and dist > close_radius:
+	if locked:
 		is_open = false
+	else:
+		var player_pos: Vector3 = _get_player_position()
+		if player_pos == Vector3.INF:
+			return
+		var dist: float = global_position.distance_to(player_pos)
+		if not is_open and dist < open_radius:
+			is_open = true
+			var local_p: Vector3 = to_local(player_pos)
+			swing_dir = signf(local_p.z)
+			if swing_dir == 0.0:
+				swing_dir = 1.0
+			AudioManager.play_sfx("open_door")
+		elif is_open and dist > close_radius:
+			is_open = false
 	var target_left: float = open_angle * swing_dir if is_open else 0.0
 	var target_right: float = -open_angle * swing_dir if is_open else 0.0
 	var step: float = swing_speed * delta
