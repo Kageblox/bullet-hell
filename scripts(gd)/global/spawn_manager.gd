@@ -83,7 +83,7 @@ func get_from_pool(pool_name: String) -> Variant:
 		pooled_object = new_instance
 	else:
 		pooled_object = unused_pool.get_child(0)
-
+	
 	if pooled_object is EntityInstance:
 		pooled_object.reparent(used_pool)
 		pooled_object.set_used()

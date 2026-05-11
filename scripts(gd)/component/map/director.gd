@@ -14,9 +14,9 @@ var room_template: Dictionary = {"index": 0, "alive": 0}
 var layout: MapLayout
 
 func _ready() -> void:
-	layout = %Map
-	locator = %Locator
-	player = %Player.get_node("PlayerBody")
+	layout = GameManager.map
+	locator = GameManager.locater
+	player = GameManager.player.get_node("PlayerBody")
 	locator.on_room_changed.connect(_on_room_changed)
 
 func _on_room_changed(room_id: int, last_room_id: int) -> void:
@@ -88,6 +88,7 @@ func _commit_room(room_id: int) -> void:
 	rooms[room_id] = dup
 
 	@warning_ignore("integer_division")
+	
 	var spawn_count: int = max(1, rooms.size() / 2)
 	# print("commit room=", room_id, " spawn=", spawn_count, " rooms=", rooms.size())
 	for k in range(spawn_count):
@@ -96,7 +97,7 @@ func _commit_room(room_id: int) -> void:
 			printerr("No enemy in pool")
 			break
 		drone.global_position = _pick_spawn_position(aabb, room_id)
-		_reset_after_spawn(drone)
+		#_reset_after_spawn(drone)
 		# print("  drone[", k, "] pos=", drone.global_position, " tile='", layout.tile_at(drone.global_position), "' room=", layout.room_index_at(drone.global_position), " visible=", drone.visible)
 		dup["alive"] += 1
 		if drone is EntityInstance:
@@ -107,25 +108,11 @@ func _commit_room(room_id: int) -> void:
 
 func _player_room() -> int:
 	return layout.room_index_at(player.global_position)
-
-func _reset_after_spawn(drone: Node3D) -> void:
-	var rb = drone.get("rigid_body_component")
-	if rb is RigidBody3D:
-		rb.global_position = drone.global_position
-		rb.linear_velocity = Vector3.ZERO
-		rb.angular_velocity = Vector3.ZERO
-		if "target_velocity" in rb:
-			rb.target_velocity = Vector3.ZERO
-	var pf = drone.get("pathfinder_component")
-	if pf is NavigationAgent3D:
-		pf.target_position = drone.global_position
-	var sm = drone.get("state_machine_component")
-	var idle = drone.get("idle_state")
-	if sm != null and idle != null:
-		sm.current_state = idle
+	
 
 func _is_walkable_floor(ch: String) -> bool:
 	return ch == "." or ch == "c" or ch == "C" or ch == "v" or ch == "h"
+
 
 func _pick_spawn_position(aabb: AABB, room_id: int) -> Vector3:
 	var room: Gen.Room = layout.generator.rooms.get(room_id, null)

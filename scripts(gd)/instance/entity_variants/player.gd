@@ -129,8 +129,11 @@ var _target_body_size: float = 1.0
 
 #region Functions
 
-func _ready() -> void:
+func _enter_tree() -> void:
 	GameManager.player = self
+	
+
+func _ready() -> void:
 
 	# Upon being loaded, update the player state machine's current state.
 	state_machine_component.current_state = aiming_state

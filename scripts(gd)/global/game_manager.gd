@@ -9,6 +9,7 @@ var pause_active: bool = false
 var hitstop_active: bool = false
 
 var player: PlayerEntity
+var locater: Locator
 var map: MapLayout
 
 func _enter_tree() -> void:

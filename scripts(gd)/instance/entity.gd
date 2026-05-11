@@ -127,7 +127,16 @@ func set_used() -> void:
 		rb.angular_velocity = Vector3.ZERO
 		if "target_velocity" in rb:
 			rb.target_velocity = Vector3.ZERO
-
+	
+	var pf = get("pathfinder_component")
+	if pf is NavigationAgent3D:
+		pf.target_position = rb.global_position
+	
+	var sm = get("state_machine_component")
+	var idle = get("idle_state")
+	if sm != null and idle != null:
+		sm.current_state = idle
+	
 	on_set_used.emit()
 
 	visible = true

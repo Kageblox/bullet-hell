@@ -11,11 +11,13 @@ var _debug_label: Label
 
 signal on_room_changed(room_id: int, last_room_id: int)
 
+func _enter_tree() -> void:
+	GameManager.locater = self
 
 func _ready() -> void:
-	#self.actor = GameManager.player.get_node("PlayerBody")
-	#self.layout = GameManager.player.get_node("PlayerBody")
-	#self.generator = self.layout.generator
+	self.actor = GameManager.player.get_node("PlayerBody")
+	self.layout = GameManager.map
+	self.generator = self.layout.generator
 
 	var canvas := CanvasLayer.new()
 	canvas.name = "LocatorDebug"
