@@ -10,6 +10,12 @@ var all_pools: PackedScenePoolDictionaryResource = preload("res://resource(tres)
 
 func _ready() -> void:
 	initialize_pools()
+	
+	SceneManager.on_scene_exit_end.connect(
+		func(_scene: SceneInstance):
+			set_all_unused()
+			)
+
 
 func initialize_pools() -> void:
 	for child in get_children():
@@ -39,6 +45,12 @@ func initialize_pools() -> void:
 			new_pool_unused.add_child(new_instance)
 			
 			new_instance.global_position = unused_position
+			
+func set_all_unused() -> void:
+	print("set all unused")
+	for pool in get_children():
+		for used in pool.get_node("used").get_children():
+			used.set_unused()
 
 func return_to_pool(pool_object: Node3D, pool_name: String) -> void:
 	if all_pools.packed_scene_pool_dictionary.has(pool_name):

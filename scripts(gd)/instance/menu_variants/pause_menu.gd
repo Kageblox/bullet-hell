@@ -21,6 +21,20 @@ func close() -> void:
 
 func _on_settings_button_pressed() -> void:
 	MenuManager.open_settings_menu()
+	
+
+func _on_restart_button_pressed() -> void:
+	MenuManager.open_question_menu(
+		"Restart Game?",
+		{
+			"Yes":
+				func():
+					SceneManager.goto_scene("res://scene(tscn)/scenes/game.tscn"),
+			"No":
+				func():
+					pass,
+		},
+	)
 
 
 func _on_main_menu_button_pressed() -> void:

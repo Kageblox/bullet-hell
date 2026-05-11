@@ -147,6 +147,10 @@ func _ready() -> void:
 	_collect_self_rids(self)
 	_initial_y = rigid_body_component.global_position.y
 
+func entity_die() -> void:
+	SceneManager.goto_scene("res://scene(tscn)/scenes/game.tscn")
+
+
 func _collect_self_rids(node: Node) -> void:
 	if node is CollisionObject3D:
 		_self_rids.append((node as CollisionObject3D).get_rid())

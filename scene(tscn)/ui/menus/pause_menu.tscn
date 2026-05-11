@@ -122,6 +122,19 @@ margin_right = 4
 margin_bottom = 4
 metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
 
+[node name="RestartButton" type="PanelContainer" parent="Modulate/Position/Panel/VBox" unique_id=1375950136]
+layout_mode = 2
+script = ExtResource("9_6fa3q")
+text = "Restart"
+label_settings = ExtResource("7_qr635")
+horizontal_alignment = 1
+vertical_alignment = 1
+margin_left = 4
+margin_top = 4
+margin_right = 4
+margin_bottom = 4
+metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
+
 [node name="MainMenuButton" type="PanelContainer" parent="Modulate/Position/Panel/VBox" unique_id=1665966490]
 layout_mode = 2
 script = ExtResource("9_6fa3q")
@@ -162,6 +175,7 @@ margin_bottom = 4
 metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
 
 [connection signal="pressed" from="Modulate/Position/Panel/VBox/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="Modulate/Position/Panel/VBox/RestartButton" to="." method="_on_restart_button_pressed"]
 [connection signal="pressed" from="Modulate/Position/Panel/VBox/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
 [connection signal="pressed" from="Modulate/Position/Panel/VBox/QuitGameButton" to="." method="_on_quit_game_button_pressed"]
 [connection signal="pressed" from="Modulate/Position/Panel/VBox/ResumeButton" to="." method="_on_resume_button_pressed"]
