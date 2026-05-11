@@ -113,8 +113,13 @@ func entity_die() -> void:
 
 
 func set_used() -> void:
+	dying = false
+	invincible = false
+	invincibility_timer = -1
+	_health = max_health
+	on_health_changed.emit(_health)
 	on_set_used.emit()
-	
+
 	visible = true
 	set_deferred("process_mode", Node.PROCESS_MODE_PAUSABLE)
 

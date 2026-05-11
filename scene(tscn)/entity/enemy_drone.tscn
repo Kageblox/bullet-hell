@@ -28,7 +28,8 @@ state_machine_component = NodePath("DroneStateMachine")
 automatic_spawner_weapon = NodePath("DroneBody/DroneAim/AutomaticSpawnerWeapon")
 sprite = NodePath("DroneBody/DroneSprite")
 pool_name = "enemy_drone"
-health = 100.0
+health = 15.0
+max_health = 15.0
 metadata/_custom_type_script = "uid://b70u1hq7nrb1f"
 
 [node name="DroneBody" type="RigidBody3D" parent="." unique_id=24094134]
