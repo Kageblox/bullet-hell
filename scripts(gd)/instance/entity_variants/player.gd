@@ -211,7 +211,6 @@ func damage_entity(value: float, direction: Vector3) -> void:
 	# If not invincible,
 	if not invincible:
 		sprite.animation_override = "pain"
-		AudioManager.play_sfx("hit")
 		# Trigger the player's hitstop, and make them invincible.
 		hitstop_timer.start(hitstop_duration)
 		GameManager.hitstop_active = true

@@ -14,7 +14,6 @@
 [ext_resource type="Script" uid="uid://bbd8bv8gd3rmg" path="res://scripts(gd)/component/entity/entity_state_machine.gd" id="11_ytwyp"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ib5rv"]
-radius = 0.25
 height = 1.25
 
 [node name="EnemyDrone" type="Node3D" unique_id=1173266395 node_paths=PackedStringArray("aim_component", "hitbox_component", "pathfinder_component", "raycast_component", "rigid_body_component", "state_machine_component", "automatic_spawner_weapon", "sprite")]
@@ -26,6 +25,9 @@ raycast_component = NodePath("DroneBody/DroneRaycast")
 rigid_body_component = NodePath("DroneBody")
 state_machine_component = NodePath("DroneStateMachine")
 automatic_spawner_weapon = NodePath("DroneBody/DroneAim/AutomaticSpawnerWeapon")
+comfortable_attacking_distance = 0.0
+min_attacking_distance = 0.0
+max_attacking_distance = 0.0
 sprite = NodePath("DroneBody/DroneSprite")
 pool_name = "enemy_drone"
 health = 100.0
@@ -45,7 +47,7 @@ transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0
 shape = SubResource("CapsuleShape3D_ib5rv")
 
 [node name="DroneSprite" type="AnimatedSprite3D" parent="DroneBody" unique_id=855058196]
-transform = Transform3D(1, 0, 0, 0, 0.9077775, -0.4194521, 0, 0.4194521, 0.9077775, 0, 1.5124611, 0.32820782)
+transform = Transform3D(1, 0, 0, 0, 0.9077775, -0.4194521, 0, 0.4194521, 0.9077775, 0, 0.1086961, 0.0096672475)
 axis = 1
 sprite_frames = ExtResource("3_6fg4m")
 animation = &"attack"
@@ -82,6 +84,7 @@ height = 0.5
 radius = 1.25
 avoidance_layers = 33
 avoidance_mask = 33
+debug_enabled = true
 script = ExtResource("9_wv4am")
 metadata/_custom_type_script = "uid://dy4ooeu54ph26"
 

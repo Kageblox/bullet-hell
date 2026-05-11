@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dqvv6h3f1oke1" path="res://scripts(gd)/instance/scene_variants/another_scene.gd" id="1_jukcp"]
 [ext_resource type="PackedScene" uid="uid://0xa7fqgxcppg" path="res://scene(tscn)/entity/player.tscn" id="2_47d8d"]
-[ext_resource type="PackedScene" uid="uid://c5aycmoa1y1u0" path="res://scene(tscn)/entity/enemy_drone.tscn" id="3_47d8d"]
+[ext_resource type="PackedScene" uid="uid://ck6mustsj2ie2" path="res://scene(tscn)/entity/enemy_grenade.tscn" id="3_47d8d"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_5t3ln"]
 
@@ -100,26 +100,5 @@ transform = Transform3D(25, 0, 0, 0, 25, 0, 0, 0, 25, 0, 0, 0)
 mesh = SubResource("QuadMesh_3lili")
 surface_material_override/0 = SubResource("StandardMaterial3D_yyo3g")
 
-[node name="EnemyDrone" parent="." unique_id=1173266395 instance=ExtResource("3_47d8d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
-
-[node name="EnemyDrone2" parent="." unique_id=1749523273 instance=ExtResource("3_47d8d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 1)
-
-[node name="EnemyDrone3" parent="." unique_id=1112514092 instance=ExtResource("3_47d8d")]
+[node name="EnemyGrenade" parent="." unique_id=746150105 instance=ExtResource("3_47d8d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
-
-[node name="EnemyDrone4" parent="." unique_id=970012985 instance=ExtResource("3_47d8d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 1)
-
-[node name="EnemyDrone5" parent="." unique_id=1625662254 instance=ExtResource("3_47d8d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -2)
-
-[node name="EnemyDrone6" parent="." unique_id=1070671966 instance=ExtResource("3_47d8d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -1)
-
-[node name="EnemyDrone7" parent="." unique_id=55988946 instance=ExtResource("3_47d8d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -2)
-
-[node name="EnemyDrone8" parent="." unique_id=1037102228 instance=ExtResource("3_47d8d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -1)

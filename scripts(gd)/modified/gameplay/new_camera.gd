@@ -7,12 +7,11 @@ extends Camera3D
 var offset: Vector3
 var target_position: Vector3
 var previous_position: Vector3
-var target: Node3D
+@export var target: Node3D
 var pan_offset: Vector3 = Vector3.ZERO
 
-func _enter_tree() -> void:
+func _ready() -> void:
 	offset = position
-	target = %Player.get_node("PlayerBody")
 
 func _process(delta: float) -> void:
 	previous_position = position

@@ -1,6 +1,6 @@
-class_name EnemyDrone
+class_name EnemyGrenade
 extends EntityInstance
-## Entity Script that defines an Enemy Drone.
+## Entity Script that defines the Grenade Enemy Type.
 
 #region Variables
 
@@ -11,20 +11,18 @@ extends EntityInstance
 @export var raycast_component: EntityRaycastComponent
 @export var rigid_body_component: EntityRigidBodyComponent
 @export var state_machine_component: EntityStateMachineComponent
-@export var automatic_spawner_weapon: AutomaticSpawnerWeapon
+@export var chargable_area_weapon: ChargableAreaWeapon
 
 @export_group("Basic")
 @export var detection_distance: float = 10 ## How far away the Enemy can detect the player.
 
-@export var comfortable_attacking_distance: float = 5
-@export var min_attacking_distance: float = 3
-@export var max_attacking_distance: float = 7
-
-@export var comfortable_attacking_angle: float = 5
+@export var kamikaze_distance: float = 5 ## Distance needed to enter the Kamikaze State.
+@export var kamikaze_speed: float = 5
+@export var kamikaze_acceleration: float = 0.05
+@export var explode_distance: float = 2 ## Distance needed before Exploding.
 
 @export_group("Advanced")
 @export var idle_animation_max_velocity: float = 0.1 ## The velocity needed for the sprite to exit its idle animation.
-@export var fleeing_distance: float = 5 ## How far away the target fleeing position is.
 
 
 var idle_state = EntityState.new(
@@ -62,8 +60,8 @@ var chasing_state = EntityState.new(
 		
 		var distance_to_player = get_distance_to_player()
 		if is_player_visible():
-			if distance_to_player < comfortable_attacking_distance:
-				state_machine_component.current_state = attacking_state
+			if distance_to_player < kamikaze_distance:
+				state_machine_component.current_state = kamikaze_state
 			elif distance_to_player > detection_distance:
 				state_machine_component.current_state = idle_state
 		
@@ -79,11 +77,14 @@ var chasing_state = EntityState.new(
 		pass,
 )
 
-var attacking_state = EntityState.new(
+var kamikaze_state = EntityState.new(
 	func(): # on_enter
 		
-		sprite.current_sprite_mode = EntitySpriteComponent.SpriteMode.HORIZONTAL_FLIP_RIGIDBODY
-		aim_component.current_aim_state = aim_component.AimState.POSITION
+		sprite.current_sprite_mode = EntitySpriteComponent.SpriteMode.FOLLOW_AIM
+		aim_component.current_aim_state = aim_component.AimState.VELOCITY
+		
+		rigid_body_component.speed = kamikaze_speed
+		rigid_body_component.acceleration = kamikaze_acceleration
 		
 		pass,
 	func(delta: float): # on_process
@@ -92,51 +93,43 @@ var attacking_state = EntityState.new(
 		
 		var distance_to_player = get_distance_to_player()
 		
-		if is_player_visible():
-			if distance_to_player > max_attacking_distance:
-				state_machine_component.current_state = chasing_state
-			elif distance_to_player < min_attacking_distance:
-				state_machine_component.current_state = fleeing_state
-			elif get_angle_to_player() < comfortable_attacking_angle:
-				automatic_spawner_weapon.is_firing = true
-			else:
-				automatic_spawner_weapon.is_firing = false
-		else:
-			state_machine_component.current_state = chasing_state
+		if get_distance_to_player() < explode_distance:
+			state_machine_component.current_state = exploding_state
 
-		sprite.current_animation = "idle"
+		sprite.current_animation = "kamikaze"
 
 		pass,
 	func(delta: float): # on_physics_process
 
-		stand_still()
+		chase_player()
 
 		pass,
 	func(): # on_exit
 		
-		automatic_spawner_weapon.is_firing = false
-		
 		pass,
 )
 
-var fleeing_state = EntityState.new(
+var exploding_state = EntityState.new(
 	func(): # on_enter
 		
-		sprite.current_sprite_mode = EntitySpriteComponent.SpriteMode.HORIZONTAL_FLIP_RIGIDBODY
+		sprite.current_sprite_mode = EntitySpriteComponent.SpriteMode.FOLLOW_AIM
 		aim_component.current_aim_state = aim_component.AimState.VELOCITY
+		
+		chargable_area_weapon.begin_charging()
+		chargable_area_weapon.on_fired.connect(
+			func():
+				entity_die()
+				)
 		
 		pass,
 	func(delta: float): # on_process
-	
-		if get_distance_to_player() > comfortable_attacking_distance:
-			state_machine_component.current_state = attacking_state
 
-		sprite.current_animation = "idle"
+		sprite.current_animation = "kamikaze"
 			
 		pass,
 	func(delta: float): # on_physics_process
 		
-		flee_from_player()
+		chase_player()
 		
 		pass,
 	func(): # on_exit
@@ -149,12 +142,6 @@ var fleeing_state = EntityState.new(
 
 func _ready() -> void:
 	state_machine_component.current_state = idle_state
-	
-	automatic_spawner_weapon.on_fired.connect(
-		func():
-			sprite.animation_override = "attack"
-			sprite.play("attack")
-			)
 
 
 func get_distance_to_player() -> float:
@@ -174,13 +161,7 @@ func chase_player() -> void:
 	pathfinder_component.target_position = GameManager.player.rigid_body_component.global_position
 	var next_path_position = pathfinder_component.get_next_path_position()
 	rigid_body_component.target_velocity = rigid_body_component.global_position.direction_to(next_path_position) * rigid_body_component.speed
-
-
-func flee_from_player() -> void:
-	pathfinder_component.target_position = GameManager.player.rigid_body_component.global_position.direction_to(rigid_body_component.global_position) * fleeing_distance
-	var next_path_position = pathfinder_component.get_next_path_position()
-	rigid_body_component.target_velocity = rigid_body_component.global_position.direction_to(next_path_position) * rigid_body_component.speed
-
+	
 
 func get_angle_to_player() -> float:
 	var forward_vector = -aim_component.global_basis.z

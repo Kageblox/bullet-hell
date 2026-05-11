@@ -91,6 +91,8 @@ func damage_entity(value: float, direction: Vector3) -> void:
 		ongoing_hit_modulate_tween.tween_property(sprite, "modulate", Color.WHITE, hit_duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SPRING)
 		ongoing_hit_modulate_tween.tween_property(sprite, "position", _sprite_initial_position, hit_duration).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SPRING)
 
+		AudioManager.play_sfx("hit")
+		
 		on_damaged.emit(value)
 
 

@@ -13,9 +13,9 @@ signal on_room_changed(room_id: int, last_room_id: int)
 
 
 func _ready() -> void:
-	self.actor = %Player.get_node("PlayerBody")
-	self.layout = %Map
-	self.generator = self.layout.generator
+	#self.actor = GameManager.player.get_node("PlayerBody")
+	#self.layout = GameManager.player.get_node("PlayerBody")
+	#self.generator = self.layout.generator
 
 	var canvas := CanvasLayer.new()
 	canvas.name = "LocatorDebug"

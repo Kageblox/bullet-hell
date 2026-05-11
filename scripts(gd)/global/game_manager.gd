@@ -9,6 +9,7 @@ var pause_active: bool = false
 var hitstop_active: bool = false
 
 var player: PlayerEntity
+var map: MapLayout
 
 func _enter_tree() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS

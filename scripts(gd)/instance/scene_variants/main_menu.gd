@@ -8,7 +8,7 @@ func _ready() -> void:
 	AudioManager.play_music("music")
 
 func _on_start_game_button_pressed() -> void:
-	SceneManager.goto_scene("res://scene(tscn)/scenes/game.tscn")
+	SceneManager.goto_scene("res://scene(tscn)/scenes/another_scene.tscn")
 
 
 func _on_settings_button_pressed() -> void:

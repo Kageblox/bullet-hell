@@ -2,14 +2,9 @@
 
 [ext_resource type="Script" uid="uid://spxeob0e16r8" path="res://scripts(gd)/instance/scene_variants/game_scene.gd" id="1_vtadh"]
 [ext_resource type="PackedScene" uid="uid://0xa7fqgxcppg" path="res://scene(tscn)/entity/player.tscn" id="2_0cwwu"]
-[ext_resource type="Script" uid="uid://bt47le4mm2tkf" path="res://scripts(gd)/modified/gameplay/new_camera.gd" id="2_ggdqm"]
 [ext_resource type="Script" uid="uid://do7iy5uxmghpo" path="res://scripts(gd)/instance/map/layout.gd" id="2_vtadh"]
 [ext_resource type="PackedScene" uid="uid://c5aycmoa1y1u0" path="res://scene(tscn)/entity/enemy_drone.tscn" id="3_vtadh"]
-[ext_resource type="Script" uid="uid://dqxh8t61mkgv1" path="res://scripts(gd)/instance/map/locator.gd" id="4_ggdqm"]
 [ext_resource type="Script" uid="uid://r01tuxyq2gj3" path="res://scripts(gd)/component/map/director.gd" id="4_ilviu"]
-
-[sub_resource type="Environment" id="Environment_vtadh"]
-background_mode = 1
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_5t3ln"]
 
@@ -37,13 +32,6 @@ albedo_color = Color(0.1254902, 0.1254902, 0.1254902, 1)
 [node name="Game" type="Node" unique_id=762678232]
 script = ExtResource("1_vtadh")
 
-[node name="Camera" type="Camera3D" parent="." unique_id=122602015]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.4403937, 0.8978048, 0, -0.8978048, 0.4403937, 0, 9.8234005, 4.44931)
-environment = SubResource("Environment_vtadh")
-current = true
-script = ExtResource("2_ggdqm")
-
 [node name="Map" type="Node3D" parent="." unique_id=2100942894]
 unique_name_in_owner = true
 script = ExtResource("2_vtadh")
@@ -56,14 +44,8 @@ unique_name_in_owner = true
 script = ExtResource("4_ilviu")
 metadata/_custom_type_script = "uid://r01tuxyq2gj3"
 
-[node name="Player" parent="." unique_id=1758969589 node_paths=PackedStringArray("player_camera") instance=ExtResource("2_0cwwu")]
+[node name="Player" parent="." unique_id=564096882 instance=ExtResource("2_0cwwu")]
 unique_name_in_owner = true
-player_camera = NodePath("../Camera")
-
-[node name="Locator" type="Node3D" parent="Player/PlayerBody" parent_id_path=PackedInt32Array(1758969589, 1403539515) index="0" unique_id=828737991]
-unique_name_in_owner = true
-script = ExtResource("4_ggdqm")
-metadata/_custom_type_script = "uid://dqxh8t61mkgv1"
 
 [node name="Environment" type="Node3D" parent="." unique_id=1270843999]
 process_mode = 4
@@ -174,5 +156,3 @@ visible = false
 process_mode = 4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -1)
 visible = false
-
-[editable path="Player"]

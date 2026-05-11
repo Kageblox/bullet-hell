@@ -46,7 +46,7 @@ func _process(delta: float) -> void:
 				
 		SpriteMode.FOLLOW_AIM:
 			if entity.aim_component != null:
-				pass
+				global_rotation = entity.aim_component.global_rotation
 		SpriteMode.INACTIVE:
 			pass
 			

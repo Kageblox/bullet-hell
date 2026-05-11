@@ -37,6 +37,8 @@ var _player_tint: Color = Color.WHITE
 var _player_sprite: AnimatedSprite3D = null
 
 func _enter_tree() -> void:
+	GameManager.map = self
+	
 	generator = Gen.Generator.Run(
 		map_width,
 		map_height,

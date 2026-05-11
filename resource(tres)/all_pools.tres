@@ -6,6 +6,12 @@
 [ext_resource type="PackedScene" uid="uid://bixguvucjlg40" path="res://scene(tscn)/entity/enemy_projectile.tscn" id="4_30wk4"]
 [ext_resource type="PackedScene" uid="uid://c5aycmoa1y1u0" path="res://scene(tscn)/entity/enemy_drone.tscn" id="5_drone"]
 
+[sub_resource type="Resource" id="Resource_drone"]
+script = ExtResource("1_6xrf1")
+packed_scene = ExtResource("5_drone")
+initial_count = 4
+metadata/_custom_type_script = "uid://dw3k226bbl56k"
+
 [sub_resource type="Resource" id="Resource_gkd4d"]
 script = ExtResource("1_6xrf1")
 packed_scene = ExtResource("4_30wk4")
@@ -18,17 +24,11 @@ packed_scene = ExtResource("3_6xrf1")
 initial_count = 10
 metadata/_custom_type_script = "uid://dw3k226bbl56k"
 
-[sub_resource type="Resource" id="Resource_drone"]
-script = ExtResource("1_6xrf1")
-packed_scene = ExtResource("5_drone")
-initial_count = 4
-metadata/_custom_type_script = "uid://dw3k226bbl56k"
-
 [resource]
 script = ExtResource("4_8fm5u")
 packed_scene_pool_dictionary = Dictionary[String, ExtResource("1_6xrf1")]({
+"enemy_drone": SubResource("Resource_drone"),
 "enemy_projectile": SubResource("Resource_gkd4d"),
-"player_projectile": SubResource("Resource_pdr6l"),
-"enemy_drone": SubResource("Resource_drone")
+"player_projectile": SubResource("Resource_pdr6l")
 })
 metadata/_custom_type_script = "uid://vrrj2lkppn4s"

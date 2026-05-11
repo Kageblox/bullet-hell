@@ -1,0 +1,125 @@
+[gd_scene format=3 uid="uid://ck6mustsj2ie2"]
+
+[ext_resource type="Script" uid="uid://hrp3f6gcqt32" path="res://scripts(gd)/instance/entity_variants/enemy_grenade.gd" id="1_xcjtu"]
+[ext_resource type="PhysicsMaterial" uid="uid://cppxcjwaykiva" path="res://resource(tres)/physics_material/no_friction.tres" id="2_ou6ww"]
+[ext_resource type="Script" uid="uid://b86asdwgrslnk" path="res://scripts(gd)/component/entity/entity_rigid_body.gd" id="3_3ib3e"]
+[ext_resource type="SpriteFrames" uid="uid://jadq8njnxj3q" path="res://resource(tres)/sprite_frames/grenade_sprite_frames.tres" id="4_u6i3s"]
+[ext_resource type="Script" uid="uid://dy1jksmmov57f" path="res://scripts(gd)/component/entity/entity_sprite.gd" id="5_g6h7h"]
+[ext_resource type="Script" uid="uid://cwss8p0mewejj" path="res://scripts(gd)/component/entity/entity_hitbox.gd" id="6_ssg3s"]
+[ext_resource type="Script" uid="uid://by1u3602we537" path="res://scripts(gd)/component/entity/entity_aim.gd" id="7_cw8wr"]
+[ext_resource type="Script" uid="uid://ch4bt6673irm0" path="res://scripts(gd)/instance/weapon_variants/chargable_area_weapon.gd" id="8_hk6hy"]
+[ext_resource type="Script" uid="uid://6npcukmkjimk" path="res://scripts(gd)/component/weapon/weapon_area.gd" id="9_4j5rx"]
+[ext_resource type="Shader" uid="uid://sx8reytfx0ou" path="res://resource(tres)/shaders/circle_attack_indicator_shader.gdshader" id="10_jsg70"]
+[ext_resource type="Texture2D" uid="uid://tgmjv640fwjl" path="res://images(png)/gradients/circular_gradient_2.png" id="11_ag4t6"]
+[ext_resource type="Script" uid="uid://dt24tqrhdktd3" path="res://scripts(gd)/component/weapon/chargable_weapon_indicator.gd" id="12_k3c6a"]
+[ext_resource type="Script" uid="uid://dy4ooeu54ph26" path="res://scripts(gd)/component/entity/entity_pathfinder.gd" id="13_l7g01"]
+[ext_resource type="Script" uid="uid://cu2arbban546y" path="res://scripts(gd)/component/entity/entity_raycast.gd" id="14_uvont"]
+[ext_resource type="Script" uid="uid://bbd8bv8gd3rmg" path="res://scripts(gd)/component/entity/entity_state_machine.gd" id="15_dnt62"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ygo6v"]
+radius = 0.75
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_sy7wl"]
+radius = 2.5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v8uqc"]
+render_priority = 0
+shader = ExtResource("10_jsg70")
+shader_parameter/circular_gradient = ExtResource("11_ag4t6")
+shader_parameter/predicted_color = Color(1, 0, 0, 0.25)
+shader_parameter/charge_color = Color(1, 0, 0, 0.5)
+shader_parameter/charge = 0.5
+shader_parameter/smoothing = 0.001
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_tn3et"]
+
+[node name="EnemyGrenade" type="Node3D" unique_id=746150105 node_paths=PackedStringArray("aim_component", "hitbox_component", "pathfinder_component", "raycast_component", "rigid_body_component", "state_machine_component", "chargable_area_weapon", "sprite")]
+script = ExtResource("1_xcjtu")
+aim_component = NodePath("GrenadeBody/GrenadeAim")
+hitbox_component = NodePath("GrenadeBody/GrenadeHitbox")
+pathfinder_component = NodePath("GrenadeBody/GrenadePathfinder")
+raycast_component = NodePath("GrenadeBody/GrenadeRaycast")
+rigid_body_component = NodePath("GrenadeBody")
+state_machine_component = NodePath("GrenadeStateMachine")
+chargable_area_weapon = NodePath("GrenadeBody/GrenadeAim/ChargableAreaWeapon")
+sprite = NodePath("GrenadeBody/GrenadeSprite")
+pool_name = "enemy_grenade"
+health = 100.0
+metadata/_custom_type_script = "uid://b70u1hq7nrb1f"
+
+[node name="GrenadeBody" type="RigidBody3D" parent="." unique_id=867325514]
+collision_layer = 32
+collision_mask = 37
+physics_material_override = ExtResource("2_ou6ww")
+script = ExtResource("3_3ib3e")
+speed = 2.5
+acceleration = 0.1
+metadata/_custom_type_script = "uid://b86asdwgrslnk"
+
+[node name="GrenadeShape" type="CollisionShape3D" parent="GrenadeBody" unique_id=42417510]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("SphereShape3D_ygo6v")
+
+[node name="GrenadeSprite" type="AnimatedSprite3D" parent="GrenadeBody" unique_id=2032328863]
+transform = Transform3D(1, 0, 0, 0, 0.9077775, -0.4194521, 0, 0.4194521, 0.9077775, 0.050020218, 0.28, 0.165)
+pixel_size = 0.02
+axis = 1
+texture_filter = 0
+sprite_frames = ExtResource("4_u6i3s")
+animation = &"hit"
+script = ExtResource("5_g6h7h")
+metadata/_custom_type_script = "uid://dy1jksmmov57f"
+
+[node name="GrenadeHitbox" type="Area3D" parent="GrenadeBody" unique_id=1095283698]
+collision_layer = 64
+collision_mask = 16
+script = ExtResource("6_ssg3s")
+metadata/_custom_type_script = "uid://cwss8p0mewejj"
+
+[node name="GrenadeHitboxShape" type="CollisionShape3D" parent="GrenadeBody/GrenadeHitbox" unique_id=1861285858]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("SphereShape3D_ygo6v")
+
+[node name="GrenadeAim" type="Node3D" parent="GrenadeBody" unique_id=1282088631]
+script = ExtResource("7_cw8wr")
+metadata/_custom_type_script = "uid://by1u3602we537"
+
+[node name="ChargableAreaWeapon" type="Node3D" parent="GrenadeBody/GrenadeAim" unique_id=929201505 node_paths=PackedStringArray("area_component", "indicator_component")]
+script = ExtResource("8_hk6hy")
+area_component = NodePath("WeaponAreaComponent")
+indicator_component = NodePath("ChargableWeaponIndicatorComponent")
+
+[node name="WeaponAreaComponent" type="Area3D" parent="GrenadeBody/GrenadeAim/ChargableAreaWeapon" unique_id=77499089]
+collision_layer = 256
+collision_mask = 24
+monitorable = false
+script = ExtResource("9_4j5rx")
+metadata/_custom_type_script = "uid://6npcukmkjimk"
+
+[node name="WeaponAreaShape" type="CollisionShape3D" parent="GrenadeBody/GrenadeAim/ChargableAreaWeapon/WeaponAreaComponent" unique_id=247596375]
+shape = SubResource("SphereShape3D_sy7wl")
+
+[node name="ChargableWeaponIndicatorComponent" type="MeshInstance3D" parent="GrenadeBody/GrenadeAim/ChargableAreaWeapon" unique_id=1900670091]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
+visible = false
+material_override = SubResource("ShaderMaterial_v8uqc")
+mesh = SubResource("PlaneMesh_tn3et")
+script = ExtResource("12_k3c6a")
+metadata/_custom_type_script = "uid://dt24tqrhdktd3"
+
+[node name="GrenadePathfinder" type="NavigationAgent3D" parent="GrenadeBody" unique_id=1276674261]
+height = 0.5
+radius = 1.25
+avoidance_layers = 33
+avoidance_mask = 33
+debug_enabled = true
+script = ExtResource("13_l7g01")
+metadata/_custom_type_script = "uid://dy4ooeu54ph26"
+
+[node name="GrenadeRaycast" type="RayCast3D" parent="GrenadeBody" unique_id=1329110594]
+script = ExtResource("14_uvont")
+metadata/_custom_type_script = "uid://cu2arbban546y"
+
+[node name="GrenadeStateMachine" type="Node" parent="." unique_id=2023712281]
+script = ExtResource("15_dnt62")
+metadata/_custom_type_script = "uid://bbd8bv8gd3rmg"

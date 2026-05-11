@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dxr012ptc6ss3" path="res://scripts(gd)/instance/entity_variants/player.gd" id="1_kbl78"]
 [ext_resource type="Script" uid="uid://b86asdwgrslnk" path="res://scripts(gd)/component/entity/entity_rigid_body.gd" id="2_0q38j"]
+[ext_resource type="Script" uid="uid://dqxh8t61mkgv1" path="res://scripts(gd)/instance/map/locator.gd" id="3_qhnqe"]
 [ext_resource type="Script" uid="uid://by1u3602we537" path="res://scripts(gd)/component/entity/entity_aim.gd" id="3_yd36o"]
 [ext_resource type="Script" uid="uid://d1gsxjkhrkpst" path="res://scripts(gd)/instance/weapon_variants/automatic_raycast_area_weapon.gd" id="4_0q38j"]
 [ext_resource type="Script" uid="uid://6gikc25n2w6v" path="res://scripts(gd)/component/weapon/weapon_raycast.gd" id="5_yd36o"]
@@ -13,6 +14,7 @@
 [ext_resource type="Script" uid="uid://dy1jksmmov57f" path="res://scripts(gd)/component/entity/entity_sprite.gd" id="7_yd36o"]
 [ext_resource type="Script" uid="uid://d1pu3lpb73s35" path="res://scripts(gd)/component/weapon/weapon_sprite.gd" id="8_kh7kf"]
 [ext_resource type="Material" uid="uid://coadvr21cvjd8" path="res://resource(tres)/materials/ray_material.tres" id="9_kh7kf"]
+[ext_resource type="Script" uid="uid://bt47le4mm2tkf" path="res://scripts(gd)/modified/gameplay/new_camera.gd" id="15_hn71w"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5t3ln"]
 friction = 0.0
@@ -91,8 +93,12 @@ animations = [{
 [sub_resource type="SphereShape3D" id="SphereShape3D_3lili"]
 radius = 0.75
 
-[node name="Player" type="Node3D" unique_id=1758969589 node_paths=PackedStringArray("aim_component", "hitbox_component", "rigid_body_component", "state_machine_component", "player_shape", "automatic_raycast_area_weapon", "hitstop_timer", "sprite")]
+[sub_resource type="Environment" id="Environment_vtadh"]
+background_mode = 1
+
+[node name="Player" type="Node3D" unique_id=564096882 node_paths=PackedStringArray("player_camera", "aim_component", "hitbox_component", "rigid_body_component", "state_machine_component", "player_shape", "automatic_raycast_area_weapon", "hitstop_timer", "sprite")]
 script = ExtResource("1_kbl78")
+player_camera = NodePath("Camera")
 aim_component = NodePath("PlayerBody/PlayerShape/PlayerAim")
 hitbox_component = NodePath("PlayerBody/PlayerShape/PlayerHitbox")
 rigid_body_component = NodePath("PlayerBody")
@@ -108,7 +114,7 @@ pool_name = "player"
 health = 100.0
 invincible = true
 
-[node name="PlayerBody" type="RigidBody3D" parent="." unique_id=1403539515]
+[node name="PlayerBody" type="RigidBody3D" parent="." unique_id=232886636]
 collision_layer = 4
 collision_mask = 37
 axis_lock_linear_y = true
@@ -118,23 +124,29 @@ axis_lock_angular_z = true
 physics_material_override = SubResource("PhysicsMaterial_5t3ln")
 script = ExtResource("2_0q38j")
 
-[node name="PlayerShape" type="CollisionShape3D" parent="PlayerBody" unique_id=2132732701]
+[node name="Locator" type="Node3D" parent="PlayerBody" unique_id=1293057682 node_paths=PackedStringArray("actor")]
+script = ExtResource("3_qhnqe")
+actor = NodePath("../..")
+metadata/_custom_type_script = "uid://dqxh8t61mkgv1"
+
+[node name="PlayerShape" type="CollisionShape3D" parent="PlayerBody" unique_id=1474523752]
 shape = SubResource("SphereShape3D_d2fiw")
 
-[node name="PlayerAim" type="Node3D" parent="PlayerBody/PlayerShape" unique_id=630180277]
+[node name="PlayerAim" type="Node3D" parent="PlayerBody/PlayerShape" unique_id=2088512696]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70378125, 0)
 script = ExtResource("3_yd36o")
 
-[node name="AutomaticRaycastAreaWeapon" type="Node3D" parent="PlayerBody/PlayerShape/PlayerAim" unique_id=376520647 node_paths=PackedStringArray("area_component", "raycast_component", "sprite_component", "ray_node")]
+[node name="AutomaticRaycastAreaWeapon" type="Node3D" parent="PlayerBody/PlayerShape/PlayerAim" unique_id=791279874 node_paths=PackedStringArray("area_component", "raycast_component", "sprite_component", "ray_node")]
 script = ExtResource("4_0q38j")
 area_component = NodePath("WeaponAreaComponent")
 raycast_component = NodePath("WeaponRaycastComponent")
 sprite_component = NodePath("WeaponAreaComponent/WeaponSpriteComponent")
 ray_node = NodePath("WeaponAreaComponent/RayNode")
 cooldown = 0.1
+damage = 10.0
 metadata/_custom_type_script = "uid://bdil1kw7dxxwg"
 
-[node name="WeaponRaycastComponent" type="RayCast3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon" unique_id=1394689491]
+[node name="WeaponRaycastComponent" type="RayCast3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon" unique_id=428391005]
 target_position = Vector3(0, 0, -5)
 collision_mask = 193
 hit_back_faces = false
@@ -143,50 +155,58 @@ debug_shape_custom_color = Color(1, 0, 0, 1)
 script = ExtResource("5_yd36o")
 metadata/_custom_type_script = "uid://6gikc25n2w6v"
 
-[node name="WeaponAreaComponent" type="Area3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon" unique_id=1057159007]
+[node name="WeaponAreaComponent" type="Area3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon" unique_id=2835203]
 top_level = true
 collision_layer = 16
 collision_mask = 193
 script = ExtResource("6_2fyw6")
 metadata/_custom_type_script = "uid://6npcukmkjimk"
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon/WeaponAreaComponent" unique_id=852583422]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon/WeaponAreaComponent" unique_id=1662328971]
 shape = SubResource("SphereShape3D_2imew")
 
-[node name="WeaponSpriteComponent" type="AnimatedSprite3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon/WeaponAreaComponent" unique_id=277513712]
+[node name="WeaponSpriteComponent" type="AnimatedSprite3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon/WeaponAreaComponent" unique_id=958074881]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 sprite_frames = SubResource("SpriteFrames_l3e8u")
 animation = &"beam"
 script = ExtResource("8_kh7kf")
 metadata/_custom_type_script = "uid://d1pu3lpb73s35"
 
-[node name="RayNode" type="Node3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon/WeaponAreaComponent" unique_id=1822786682]
+[node name="RayNode" type="Node3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon/WeaponAreaComponent" unique_id=1158642019]
 
-[node name="RayMesh" type="MeshInstance3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon/WeaponAreaComponent/RayNode" unique_id=1025150450]
+[node name="RayMesh" type="MeshInstance3D" parent="PlayerBody/PlayerShape/PlayerAim/AutomaticRaycastAreaWeapon/WeaponAreaComponent/RayNode" unique_id=232806899]
 transform = Transform3D(0.025, 0, 0, 0, -2.1855694e-08, 0.025, 0, -0.5, -1.0927848e-09, 0, 0, 0)
 material_override = ExtResource("9_kh7kf")
 mesh = SubResource("CylinderMesh_so3tq")
 
-[node name="PlayerHitbox" type="Area3D" parent="PlayerBody/PlayerShape" unique_id=614805099]
+[node name="PlayerHitbox" type="Area3D" parent="PlayerBody/PlayerShape" unique_id=814828100]
 collision_layer = 8
 collision_mask = 128
 script = ExtResource("6_so3tq")
 
-[node name="PlayerHitboxShape" type="CollisionShape3D" parent="PlayerBody/PlayerShape/PlayerHitbox" unique_id=1183933376]
+[node name="PlayerHitboxShape" type="CollisionShape3D" parent="PlayerBody/PlayerShape/PlayerHitbox" unique_id=709267677]
 shape = SubResource("SphereShape3D_3lili")
 
-[node name="PlayerSprite" type="AnimatedSprite3D" parent="PlayerBody/PlayerShape" unique_id=1553281956]
+[node name="PlayerSprite" type="AnimatedSprite3D" parent="PlayerBody/PlayerShape" unique_id=1694097596]
 transform = Transform3D(1, 0, 0, 0, 0.9077775, -0.4194521, 0, 0.4194521, 0.9077775, 0, 0.41631448, 0)
 axis = 1
 sprite_frames = ExtResource("7_2fyw6")
 animation = &"walk"
 script = ExtResource("7_yd36o")
 
-[node name="PlayerStateMachine" type="Node" parent="." unique_id=309160079]
+[node name="PlayerStateMachine" type="Node" parent="." unique_id=2085945219]
 script = ExtResource("7_kh7kf")
 metadata/_custom_type_script = "uid://bbd8bv8gd3rmg"
 
-[node name="HitstopTimer" type="Timer" parent="." unique_id=476547132]
+[node name="HitstopTimer" type="Timer" parent="." unique_id=319450596]
 process_mode = 3
 one_shot = true
 ignore_time_scale = true
+
+[node name="Camera" type="Camera3D" parent="." unique_id=1892799497 node_paths=PackedStringArray("target")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.4403937, 0.8978048, 0, -0.8978048, 0.4403937, 0, 9.8234005, 4.44931)
+environment = SubResource("Environment_vtadh")
+current = true
+script = ExtResource("15_hn71w")
+target = NodePath("../PlayerBody")
