@@ -1,0 +1,142 @@
+[gd_scene format=3 uid="uid://bcsebxxuk1jni"]
+
+[ext_resource type="Script" uid="uid://bnyr3coxpq0uq" path="res://scripts(gd)/instance/entity_variants/enemy_gas_boss_smoke.gd" id="1_bjjlx"]
+[ext_resource type="Texture2D" uid="uid://cjq5ljdp2ytdb" path="res://images(png)/entities/smoke/smoke.png" id="2_tlevg"]
+[ext_resource type="Script" uid="uid://dy1jksmmov57f" path="res://scripts(gd)/component/entity/entity_sprite.gd" id="3_2j3pw"]
+[ext_resource type="Script" uid="uid://ch4bt6673irm0" path="res://scripts(gd)/instance/weapon_variants/chargable_area_weapon.gd" id="4_h6k1x"]
+[ext_resource type="Script" uid="uid://6npcukmkjimk" path="res://scripts(gd)/component/weapon/weapon_area.gd" id="5_kmjc4"]
+[ext_resource type="Shader" uid="uid://sx8reytfx0ou" path="res://resource(tres)/shaders/circle_attack_indicator_shader.gdshader" id="6_efhnw"]
+[ext_resource type="Texture2D" uid="uid://tgmjv640fwjl" path="res://images(png)/gradients/circular_gradient_2.png" id="7_75c76"]
+[ext_resource type="Script" uid="uid://dt24tqrhdktd3" path="res://scripts(gd)/component/weapon/chargable_weapon_indicator.gd" id="8_ldep5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bjjlx"]
+atlas = ExtResource("2_tlevg")
+region = Rect2(0, 0, 46, 75)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tlevg"]
+atlas = ExtResource("2_tlevg")
+region = Rect2(46, 0, 46, 75)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2j3pw"]
+atlas = ExtResource("2_tlevg")
+region = Rect2(92, 0, 46, 75)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h6k1x"]
+atlas = ExtResource("2_tlevg")
+region = Rect2(138, 0, 46, 75)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kmjc4"]
+atlas = ExtResource("2_tlevg")
+region = Rect2(184, 0, 46, 75)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_efhnw"]
+atlas = ExtResource("2_tlevg")
+region = Rect2(230, 0, 46, 75)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_75c76"]
+atlas = ExtResource("2_tlevg")
+region = Rect2(276, 0, 46, 75)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ldep5"]
+atlas = ExtResource("2_tlevg")
+region = Rect2(322, 0, 46, 75)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5h5fo"]
+atlas = ExtResource("2_tlevg")
+region = Rect2(368, 0, 46, 75)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uxqut"]
+atlas = ExtResource("2_tlevg")
+region = Rect2(414, 0, 46, 75)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_x8ejh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bjjlx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tlevg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2j3pw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h6k1x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kmjc4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_efhnw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_75c76")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ldep5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5h5fo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uxqut")
+}],
+"loop": false,
+"name": &"charging",
+"speed": 9.0
+}]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_qprhl"]
+radius = 1.5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k7jef"]
+render_priority = 0
+shader = ExtResource("6_efhnw")
+shader_parameter/circular_gradient = ExtResource("7_75c76")
+shader_parameter/predicted_color = Color(1, 0, 0, 0.25)
+shader_parameter/charge_color = Color(1, 0, 0, 0.5)
+shader_parameter/charge = 0.5
+shader_parameter/smoothing = 0.001
+
+[sub_resource type="QuadMesh" id="QuadMesh_s37yp"]
+orientation = 1
+
+[node name="EnemyGasBossSmoke" type="Node3D" unique_id=870281909 node_paths=PackedStringArray("chargable_area_weapon", "sprite")]
+script = ExtResource("1_bjjlx")
+chargable_area_weapon = NodePath("ChargableAreaWeapon")
+sprite = NodePath("SmokeSprite")
+pool_name = "enemy_gas_boss_smoke"
+health = 100.0
+metadata/_custom_type_script = "uid://b70u1hq7nrb1f"
+
+[node name="SmokeSprite" type="AnimatedSprite3D" parent="." unique_id=1648534444]
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 0.57414496, 0)
+pixel_size = 0.03
+sprite_frames = SubResource("SpriteFrames_x8ejh")
+animation = &"charging"
+script = ExtResource("3_2j3pw")
+metadata/_custom_type_script = "uid://dy1jksmmov57f"
+
+[node name="ChargableAreaWeapon" type="Node3D" parent="." unique_id=1095857854 node_paths=PackedStringArray("area_component", "indicator_component")]
+script = ExtResource("4_h6k1x")
+area_component = NodePath("WeaponAreaComponent")
+indicator_component = NodePath("ChargableWeaponIndicatorComponent")
+metadata/_custom_type_script = "uid://ch4bt6673irm0"
+
+[node name="WeaponAreaComponent" type="Area3D" parent="ChargableAreaWeapon" unique_id=1400528387]
+collision_layer = 256
+collision_mask = 24
+monitorable = false
+script = ExtResource("5_kmjc4")
+metadata/_custom_type_script = "uid://6npcukmkjimk"
+
+[node name="WeaponAreaShape" type="CollisionShape3D" parent="ChargableAreaWeapon/WeaponAreaComponent" unique_id=1472068089]
+shape = SubResource("SphereShape3D_qprhl")
+
+[node name="ChargableWeaponIndicatorComponent" type="MeshInstance3D" parent="ChargableAreaWeapon" unique_id=1554357275]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_k7jef")
+mesh = SubResource("QuadMesh_s37yp")
+script = ExtResource("8_ldep5")
+metadata/_custom_type_script = "uid://dt24tqrhdktd3"

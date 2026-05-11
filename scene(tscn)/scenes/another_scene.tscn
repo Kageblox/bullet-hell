@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dqvv6h3f1oke1" path="res://scripts(gd)/instance/scene_variants/another_scene.gd" id="1_jukcp"]
 [ext_resource type="PackedScene" uid="uid://0xa7fqgxcppg" path="res://scene(tscn)/entity/player.tscn" id="2_47d8d"]
 [ext_resource type="PackedScene" uid="uid://bfni4oqqy61un" path="res://scene(tscn)/entity/enemy_gas_boss.tscn" id="3_47d8d"]
+[ext_resource type="PackedScene" uid="uid://bcsebxxuk1jni" path="res://scene(tscn)/entity/enemy_gas_boss_smoke.tscn" id="4_hn31m"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_5t3ln"]
 
@@ -102,3 +103,6 @@ surface_material_override/0 = SubResource("StandardMaterial3D_yyo3g")
 
 [node name="EnemyGasBoss" parent="." unique_id=683229938 instance=ExtResource("3_47d8d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
+
+[node name="EnemyGasBossSmoke" parent="." unique_id=870281909 instance=ExtResource("4_hn31m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)

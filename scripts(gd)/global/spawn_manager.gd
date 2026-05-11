@@ -9,6 +9,8 @@ const unused_position: Vector3 = Vector3(1000,1000,1000)
 var all_pools: PackedScenePoolDictionaryResource = preload("res://resource(tres)/all_pools.tres") as PackedScenePoolDictionaryResource
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
+	
 	initialize_pools()
 	
 	SceneManager.on_scene_exit_end.connect(

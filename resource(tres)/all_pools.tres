@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://ck6mustsj2ie2" path="res://scene(tscn)/entity/enemy_grenade.tscn" id="5_gkd4d"]
 [ext_resource type="PackedScene" uid="uid://c304gco2f2bbt" path="res://scene(tscn)/entity/enemy_laser_mouse.tscn" id="6_76xtx"]
 [ext_resource type="PackedScene" uid="uid://bfni4oqqy61un" path="res://scene(tscn)/entity/enemy_gas_boss.tscn" id="7_511pb"]
+[ext_resource type="PackedScene" uid="uid://bcsebxxuk1jni" path="res://scene(tscn)/entity/enemy_gas_boss_smoke.tscn" id="8_76xtx"]
 
 [sub_resource type="Resource" id="Resource_drone"]
 script = ExtResource("1_6xrf1")
@@ -44,11 +45,18 @@ packed_scene = ExtResource("3_6xrf1")
 initial_count = 10
 metadata/_custom_type_script = "uid://dw3k226bbl56k"
 
+[sub_resource type="Resource" id="Resource_511pb"]
+script = ExtResource("1_6xrf1")
+packed_scene = ExtResource("8_76xtx")
+initial_count = 4
+metadata/_custom_type_script = "uid://dw3k226bbl56k"
+
 [resource]
 script = ExtResource("4_8fm5u")
 packed_scene_pool_dictionary = Dictionary[String, ExtResource("1_6xrf1")]({
 "enemy_drone": SubResource("Resource_drone"),
 "enemy_gas_boss": SubResource("Resource_33bpe"),
+"enemy_gas_boss_smoke": SubResource("Resource_511pb"),
 "enemy_grenade": SubResource("Resource_v82b5"),
 "enemy_laser_mouse": SubResource("Resource_88v7a"),
 "enemy_projectile": SubResource("Resource_gkd4d"),
