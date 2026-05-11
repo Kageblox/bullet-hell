@@ -25,9 +25,6 @@ raycast_component = NodePath("DroneBody/DroneRaycast")
 rigid_body_component = NodePath("DroneBody")
 state_machine_component = NodePath("DroneStateMachine")
 automatic_spawner_weapon = NodePath("DroneBody/DroneAim/AutomaticSpawnerWeapon")
-comfortable_attacking_distance = 0.0
-min_attacking_distance = 0.0
-max_attacking_distance = 0.0
 sprite = NodePath("DroneBody/DroneSprite")
 pool_name = "enemy_drone"
 health = 15.0
@@ -75,6 +72,7 @@ spawner_component = NodePath("WeaponSpawnerComponent")
 projectile_pool_name = "enemy_projectile"
 projectile_speed = 5.0
 projectile_lifetime = 2.0
+damage = 100.0
 
 [node name="WeaponSpawnerComponent" type="Node3D" parent="DroneBody/DroneAim/AutomaticSpawnerWeapon" unique_id=83087319]
 script = ExtResource("8_vfryu")

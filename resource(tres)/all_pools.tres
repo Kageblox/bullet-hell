@@ -15,16 +15,9 @@ packed_scene = ExtResource("5_drone")
 initial_count = 4
 metadata/_custom_type_script = "uid://dw3k226bbl56k"
 
-[sub_resource type="Resource" id="Resource_gkd4d"]
+[sub_resource type="Resource" id="Resource_33bpe"]
 script = ExtResource("1_6xrf1")
-packed_scene = ExtResource("4_30wk4")
-initial_count = 10
-metadata/_custom_type_script = "uid://dw3k226bbl56k"
-
-[sub_resource type="Resource" id="Resource_pdr6l"]
-script = ExtResource("1_6xrf1")
-packed_scene = ExtResource("3_6xrf1")
-initial_count = 10
+packed_scene = ExtResource("7_511pb")
 metadata/_custom_type_script = "uid://dw3k226bbl56k"
 
 [sub_resource type="Resource" id="Resource_v82b5"]
@@ -39,9 +32,16 @@ packed_scene = ExtResource("6_76xtx")
 initial_count = 4
 metadata/_custom_type_script = "uid://dw3k226bbl56k"
 
-[sub_resource type="Resource" id="Resource_33bpe"]
+[sub_resource type="Resource" id="Resource_gkd4d"]
 script = ExtResource("1_6xrf1")
-packed_scene = ExtResource("7_511pb")
+packed_scene = ExtResource("4_30wk4")
+initial_count = 10
+metadata/_custom_type_script = "uid://dw3k226bbl56k"
+
+[sub_resource type="Resource" id="Resource_pdr6l"]
+script = ExtResource("1_6xrf1")
+packed_scene = ExtResource("3_6xrf1")
+initial_count = 10
 metadata/_custom_type_script = "uid://dw3k226bbl56k"
 
 [resource]

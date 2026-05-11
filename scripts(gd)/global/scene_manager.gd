@@ -3,6 +3,15 @@ extends Node
 ## Global Script in charge of Scenes.[br]
 ## Also handles the loading screen.
 
+#region Signals
+
+signal on_scene_entry_start(_scene: SceneInstance)
+signal on_scene_entry_end(_scene: SceneInstance)
+signal on_scene_exit_start(_scene: SceneInstance)
+signal on_scene_exit_end(_scene: SceneInstance)
+
+#endregion
+
 #region Variables
 
 const PAUSE_BUTTON_RESOURCE: Resource = preload("res://scene(tscn)/ui/pause_button.tscn")
@@ -82,12 +91,16 @@ func _process(_delta: float) -> void:
 
 				get_tree().root.add_child(current_scene)
 				get_tree().current_scene = current_scene
+				
+				on_scene_entry_start.emit(current_scene)
 
 				current_scene.entry_start()
 				current_scene.on_entry_start.emit()
 				_pause_button.visible = current_scene.pausable
 				
 				await get_tree().create_timer(_loading_screen.close_duration).timeout
+				
+				on_scene_entry_end.emit(current_scene)
 				
 				current_scene.entry_end()
 				current_scene.on_entry_end.emit()
@@ -104,6 +117,8 @@ func _process(_delta: float) -> void:
 ## _path: The resource path of the scene to transition to.
 func goto_scene(_path: String) -> void:
 	
+	on_scene_exit_start.emit(current_scene)
+	
 	current_scene.exit_start()
 	current_scene.on_exit_start.emit()
 	
@@ -115,6 +130,8 @@ func goto_scene(_path: String) -> void:
 	
 	# Wait for the loading screen to fully obscure the screen.
 	await get_tree().create_timer(_loading_screen.open_duration).timeout
+	
+	on_scene_exit_end.emit(current_scene)
 	
 	current_scene.exit_end()
 	current_scene.on_exit_end.emit()
