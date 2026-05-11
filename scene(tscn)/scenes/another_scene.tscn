@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://0xa7fqgxcppg" path="res://scene(tscn)/entity/player.tscn" id="2_47d8d"]
 [ext_resource type="PackedScene" uid="uid://bfni4oqqy61un" path="res://scene(tscn)/entity/enemy_gas_boss.tscn" id="3_47d8d"]
 [ext_resource type="PackedScene" uid="uid://bcsebxxuk1jni" path="res://scene(tscn)/entity/enemy_gas_boss_smoke.tscn" id="4_hn31m"]
+[ext_resource type="PackedScene" uid="uid://1nkwcaltigdt" path="res://scene(tscn)/entity/death_vfx.tscn" id="5_qllpf"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_5t3ln"]
 
@@ -106,3 +107,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0)
 
 [node name="EnemyGasBossSmoke" parent="." unique_id=870281909 instance=ExtResource("4_hn31m")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
+
+[node name="DeathVFX" parent="." unique_id=1818957589 instance=ExtResource("5_qllpf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)

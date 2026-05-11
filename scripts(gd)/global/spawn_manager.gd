@@ -47,12 +47,13 @@ func initialize_pools() -> void:
 			new_pool_unused.add_child(new_instance)
 			
 			new_instance.global_position = unused_position
-			
+
+
 func set_all_unused() -> void:
-	print("set all unused")
 	for pool in get_children():
 		for used in pool.get_node("used").get_children():
 			used.set_unused()
+
 
 func return_to_pool(pool_object: Node3D, pool_name: String) -> void:
 	if all_pools.packed_scene_pool_dictionary.has(pool_name):

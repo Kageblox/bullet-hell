@@ -181,6 +181,14 @@ func _ready() -> void:
 		func():
 			state_machine_component.current_state = cooldown_state
 	)
+	
+	on_death.connect(
+		func():
+			var death_vfx = SpawnManager.get_from_pool("death_vfx")
+			death_vfx.global_position = rigid_body_component.global_position
+			)
+
+
 
 
 func get_distance_to_player() -> float:

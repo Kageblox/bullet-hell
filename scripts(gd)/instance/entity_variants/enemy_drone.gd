@@ -155,6 +155,12 @@ func _ready() -> void:
 			sprite.animation_override = "attack"
 			sprite.play("attack")
 			)
+			
+	on_death.connect(
+		func():
+			var death_vfx = SpawnManager.get_from_pool("death_vfx")
+			death_vfx.global_position = rigid_body_component.global_position
+			)
 
 
 func get_distance_to_player() -> float:

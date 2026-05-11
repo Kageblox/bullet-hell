@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://1nkwcaltigdt"]
+
+[ext_resource type="Script" uid="uid://bxqfko0cfdal2" path="res://scripts(gd)/instance/entity_variants/death_vfx.gd" id="1_n4pwu"]
+[ext_resource type="Texture2D" uid="uid://bwo35uowfc2iw" path="res://images(png)/vfx/pow1.png" id="2_16ttc"]
+[ext_resource type="Script" uid="uid://dy1jksmmov57f" path="res://scripts(gd)/component/entity/entity_sprite.gd" id="3_73rxl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v4nif"]
+atlas = ExtResource("2_16ttc")
+region = Rect2(0, 0, 270, 262)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5gnj3"]
+atlas = ExtResource("2_16ttc")
+region = Rect2(270, 0, 270, 262)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u77le"]
+atlas = ExtResource("2_16ttc")
+region = Rect2(540, 0, 270, 262)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qiqw2"]
+atlas = ExtResource("2_16ttc")
+region = Rect2(810, 0, 270, 262)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6cjme"]
+atlas = ExtResource("2_16ttc")
+region = Rect2(1080, 0, 270, 262)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8sshd"]
+atlas = ExtResource("2_16ttc")
+region = Rect2(0, 262, 270, 262)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_byrrw"]
+atlas = ExtResource("2_16ttc")
+region = Rect2(270, 262, 270, 262)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qprhl"]
+atlas = ExtResource("2_16ttc")
+region = Rect2(540, 262, 270, 262)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_k7jef"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v4nif")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5gnj3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u77le")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qiqw2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6cjme")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8sshd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_byrrw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qprhl")
+}],
+"loop": false,
+"name": &"death_vfx",
+"speed": 14.0
+}]
+
+[node name="DeathVFX" type="Node3D" unique_id=1818957589 node_paths=PackedStringArray("sprite")]
+script = ExtResource("1_n4pwu")
+sprite = NodePath("DeathVFXSprite")
+pool_name = "death_vfx"
+health = 100.0
+metadata/_custom_type_script = "uid://bxqfko0cfdal2"
+
+[node name="DeathVFXSprite" type="AnimatedSprite3D" parent="." unique_id=2118811514]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0.59683, 0)
+pixel_size = 0.0075
+axis = 1
+sprite_frames = SubResource("SpriteFrames_k7jef")
+animation = &"death_vfx"
+frame = 7
+frame_progress = 1.0
+script = ExtResource("3_73rxl")
+metadata/_custom_type_script = "uid://dy1jksmmov57f"

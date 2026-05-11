@@ -28,6 +28,10 @@ AudioManager="*uid://dx1eyue1in3g0"
 SpawnManager="*uid://c3opnuky6gwaw"
 GameManager="*uid://bt8rtmbp1xl28"
 
+[debug_draw_3d]
+
+settings/addon_root_folder="res://addons/debug_draw_3d"
+
 [display]
 
 window/size/viewport_width=3000
