@@ -64,7 +64,8 @@ func _room_enter(room_id: int) -> void:
 	var room: Gen.Room = layout.generator.rooms.get(room_id, null)
 	if room == null:
 		return
-	if _room_contains_subroom(room):
+	var is_boss: bool = boss_room != null and room_id == boss_room.id
+	if not is_boss and _room_contains_subroom(room):
 		return
 	pending[room_id] = true
 
@@ -76,7 +77,7 @@ func _room_contains_subroom(main: Gen.Room) -> bool:
 	return false
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_Z:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_B:
 		_teleport_to_boss_room()
 
 func _teleport_to_boss_room() -> void:
@@ -217,6 +218,8 @@ func _on_enemy_died(room_id: int) -> void:
 	data["alive"] = max(0, data["alive"] - 1)
 	if data["alive"] == 0:
 		_set_room_locked(room_id, false)
+		if boss_room != null and room_id == boss_room.id:
+			SceneManager.goto_scene("res://scene(tscn)/scenes/main_menu_scene.tscn")
 
 func _set_room_locked(room_id: int, locked: bool) -> void:
 	if locked:
