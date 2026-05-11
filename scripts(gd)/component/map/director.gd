@@ -5,6 +5,7 @@ const DOOR_CLEARANCE: float = 2.0
 const SPAWN_WALL_INSET: float = 2.0
 const SPAWN_MIN_PLAYER_DIST: float = 4.0
 const SPAWN_PLACEMENT_ATTEMPTS: int = 16
+const ENEMY_POOLS: Array[String] = ["enemy_drone", "enemy_laser_mouse"]
 
 var locator: Locator
 var player: EntityRigidBodyComponent
@@ -52,9 +53,10 @@ func _room_contains_subroom(main: Gen.Room) -> bool:
 
 func _process(_delta: float) -> void:
 	var current_id: int = _player_room()
-	if current_id > 0 and layout.generator.mainRooms.has(current_id):
-		var _s = DebugDraw3D.new_scoped_config().set_no_depth_test(true)
-		DebugDraw3D.draw_aabb(layout.get_room_aabb(current_id), Color.AQUA)
+	# if current_id > 0 and layout.generator.mainRooms.has(current_id):
+	# 	pass
+		# var _s = DebugDraw3D.new_scoped_config().set_no_depth_test(true)
+		# DebugDraw3D.draw_aabb(layout.get_room_aabb(current_id), Color.AQUA)
 	if pending.is_empty():
 		return
 	var ids: Array = pending.keys()
@@ -95,9 +97,10 @@ func _commit_room(room_id: int) -> void:
 	var spawn_count: int = max(1, rooms.size() / 2)
 	_set_room_locked(room_id, true)
 	for k in range(spawn_count):
-		var drone: Node3D = SpawnManager.get_from_pool("enemy_drone")
+		var pool_name: String = ENEMY_POOLS[randi() % ENEMY_POOLS.size()]
+		var drone: Node3D = SpawnManager.get_from_pool(pool_name)
 		if drone == null:
-			printerr("No enemy in pool")
+			printerr("No enemy in pool: ", pool_name)
 			break
 		drone.global_position = _pick_spawn_position(aabb, room_id)
 		_sync_after_spawn(drone)

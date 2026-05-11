@@ -62,10 +62,10 @@ func get_room_aabb(room_id: int) -> AABB:
 	var r = generator.rooms[room_id]
 	var offset_x: float = -generator.MapWidth * tile_size * 0.5
 	var offset_z: float = -generator.MapHeight * tile_size * 0.5
-	var min_x: float = offset_x + (r.x + 1) * tile_size - tile_size * 0.5
-	var min_z: float = offset_z + (r.y + 1) * tile_size - tile_size * 0.5
-	var size_x: float = (r.w - 2) * tile_size
-	var size_z: float = (r.h - 2) * tile_size
+	var min_x: float = offset_x + (r.x + 2) * tile_size - tile_size * 0.5
+	var min_z: float = offset_z + (r.y + 2) * tile_size - tile_size * 0.5
+	var size_x: float = (r.w - 4) * tile_size
+	var size_z: float = (r.h - 4) * tile_size
 	return AABB(Vector3(min_x, 0.0, min_z), Vector3(size_x, tile_size * 2.0, size_z))
 
 func random_position_in_room(room_id: int) -> Vector3:
