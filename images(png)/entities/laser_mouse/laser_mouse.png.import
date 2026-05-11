@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b83g6o3wpn8sw"
-path.s3tc="res://.godot/imported/granade_sprites_2.png-f09bea532acc2ca6aa6bc66f9d58a7f5.s3tc.ctex"
+uid="uid://c8d1cnln5c77q"
+path.s3tc="res://.godot/imported/laser_mouse.png-ad445fb15205df0e7049dc79ac7814e1.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://images(png)/gameplay/entities/grenade/granade_sprites_2.png"
-dest_files=["res://.godot/imported/granade_sprites_2.png-f09bea532acc2ca6aa6bc66f9d58a7f5.s3tc.ctex"]
+source_file="res://images(png)/entities/laser_mouse/laser_mouse.png"
+dest_files=["res://.godot/imported/laser_mouse.png-ad445fb15205df0e7049dc79ac7814e1.s3tc.ctex"]
 
 [params]
 

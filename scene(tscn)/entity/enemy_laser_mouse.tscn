@@ -1,0 +1,247 @@
+[gd_scene format=3 uid="uid://c304gco2f2bbt"]
+
+[ext_resource type="Script" uid="uid://bnxtk2ofdybub" path="res://scripts(gd)/instance/entity_variants/enemy_laser_mouse.gd" id="1_hc8sh"]
+[ext_resource type="PhysicsMaterial" uid="uid://cppxcjwaykiva" path="res://resource(tres)/physics_material/no_friction.tres" id="2_b0kvj"]
+[ext_resource type="Script" uid="uid://b86asdwgrslnk" path="res://scripts(gd)/component/entity/entity_rigid_body.gd" id="3_ifj07"]
+[ext_resource type="Texture2D" uid="uid://c8d1cnln5c77q" path="res://images(png)/entities/laser_mouse/laser_mouse.png" id="4_ffukw"]
+[ext_resource type="Script" uid="uid://dy1jksmmov57f" path="res://scripts(gd)/component/entity/entity_sprite.gd" id="5_toq7d"]
+[ext_resource type="Script" uid="uid://cwss8p0mewejj" path="res://scripts(gd)/component/entity/entity_hitbox.gd" id="6_q4252"]
+[ext_resource type="Script" uid="uid://by1u3602we537" path="res://scripts(gd)/component/entity/entity_aim.gd" id="7_ys420"]
+[ext_resource type="Script" uid="uid://ch4bt6673irm0" path="res://scripts(gd)/instance/weapon_variants/chargable_area_weapon.gd" id="8_ahshb"]
+[ext_resource type="Script" uid="uid://6npcukmkjimk" path="res://scripts(gd)/component/weapon/weapon_area.gd" id="9_kioe8"]
+[ext_resource type="Shader" uid="uid://dw2lls6eq1sne" path="res://resource(tres)/shaders/box_attack_indicator_shader.gdshader" id="10_ysivc"]
+[ext_resource type="Script" uid="uid://dt24tqrhdktd3" path="res://scripts(gd)/component/weapon/chargable_weapon_indicator.gd" id="11_besc4"]
+[ext_resource type="Script" uid="uid://dy4ooeu54ph26" path="res://scripts(gd)/component/entity/entity_pathfinder.gd" id="12_huo0j"]
+[ext_resource type="Script" uid="uid://cu2arbban546y" path="res://scripts(gd)/component/entity/entity_raycast.gd" id="13_8rbrs"]
+[ext_resource type="Script" uid="uid://bbd8bv8gd3rmg" path="res://scripts(gd)/component/entity/entity_state_machine.gd" id="14_wj4jh"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_s37yp"]
+radius = 0.25
+height = 1.5
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ygo6v"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(500, 150, 100, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sy7wl"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(0, 150, 100, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v8uqc"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(100, 150, 100, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tn3et"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(200, 150, 100, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1rbfk"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(300, 150, 100, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dqphp"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(400, 150, 100, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1vxcm"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(500, 150, 100, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y65bu"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(0, 0, 100, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n6tm8"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(0, 0, 100, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fcuna"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(100, 0, 100, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a43k5"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(200, 0, 100, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fr2wh"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(300, 0, 100, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ogd2j"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(400, 0, 100, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c72uh"]
+atlas = ExtResource("4_ffukw")
+region = Rect2(500, 0, 100, 150)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w0oga"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ygo6v")
+}],
+"loop": true,
+"name": &"charge_loop",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sy7wl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v8uqc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tn3et")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1rbfk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dqphp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1vxcm")
+}],
+"loop": false,
+"name": &"charge_start",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y65bu")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n6tm8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fcuna")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a43k5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fr2wh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ogd2j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c72uh")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 6.0
+}]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ygo6v"]
+radius = 0.75
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k7jef"]
+size = Vector3(0.5, 0.5, 5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v8uqc"]
+render_priority = 0
+shader = ExtResource("10_ysivc")
+shader_parameter/predicted_color = Color(1, 0, 0, 0.25)
+shader_parameter/charge_color = Color(1, 0, 0, 0.5)
+shader_parameter/charge = 0.5
+shader_parameter/smoothing = 0.001
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_tn3et"]
+
+[node name="EnemyLaserMouse" type="Node3D" unique_id=195227226 node_paths=PackedStringArray("aim_component", "hitbox_component", "pathfinder_component", "raycast_component", "rigid_body_component", "state_machine_component", "chargable_area_weapon", "sprite")]
+script = ExtResource("1_hc8sh")
+aim_component = NodePath("LaserMouseBody/LaserMouseAim")
+hitbox_component = NodePath("LaserMouseBody/LaserMouseHitbox")
+pathfinder_component = NodePath("LaserMouseBody/LaserMousePathfinder")
+raycast_component = NodePath("LaserMouseBody/LaserMouseRaycast")
+rigid_body_component = NodePath("LaserMouseBody")
+state_machine_component = NodePath("LaserMouseStateMachine")
+chargable_area_weapon = NodePath("LaserMouseBody/LaserMouseAim/ChargableAreaWeapon")
+sprite = NodePath("LaserMouseBody/LaserMouseSprite")
+pool_name = "enemy_laser_mouse"
+health = 100.0
+metadata/_custom_type_script = "uid://b70u1hq7nrb1f"
+
+[node name="LaserMouseBody" type="RigidBody3D" parent="." unique_id=1116858173]
+collision_layer = 32
+collision_mask = 37
+physics_material_override = ExtResource("2_b0kvj")
+script = ExtResource("3_ifj07")
+speed = 2.5
+acceleration = 0.1
+metadata/_custom_type_script = "uid://b86asdwgrslnk"
+
+[node name="LaserMouseShape" type="CollisionShape3D" parent="LaserMouseBody" unique_id=536744995]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_s37yp")
+
+[node name="LaserMouseSprite" type="AnimatedSprite3D" parent="LaserMouseBody" unique_id=780032689]
+transform = Transform3D(1, 0, 0, 0, 0.9077775, -0.4194521, 0, 0.4194521, 0.9077775, 0.050020218, 0.28, 0.093032286)
+axis = 1
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_w0oga")
+animation = &"walk"
+script = ExtResource("5_toq7d")
+metadata/_custom_type_script = "uid://dy1jksmmov57f"
+
+[node name="LaserMouseHitbox" type="Area3D" parent="LaserMouseBody" unique_id=1735379383]
+collision_layer = 64
+collision_mask = 16
+script = ExtResource("6_q4252")
+metadata/_custom_type_script = "uid://cwss8p0mewejj"
+
+[node name="LaserMouseHitboxShape" type="CollisionShape3D" parent="LaserMouseBody/LaserMouseHitbox" unique_id=286748110]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("SphereShape3D_ygo6v")
+
+[node name="LaserMouseAim" type="Node3D" parent="LaserMouseBody" unique_id=2039162724]
+script = ExtResource("7_ys420")
+metadata/_custom_type_script = "uid://by1u3602we537"
+
+[node name="ChargableAreaWeapon" type="Node3D" parent="LaserMouseBody/LaserMouseAim" unique_id=1068453111 node_paths=PackedStringArray("area_component", "indicator_component")]
+script = ExtResource("8_ahshb")
+area_component = NodePath("WeaponAreaComponent")
+indicator_component = NodePath("ChargableWeaponIndicatorComponent")
+
+[node name="WeaponAreaComponent" type="Area3D" parent="LaserMouseBody/LaserMouseAim/ChargableAreaWeapon" unique_id=674868649]
+collision_layer = 256
+collision_mask = 24
+monitorable = false
+script = ExtResource("9_kioe8")
+metadata/_custom_type_script = "uid://6npcukmkjimk"
+
+[node name="WeaponAreaShape" type="CollisionShape3D" parent="LaserMouseBody/LaserMouseAim/ChargableAreaWeapon/WeaponAreaComponent" unique_id=756496352]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.5)
+shape = SubResource("BoxShape3D_k7jef")
+
+[node name="ChargableWeaponIndicatorComponent" type="MeshInstance3D" parent="LaserMouseBody/LaserMouseAim/ChargableAreaWeapon" unique_id=731124166]
+transform = Transform3D(-1.09278474e-07, 0, -0.25, 0, 1, 0, 2.5, 0, -1.0927847e-08, 0, 0, -2.5)
+visible = false
+material_override = SubResource("ShaderMaterial_v8uqc")
+mesh = SubResource("PlaneMesh_tn3et")
+script = ExtResource("11_besc4")
+metadata/_custom_type_script = "uid://dt24tqrhdktd3"
+
+[node name="LaserMousePathfinder" type="NavigationAgent3D" parent="LaserMouseBody" unique_id=1528576470]
+height = 0.5
+radius = 1.25
+avoidance_layers = 33
+avoidance_mask = 33
+script = ExtResource("12_huo0j")
+metadata/_custom_type_script = "uid://dy4ooeu54ph26"
+
+[node name="LaserMouseRaycast" type="RayCast3D" parent="LaserMouseBody" unique_id=1118095716]
+script = ExtResource("13_8rbrs")
+metadata/_custom_type_script = "uid://cu2arbban546y"
+
+[node name="LaserMouseStateMachine" type="Node" parent="." unique_id=1957749361]
+script = ExtResource("14_wj4jh")
+metadata/_custom_type_script = "uid://bbd8bv8gd3rmg"

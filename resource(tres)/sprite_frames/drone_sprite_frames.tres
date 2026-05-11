@@ -1,7 +1,7 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://oi07r53lwcfn"]
 
-[ext_resource type="Texture2D" uid="uid://dfe3xixkxynaj" path="res://images(png)/gameplay/entities/drone/drone_sprites_1.png" id="1_10jxi"]
-[ext_resource type="Texture2D" uid="uid://bg6wwp3lvs5lt" path="res://images(png)/gameplay/entities/drone/drone_sprites_2.png" id="1_22crs"]
+[ext_resource type="Texture2D" uid="uid://dfe3xixkxynaj" path="res://images(png)/entities/drone/drone_sprites_1.png" id="1_10jxi"]
+[ext_resource type="Texture2D" uid="uid://bg6wwp3lvs5lt" path="res://images(png)/entities/drone/drone_sprites_2.png" id="1_22crs"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pgb15"]
 atlas = ExtResource("1_22crs")

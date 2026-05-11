@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://doca03j3cq0jf"
-path.s3tc="res://.godot/imported/rat_pain.png-6777c6284c9b02e00e32b71823c7ede6.s3tc.ctex"
+uid="uid://8wd7bxygkndh"
+path.s3tc="res://.godot/imported/bullet_explosion.png-99a5d78528b9886906c9d663871b7805.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://images(png)/gameplay/entities/rat/rat_pain.png"
-dest_files=["res://.godot/imported/rat_pain.png-6777c6284c9b02e00e32b71823c7ede6.s3tc.ctex"]
+source_file="res://images(png)/entities/bullet/bullet_explosion.png"
+dest_files=["res://.godot/imported/bullet_explosion.png-99a5d78528b9886906c9d663871b7805.s3tc.ctex"]
 
 [params]
 

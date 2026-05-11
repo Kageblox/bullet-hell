@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfe3xixkxynaj"
-path.s3tc="res://.godot/imported/drone_sprites_1.png-836cea7b47745288f500c378242de0d0.s3tc.ctex"
+uid="uid://2q8hcosg5cjo"
+path.s3tc="res://.godot/imported/rat_idle.png-7b51a00ff88c107923152b0dcbf6dda5.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://images(png)/gameplay/entities/drone/drone_sprites_1.png"
-dest_files=["res://.godot/imported/drone_sprites_1.png-836cea7b47745288f500c378242de0d0.s3tc.ctex"]
+source_file="res://images(png)/entities/rat/rat_idle.png"
+dest_files=["res://.godot/imported/rat_idle.png-7b51a00ff88c107923152b0dcbf6dda5.s3tc.ctex"]
 
 [params]
 

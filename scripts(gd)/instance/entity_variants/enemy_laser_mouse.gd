@@ -1,6 +1,5 @@
-class_name MeleeEnemyEntity
+class_name EnemyLaserMouse
 extends EntityInstance
-## Instance Script that oversees a ranged enemy.
 
 #region Variables
 
@@ -8,24 +7,28 @@ extends EntityInstance
 @export var aim_component: EntityAimComponent
 @export var hitbox_component: EntityHitboxComponent
 @export var pathfinder_component: EntityPathfinderComponent
+@export var raycast_component: EntityRaycastComponent
 @export var rigid_body_component: EntityRigidBodyComponent
 @export var state_machine_component: EntityStateMachineComponent
 @export var chargable_area_weapon: ChargableAreaWeapon
 
+
 @export_group("Basic")
 @export var detection_distance: float = 10 ## How far away the Enemy can detect the player.
 
-@export var comfortable_attacking_distance: float = 2
-@export var max_attacking_distance: float = 3
-
+@export var comfortable_attacking_distance: float = 4
 @export var comfortable_attacking_angle: float = 5
+
+@export var min_attacking_distance: float = 3
+@export var max_attacking_distance: float = 5
 
 @export var cooldown_duration: float = 1
 
-@export_group("Advanced")	
+@export_group("Advanced")
 @export var idle_animation_max_velocity: float = 0.1 ## The velocity needed for the sprite to exit its idle animation.
+@export var fleeing_distance: float = 5 ## How far away the target fleeing position is.
 
-var cooldown_timer: float = 0
+var cooldown_timer:float = -1
 
 var idle_state = EntityState.new(
 	func(): # on_enter
@@ -64,17 +67,14 @@ var chasing_state = EntityState.new(
 	func(delta: float): # on_process
 		
 		var distance_to_player = get_distance_to_player()
-		
 		if is_player_visible():
-			if distance_to_player > max_attacking_distance:
-				state_machine_component.current_state = chasing_state
-			elif distance_to_player < comfortable_attacking_distance:
+			if distance_to_player < comfortable_attacking_distance:
 				state_machine_component.current_state = aiming_state
-		else:
-			state_machine_component.current_state = chasing_state
+			elif distance_to_player > detection_distance:
+				state_machine_component.current_state = idle_state
 		
 		if rigid_body_component.linear_velocity.length() > idle_animation_max_velocity:
-			sprite.current_animation = "run"
+			sprite.current_animation = "walk"
 		else:
 			sprite.current_animation = "idle"
 			
@@ -87,6 +87,7 @@ var chasing_state = EntityState.new(
 	func(): # on_exit
 		pass,
 )
+
 
 var aiming_state = EntityState.new(
 	func(): # on_enter
@@ -103,6 +104,8 @@ var aiming_state = EntityState.new(
 		if is_player_visible():
 			if distance_to_player > max_attacking_distance:
 				state_machine_component.current_state = chasing_state
+			elif distance_to_player < min_attacking_distance:
+				state_machine_component.current_state = fleeing_state
 			elif get_angle_to_player() < comfortable_attacking_angle:
 				state_machine_component.current_state = charging_state
 		else:
@@ -120,6 +123,7 @@ var aiming_state = EntityState.new(
 		pass,
 )
 
+
 var charging_state = EntityState.new(
 	func(): # on_enter
 		
@@ -131,7 +135,8 @@ var charging_state = EntityState.new(
 		pass,
 	func(delta: float): # on_process
 		
-		sprite.current_animation = "idle"
+		sprite.current_animation = "charge_loop"
+		sprite.animation_override = "charge_start"
 		
 		pass,
 	func(delta: float): # on_physics_process
@@ -143,6 +148,7 @@ var charging_state = EntityState.new(
 		
 		pass,
 )
+
 
 var cooldown_state = EntityState.new(
 	func(): # on_enter
@@ -172,7 +178,35 @@ var cooldown_state = EntityState.new(
 		pass,
 )
 
+var fleeing_state = EntityState.new(
+	func(): # on_enter
+		
+		sprite.current_sprite_mode = EntitySpriteComponent.SpriteMode.HORIZONTAL_FLIP_RIGIDBODY
+		aim_component.current_aim_state = aim_component.AimState.VELOCITY
+		
+		pass,
+	func(delta: float): # on_process
+		
+		if get_distance_to_player() > comfortable_attacking_distance:
+			state_machine_component.current_state = aiming_state
+
+		if rigid_body_component.linear_velocity.length() > idle_animation_max_velocity:
+			sprite.current_animation = "walk"
+		else:
+			sprite.current_animation = "idle"
+			
+		pass,
+	func(delta: float): # on_physics_process
+		
+		flee_from_player()
+		
+		pass,
+	func(): # on_exit
+		pass,
+)
+
 #endregion
+
 
 #region Functions
 
@@ -184,28 +218,14 @@ func _ready() -> void:
 			state_machine_component.current_state = cooldown_state
 	)
 
-func damage_entity(value: float, direction: Vector3) -> void:
-	super(value, direction)
-	
-	# If not invincible, 
-	if not invincible:
-		sprite.animation_override = "hit"
-
 
 func get_distance_to_player() -> float:
 	return (GameManager.player.rigid_body_component.global_position - rigid_body_component.global_position).length()
 
 
 func is_player_visible() -> bool:
-	var space_state = get_world_3d().direct_space_state
-	var query = PhysicsRayQueryParameters3D.create(
-		GameManager.player.rigid_body_component.global_position, 
-		rigid_body_component.global_position, 
-		GameManager.environment_layer)
-		
-	var result = space_state.intersect_ray(query)
-
-	return result.is_empty()
+	var result = raycast_component.get_obstacle(GameManager.player.hitbox_component.global_position)
+	return result["collider"] == null
 
 
 func stand_still() -> void:
@@ -214,6 +234,12 @@ func stand_still() -> void:
 
 func chase_player() -> void:
 	pathfinder_component.target_position = GameManager.player.rigid_body_component.global_position
+	var next_path_position = pathfinder_component.get_next_path_position()
+	rigid_body_component.target_velocity = rigid_body_component.global_position.direction_to(next_path_position) * rigid_body_component.speed
+
+
+func flee_from_player() -> void:
+	pathfinder_component.target_position = GameManager.player.rigid_body_component.global_position.direction_to(rigid_body_component.global_position) * fleeing_distance
 	var next_path_position = pathfinder_component.get_next_path_position()
 	rigid_body_component.target_velocity = rigid_body_component.global_position.direction_to(next_path_position) * rigid_body_component.speed
 

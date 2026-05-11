@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cqjtapbjswv7e"
-path.s3tc="res://.godot/imported/rat_run.png-958d883555f63b21c12b9c72917855f1.s3tc.ctex"
+uid="uid://doca03j3cq0jf"
+path.s3tc="res://.godot/imported/rat_pain.png-3fc470d4317f3c2eb0c4698274640d24.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://images(png)/gameplay/entities/rat/rat_run.png"
-dest_files=["res://.godot/imported/rat_run.png-958d883555f63b21c12b9c72917855f1.s3tc.ctex"]
+source_file="res://images(png)/entities/rat/rat_pain.png"
+dest_files=["res://.godot/imported/rat_pain.png-3fc470d4317f3c2eb0c4698274640d24.s3tc.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bg6wwp3lvs5lt"
-path.s3tc="res://.godot/imported/drone_sprites_2.png-3a9dc6ac8ef24f72f8d99725cb15119e.s3tc.ctex"
+uid="uid://oh4sfre0n1m"
+path.s3tc="res://.godot/imported/rat_walk.png-7461429e87d84cbe7ca10fd94a0465f7.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://images(png)/gameplay/entities/drone/drone_sprites_2.png"
-dest_files=["res://.godot/imported/drone_sprites_2.png-3a9dc6ac8ef24f72f8d99725cb15119e.s3tc.ctex"]
+source_file="res://images(png)/entities/rat/rat_walk.png"
+dest_files=["res://.godot/imported/rat_walk.png-7461429e87d84cbe7ca10fd94a0465f7.s3tc.ctex"]
 
 [params]
 

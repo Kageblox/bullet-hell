@@ -1,9 +1,9 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://k2ssd4i0lxf5"]
 
-[ext_resource type="Texture2D" uid="uid://2q8hcosg5cjo" path="res://images(png)/gameplay/entities/rat/rat_idle.png" id="1_wv67h"]
-[ext_resource type="Texture2D" uid="uid://doca03j3cq0jf" path="res://images(png)/gameplay/entities/rat/rat_pain.png" id="2_ya54i"]
-[ext_resource type="Texture2D" uid="uid://cqjtapbjswv7e" path="res://images(png)/gameplay/entities/rat/rat_run.png" id="3_e8xga"]
-[ext_resource type="Texture2D" uid="uid://oh4sfre0n1m" path="res://images(png)/gameplay/entities/rat/rat_walk.png" id="4_602y3"]
+[ext_resource type="Texture2D" uid="uid://2q8hcosg5cjo" path="res://images(png)/entities/rat/rat_idle.png" id="1_wv67h"]
+[ext_resource type="Texture2D" uid="uid://doca03j3cq0jf" path="res://images(png)/entities/rat/rat_pain.png" id="2_ya54i"]
+[ext_resource type="Texture2D" uid="uid://cqjtapbjswv7e" path="res://images(png)/entities/rat/rat_run.png" id="3_e8xga"]
+[ext_resource type="Texture2D" uid="uid://oh4sfre0n1m" path="res://images(png)/entities/rat/rat_walk.png" id="4_602y3"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bxeex"]
 atlas = ExtResource("1_wv67h")

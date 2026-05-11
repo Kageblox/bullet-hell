@@ -10,7 +10,7 @@
 [ext_resource type="Script" uid="uid://cwss8p0mewejj" path="res://scripts(gd)/component/entity/entity_hitbox.gd" id="6_so3tq"]
 [ext_resource type="SpriteFrames" uid="uid://k2ssd4i0lxf5" path="res://resource(tres)/sprite_frames/rat_sprite_frames.tres" id="7_2fyw6"]
 [ext_resource type="Script" uid="uid://bbd8bv8gd3rmg" path="res://scripts(gd)/component/entity/entity_state_machine.gd" id="7_kh7kf"]
-[ext_resource type="Texture2D" uid="uid://8wd7bxygkndh" path="res://images(png)/gameplay/entities/bullet/bullet_explosion.png" id="7_so3tq"]
+[ext_resource type="Texture2D" uid="uid://8wd7bxygkndh" path="res://images(png)/entities/bullet/bullet_explosion.png" id="7_so3tq"]
 [ext_resource type="Script" uid="uid://dy1jksmmov57f" path="res://scripts(gd)/component/entity/entity_sprite.gd" id="7_yd36o"]
 [ext_resource type="Script" uid="uid://d1pu3lpb73s35" path="res://scripts(gd)/component/weapon/weapon_sprite.gd" id="8_kh7kf"]
 [ext_resource type="Material" uid="uid://coadvr21cvjd8" path="res://resource(tres)/materials/ray_material.tres" id="9_kh7kf"]

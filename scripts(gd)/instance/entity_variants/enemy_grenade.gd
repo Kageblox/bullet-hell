@@ -36,7 +36,7 @@ var idle_state = EntityState.new(
 		
 		if get_distance_to_player() < detection_distance:
 			state_machine_component.current_state = chasing_state
-			
+		
 		sprite.current_animation = "idle"
 		
 		pass,
@@ -116,10 +116,6 @@ var exploding_state = EntityState.new(
 		aim_component.current_aim_state = aim_component.AimState.VELOCITY
 		
 		chargable_area_weapon.begin_charging()
-		chargable_area_weapon.on_fired.connect(
-			func():
-				entity_die()
-				)
 		
 		pass,
 	func(delta: float): # on_process
@@ -142,6 +138,11 @@ var exploding_state = EntityState.new(
 
 func _ready() -> void:
 	state_machine_component.current_state = idle_state
+	
+	chargable_area_weapon.on_fired.connect(
+		func():
+			entity_die()
+			)
 
 
 func get_distance_to_player() -> float:

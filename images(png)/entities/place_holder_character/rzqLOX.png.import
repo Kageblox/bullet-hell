@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8wd7bxygkndh"
-path.s3tc="res://.godot/imported/bullet_explosion.png-19f2f9543091a31f00319e0c0beb94bc.s3tc.ctex"
+uid="uid://cpbh1wsdv74wv"
+path.s3tc="res://.godot/imported/rzqLOX.png-1c67fa943214a3a13946ec0f7c3a11e1.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://images(png)/gameplay/entities/bullet/bullet_explosion.png"
-dest_files=["res://.godot/imported/bullet_explosion.png-19f2f9543091a31f00319e0c0beb94bc.s3tc.ctex"]
+source_file="res://images(png)/entities/place_holder_character/rzqLOX.png"
+dest_files=["res://.godot/imported/rzqLOX.png-1c67fa943214a3a13946ec0f7c3a11e1.s3tc.ctex"]
 
 [params]
 

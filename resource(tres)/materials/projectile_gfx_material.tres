@@ -1,7 +1,7 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://c6i2q2acrww2h"]
 
 [ext_resource type="Shader" uid="uid://d6qlyeqlkfi1" path="res://resource(tres)/shaders/sprite_shader.gdshader" id="1_avpqf"]
-[ext_resource type="Texture2D" uid="uid://d2x67v4hupd8u" path="res://images(png)/gameplay/entities/bullet/bullet_normal.png" id="2_avpqf"]
+[ext_resource type="Texture2D" uid="uid://d2x67v4hupd8u" path="res://images(png)/entities/bullet/bullet_normal.png" id="2_avpqf"]
 
 [resource]
 render_priority = 0
