@@ -96,6 +96,7 @@ func _commit_room(room_id: int) -> void:
 			printerr("No enemy in pool")
 			break
 		drone.global_position = _pick_spawn_position(aabb, room_id)
+		_reset_after_spawn(drone)
 		# print("  drone[", k, "] pos=", drone.global_position, " tile='", layout.tile_at(drone.global_position), "' room=", layout.room_index_at(drone.global_position), " visible=", drone.visible)
 		dup["alive"] += 1
 		if drone is EntityInstance:
@@ -107,37 +108,57 @@ func _commit_room(room_id: int) -> void:
 func _player_room() -> int:
 	return layout.room_index_at(player.global_position)
 
+func _reset_after_spawn(drone: Node3D) -> void:
+	var rb = drone.get("rigid_body_component")
+	if rb is RigidBody3D:
+		rb.global_position = drone.global_position
+		rb.linear_velocity = Vector3.ZERO
+		rb.angular_velocity = Vector3.ZERO
+		if "target_velocity" in rb:
+			rb.target_velocity = Vector3.ZERO
+	var pf = drone.get("pathfinder_component")
+	if pf is NavigationAgent3D:
+		pf.target_position = drone.global_position
+	var sm = drone.get("state_machine_component")
+	var idle = drone.get("idle_state")
+	if sm != null and idle != null:
+		sm.current_state = idle
+
 func _is_walkable_floor(ch: String) -> bool:
-	return ch != "" and ch != " " and ch != "V" and ch != "H" and ch != "#" and ch != "P"
+	return ch == "." or ch == "c" or ch == "C" or ch == "v" or ch == "h"
 
 func _pick_spawn_position(aabb: AABB, room_id: int) -> Vector3:
-	var min_x: float = aabb.position.x + SPAWN_WALL_INSET
-	var max_x: float = aabb.position.x + aabb.size.x - SPAWN_WALL_INSET
-	var min_z: float = aabb.position.z + SPAWN_WALL_INSET
-	var max_z: float = aabb.position.z + aabb.size.z - SPAWN_WALL_INSET
-	if min_x >= max_x or min_z >= max_z:
+	var room: Gen.Room = layout.generator.rooms.get(room_id, null)
+	if room == null:
 		return aabb.position + aabb.size * 0.5
-	var min_dist_sq: float = SPAWN_MIN_PLAYER_DIST * SPAWN_MIN_PLAYER_DIST
-	var player_pos: Vector3 = player.global_position
-	var p: Vector3 = Vector3.ZERO
-	var fallback: Vector3 = Vector3.ZERO
-	var have_fallback: bool = false
+	var inset: int = 2
+	while inset > 0 and (room.w - inset * 2 < 1 or room.h - inset * 2 < 1):
+		inset -= 1
+	var i_min: int = room.x + inset
+	var i_max: int = room.x + room.w - 1 - inset
+	var j_min: int = room.y + inset
+	var j_max: int = room.y + room.h - 1 - inset
+	var offset_x: float = -layout.generator.MapWidth * layout.tile_size * 0.5
+	var offset_z: float = -layout.generator.MapHeight * layout.tile_size * 0.5
 	for attempt in range(SPAWN_PLACEMENT_ATTEMPTS):
-		p = Vector3(randf_range(min_x, max_x), aabb.position.y, randf_range(min_z, max_z))
-		if layout.room_index_at(p) != room_id:
-			continue
-		if not _is_walkable_floor(layout.tile_at(p)):
-			continue
-		if not have_fallback:
-			fallback = p
-			have_fallback = true
-		var dx: float = p.x - player_pos.x
-		var dz: float = p.z - player_pos.z
-		if dx * dx + dz * dz >= min_dist_sq:
-			return p
-	if have_fallback:
-		return fallback
+		var i: int = randi_range(i_min, i_max)
+		var j: int = randi_range(j_min, j_max)
+		if _tile_is_safe_to_spawn(i, j, room_id):
+			return Vector3(offset_x + i * layout.tile_size, 0.0, offset_z + j * layout.tile_size)
+	for j in range(j_min, j_max + 1):
+		for i in range(i_min, i_max + 1):
+			if _tile_is_safe_to_spawn(i, j, room_id):
+				return Vector3(offset_x + i * layout.tile_size, 0.0, offset_z + j * layout.tile_size)
 	return aabb.position + aabb.size * 0.5
+
+func _tile_is_safe_to_spawn(i: int, j: int, room_id: int) -> bool:
+	if layout.generator.RoomIndexAt(i, j) != room_id:
+		return false
+	for dj in range(-1, 2):
+		for di in range(-1, 2):
+			if not _is_walkable_floor(layout.generator.At(i + di, j + dj)):
+				return false
+	return true
 
 func _on_enemy_died(room_id: int) -> void:
 	if not rooms.has(room_id):
