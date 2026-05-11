@@ -51,6 +51,10 @@ func _room_contains_subroom(main: Gen.Room) -> bool:
 	return false
 
 func _process(_delta: float) -> void:
+	var current_id: int = _player_room()
+	if current_id > 0 and layout.generator.mainRooms.has(current_id):
+		var _s = DebugDraw3D.new_scoped_config().set_no_depth_test(true)
+		DebugDraw3D.draw_aabb(layout.get_room_aabb(current_id), Color.AQUA)
 	if pending.is_empty():
 		return
 	var ids: Array = pending.keys()
@@ -88,26 +92,41 @@ func _commit_room(room_id: int) -> void:
 	rooms[room_id] = dup
 
 	@warning_ignore("integer_division")
-	
 	var spawn_count: int = max(1, rooms.size() / 2)
-	# print("commit room=", room_id, " spawn=", spawn_count, " rooms=", rooms.size())
+	_set_room_locked(room_id, true)
 	for k in range(spawn_count):
 		var drone: Node3D = SpawnManager.get_from_pool("enemy_drone")
 		if drone == null:
 			printerr("No enemy in pool")
 			break
 		drone.global_position = _pick_spawn_position(aabb, room_id)
-		#_reset_after_spawn(drone)
-		# print("  drone[", k, "] pos=", drone.global_position, " tile='", layout.tile_at(drone.global_position), "' room=", layout.room_index_at(drone.global_position), " visible=", drone.visible)
+		_sync_after_spawn(drone)
 		dup["alive"] += 1
 		if drone is EntityInstance:
 			(drone as EntityInstance).on_death.connect(_on_enemy_died.bind(room_id), CONNECT_ONE_SHOT)
 
-	if dup["alive"] > 0:
-		_set_room_locked(room_id, true)
+	if dup["alive"] == 0:
+		_set_room_locked(room_id, false)
+
+	# Test layout random_position_in_room
+	# for n in range(20):
+	# 	var test_pos: Vector3 = layout.random_position_in_room(room_id)
+	# 	DebugDraw3D.draw_sphere(test_pos, 0.2, Color.LIME_GREEN, 10.0)
 
 func _player_room() -> int:
 	return layout.room_index_at(player.global_position)
+
+func _sync_after_spawn(drone: Node3D) -> void:
+	var rb = drone.get("rigid_body_component")
+	if rb is RigidBody3D:
+		rb.global_position = drone.global_position
+		rb.linear_velocity = Vector3.ZERO
+		rb.angular_velocity = Vector3.ZERO
+		if "target_velocity" in rb:
+			rb.target_velocity = Vector3.ZERO
+	var pf = drone.get("pathfinder_component")
+	if pf is NavigationAgent3D:
+		pf.target_position = drone.global_position
 	
 
 func _is_walkable_floor(ch: String) -> bool:
@@ -115,27 +134,14 @@ func _is_walkable_floor(ch: String) -> bool:
 
 
 func _pick_spawn_position(aabb: AABB, room_id: int) -> Vector3:
-	var room: Gen.Room = layout.generator.rooms.get(room_id, null)
-	if room == null:
-		return aabb.position + aabb.size * 0.5
-	var inset: int = 2
-	while inset > 0 and (room.w - inset * 2 < 1 or room.h - inset * 2 < 1):
-		inset -= 1
-	var i_min: int = room.x + inset
-	var i_max: int = room.x + room.w - 1 - inset
-	var j_min: int = room.y + inset
-	var j_max: int = room.y + room.h - 1 - inset
-	var offset_x: float = -layout.generator.MapWidth * layout.tile_size * 0.5
-	var offset_z: float = -layout.generator.MapHeight * layout.tile_size * 0.5
+	var min_x: float = aabb.position.x
+	var max_x: float = aabb.position.x + aabb.size.x
+	var min_z: float = aabb.position.z
+	var max_z: float = aabb.position.z + aabb.size.z
 	for attempt in range(SPAWN_PLACEMENT_ATTEMPTS):
-		var i: int = randi_range(i_min, i_max)
-		var j: int = randi_range(j_min, j_max)
-		if _tile_is_safe_to_spawn(i, j, room_id):
-			return Vector3(offset_x + i * layout.tile_size, 0.0, offset_z + j * layout.tile_size)
-	for j in range(j_min, j_max + 1):
-		for i in range(i_min, i_max + 1):
-			if _tile_is_safe_to_spawn(i, j, room_id):
-				return Vector3(offset_x + i * layout.tile_size, 0.0, offset_z + j * layout.tile_size)
+		var p: Vector3 = Vector3(randf_range(min_x, max_x), aabb.position.y, randf_range(min_z, max_z))
+		if layout.room_index_at(p) == room_id:
+			return p
 	return aabb.position + aabb.size * 0.5
 
 func _tile_is_safe_to_spawn(i: int, j: int, room_id: int) -> bool:
@@ -156,6 +162,21 @@ func _on_enemy_died(room_id: int) -> void:
 		_set_room_locked(room_id, false)
 
 func _set_room_locked(room_id: int, locked: bool) -> void:
+	if locked:
+		_clamp_player_into_room(room_id)
 	for d in layout.get_room_doors(room_id):
 		if d is MapDoor:
 			(d as MapDoor).set_locked(locked)
+
+func _clamp_player_into_room(room_id: int) -> void:
+	var aabb: AABB = layout.get_room_aabb(room_id)
+	if aabb.size.x <= 0.0 or aabb.size.z <= 0.0:
+		return
+	var p: Vector3 = player.global_position
+	var inside: bool = layout.room_index_at(p) == room_id
+	if inside:
+		return
+	p.x = clamp(p.x, aabb.position.x, aabb.position.x + aabb.size.x)
+	p.z = clamp(p.z, aabb.position.z, aabb.position.z + aabb.size.z)
+	player.global_position = p
+	player.linear_velocity = Vector3.ZERO
