@@ -8,6 +8,7 @@ var generator: Gen.LayoutGenerator
 var room_id: int = 0
 var room: Gen.Room
 var _debug_label: Label
+var spawn_pos: Vector3
 
 signal on_room_changed(room_id: int, last_room_id: int)
 
@@ -19,17 +20,17 @@ func _ready() -> void:
 	self.layout = GameManager.map
 	self.generator = self.layout.generator
 
-	var canvas := CanvasLayer.new()
-	canvas.name = "LocatorDebug"
-	add_child(canvas)
-	_debug_label = Label.new()
-	_debug_label.position = Vector2(8, 8)
-	_debug_label.add_theme_color_override("font_color", Color.WHITE)
-	_debug_label.add_theme_color_override("font_outline_color", Color.BLACK)
-	_debug_label.add_theme_constant_override("outline_size", 4)
-	_debug_label.add_theme_font_size_override("font_size", 32)
-	canvas.add_child(_debug_label)
-	_update_debug_label()
+	# var canvas := CanvasLayer.new()
+	# canvas.name = "LocatorDebug"
+	# add_child(canvas)
+	# _debug_label = Label.new()
+	# _debug_label.position = Vector2(8, 8)
+	# _debug_label.add_theme_color_override("font_color", Color.WHITE)
+	# _debug_label.add_theme_color_override("font_outline_color", Color.BLACK)
+	# _debug_label.add_theme_constant_override("outline_size", 4)
+	# _debug_label.add_theme_font_size_override("font_size", 32)
+	# canvas.add_child(_debug_label)
+	# _update_debug_label()
 
 func _physics_process(_delta) -> void:
 	if self.actor == null:

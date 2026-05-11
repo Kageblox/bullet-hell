@@ -14,11 +14,35 @@ var pending: Dictionary = {}
 var room_template: Dictionary = {"index": 0, "alive": 0}
 var layout: MapLayout
 
+var spawn_room: Gen.Room
+var spawn_pos: Vector3
+var boss_room: Gen.Room
+
+func _enter_tree() -> void:
+	GameManager.director = self
+
 func _ready() -> void:
 	layout = GameManager.map
 	locator = GameManager.locater
 	player = GameManager.player.get_node("PlayerBody")
 	locator.on_room_changed.connect(_on_room_changed)
+
+	# Position player on spawn
+	spawn_room = layout.generator.rooms.get(layout.generator.StartRoom, null)
+	boss_room = layout.generator.rooms.get(layout.generator.EndRoom, null)
+
+	if spawn_room == null:
+		printerr("No spawn room")
+		return
+	if boss_room == null:
+		printerr("No boss room")
+		return
+
+	var aabb: AABB = layout.get_room_aabb(spawn_room.id)
+	spawn_pos = aabb.position + aabb.size * 0.5
+	spawn_pos.y = player.global_position.y
+	locator.spawn_pos = spawn_pos
+	player.global_position = spawn_pos
 
 func _on_room_changed(room_id: int, last_room_id: int) -> void:
 	if pending.has(last_room_id):
@@ -94,7 +118,7 @@ func _commit_room(room_id: int) -> void:
 	rooms[room_id] = dup
 
 	@warning_ignore("integer_division")
-	var spawn_count: int = max(1, rooms.size() / 2)
+	var spawn_count: int = max(2, min(rooms.size(), 8))
 	_set_room_locked(room_id, true)
 	for k in range(spawn_count):
 		var pool_name: String = ENEMY_POOLS[randi() % ENEMY_POOLS.size()]

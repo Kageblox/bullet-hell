@@ -11,6 +11,7 @@ var hitstop_active: bool = false
 var player: PlayerEntity
 var locater: Locator
 var map: MapLayout
+var director: Director
 
 func _enter_tree() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS

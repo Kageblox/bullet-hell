@@ -175,8 +175,8 @@ collision_layer = 32
 collision_mask = 37
 physics_material_override = ExtResource("2_b0kvj")
 script = ExtResource("3_ifj07")
-speed = 2.5
-acceleration = 0.1
+speed = 6.0
+acceleration = 0.25
 metadata/_custom_type_script = "uid://b86asdwgrslnk"
 
 [node name="LaserMouseShape" type="CollisionShape3D" parent="LaserMouseBody" unique_id=536744995]
