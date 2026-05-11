@@ -5,7 +5,7 @@ const DOOR_CLEARANCE: float = 2.0
 const SPAWN_WALL_INSET: float = 2.0
 const SPAWN_MIN_PLAYER_DIST: float = 4.0
 const SPAWN_PLACEMENT_ATTEMPTS: int = 16
-const ENEMY_POOLS: Array[String] = ["enemy_drone", "enemy_laser_mouse"]
+const ENEMY_POOLS: Array[String] = ["enemy_drone", "enemy_laser_mouse", "enemy_grenade"]
 
 var locator: Locator
 var player: EntityRigidBodyComponent
