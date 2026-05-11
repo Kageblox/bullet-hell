@@ -147,6 +147,15 @@ func room_index_at(pos: Vector3) -> int:
 	var j: int = int(floor((pos.z - offset_z) / tile_size + 0.5))
 	return generator.RoomIndexAt(i, j)
 
+func tile_at(pos: Vector3) -> String:
+	if generator == null:
+		return " "
+	var offset_x: float = -generator.MapWidth * tile_size * 0.5
+	var offset_z: float = -generator.MapHeight * tile_size * 0.5
+	var i: int = int(floor((pos.x - offset_x) / tile_size + 0.5))
+	var j: int = int(floor((pos.z - offset_z) / tile_size + 0.5))
+	return generator.At(i, j)
+
 func room_at(pos: Vector3) -> Gen.Room:
 	if generator == null:
 		return null
@@ -417,6 +426,13 @@ func _place_door(ch: String, x: float, z: float, mat: StandardMaterial3D, room_a
 	body.add_child(shape)
 	door.add_child(body)
 	door.collider = shape
+
+	var connecting: Array[int] = []
+	if room_a > 0:
+		connecting.append(room_a)
+	if room_b > 0 and room_b != room_a:
+		connecting.append(room_b)
+	door.connecting_rooms = connecting
 
 	var parent_id: int = room_a if room_a > 0 else room_b
 	var parent: Node = room_nodes.get(parent_id, self)

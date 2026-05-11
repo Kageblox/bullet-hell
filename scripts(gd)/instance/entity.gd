@@ -115,8 +115,21 @@ func entity_die() -> void:
 
 
 func set_used() -> void:
+	dying = false
+	invincible = false
+	invincibility_timer = -1
+	_health = max_health
+	on_health_changed.emit(_health)
+
+	var rb = get("rigid_body_component")
+	if rb is RigidBody3D:
+		rb.linear_velocity = Vector3.ZERO
+		rb.angular_velocity = Vector3.ZERO
+		if "target_velocity" in rb:
+			rb.target_velocity = Vector3.ZERO
+
 	on_set_used.emit()
-	
+
 	visible = true
 	set_deferred("process_mode", Node.PROCESS_MODE_PAUSABLE)
 

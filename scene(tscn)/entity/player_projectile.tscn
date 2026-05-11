@@ -42,6 +42,7 @@ metadata/_custom_type_script = "uid://cwss8p0mewejj"
 shape = SubResource("SphereShape3D_0sdrn")
 
 [node name="BulletSprite" type="AnimatedSprite3D" parent="." unique_id=554734676]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.24742138, 0)
 pixel_size = 0.03
 axis = 1
 texture_filter = 0

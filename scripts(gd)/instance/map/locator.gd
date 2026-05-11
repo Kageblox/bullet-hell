@@ -30,23 +30,23 @@ func _ready() -> void:
 	_update_debug_label()
 
 func _physics_process(_delta) -> void:
-	if self.actor != null:
-		if self.generator == null:
-			return
-		var last_room: Gen.Room = room  # may be null
-		var last_room_id := 0
-		if last_room != null:
-			last_room_id = last_room.id
-		self.room = self.current_room()  # may be null
-		if self.room != null:
-			if self.room.id > 0:
-				if self.room.id != last_room_id:
-					self.room_id = room.id
-					on_room_changed.emit(room.id, last_room_id)
-					_update_debug_label()
-	else:
+	if self.actor == null:
 		printerr("Actor not set")
 		return
+	if self.generator == null:
+		return
+	var new_room: Gen.Room = self.current_room()
+	if new_room == null or new_room.id <= 0:
+		return
+	var last_room_id: int = 0
+	if self.room != null:
+		last_room_id = self.room.id
+	if new_room.id == last_room_id:
+		return
+	self.room = new_room
+	self.room_id = new_room.id
+	on_room_changed.emit(new_room.id, last_room_id)
+	_update_debug_label()
 
 func _update_debug_label() -> void:
 	if _debug_label == null:

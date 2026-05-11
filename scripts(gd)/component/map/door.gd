@@ -10,6 +10,7 @@ extends Node3D
 var left_hinge: Node3D
 var right_hinge: Node3D
 var collider: CollisionShape3D
+var connecting_rooms: Array[int] = []
 var is_open: bool = false
 var locked: bool = false
 var swing_dir: float = 0.0
