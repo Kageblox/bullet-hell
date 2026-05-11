@@ -1,19 +1,33 @@
 [gd_scene format=3 uid="uid://cwjcy0bcri0a5"]
 
 [ext_resource type="Script" uid="uid://di26ngxtod0t8" path="res://scripts(gd)/instance/scene_variants/main_menu.gd" id="1_akvxk"]
-[ext_resource type="Script" uid="uid://cgk0ds34wj3gt" path="res://scripts(gd)/modified/ui/button_modified.gd" id="2_lyb30"]
-[ext_resource type="LabelSettings" uid="uid://daoiht7da33pg" path="res://resource(tres)/ui/label_settings/16_white.tres" id="3_0b5q6"]
+[ext_resource type="Texture2D" uid="uid://djmskyol6opvt" path="res://images(png)/ui/background.png" id="2_c8d6h"]
+[ext_resource type="Texture2D" uid="uid://d168rb0m80p4e" path="res://images(png)/ui/1.png" id="3_p4fbl"]
+[ext_resource type="Texture2D" uid="uid://b71baejar0rj0" path="res://images(png)/ui/2.png" id="4_aideg"]
+[ext_resource type="Texture2D" uid="uid://ofncohi7jo5d" path="res://images(png)/ui/3.png" id="5_krji7"]
+[ext_resource type="Texture2D" uid="uid://2cl82ox73mm7" path="res://images(png)/ui/4.png" id="6_x20ja"]
+[ext_resource type="Texture2D" uid="uid://bexfnlh650yy" path="res://images(png)/ui/5.png" id="7_q10v6"]
+[ext_resource type="Texture2D" uid="uid://cdbykgb703n22" path="res://images(png)/ui/6.png" id="8_tx102"]
 
 [node name="MainMenuScene" type="Node" unique_id=1721459187 node_paths=PackedStringArray("focus_control")]
 script = ExtResource("1_akvxk")
-focus_control = NodePath("VBoxContainer/StartGameButton")
+focus_control = NodePath("")
+
+[node name="Bakground" type="TextureRect" parent="." unique_id=1978306254]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_c8d6h")
+expand_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=533352825]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
+anchors_preset = -1
+anchor_left = 0.45
+anchor_top = 0.35
+anchor_right = 0.55
+anchor_bottom = 0.65
 offset_left = -20.0
 offset_top = -20.0
 offset_right = 20.0
@@ -21,44 +35,38 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="StartGameButton" type="PanelContainer" parent="VBoxContainer" unique_id=826320724]
+[node name="StartGameButton" type="TextureButton" parent="VBoxContainer" unique_id=1408522740]
 layout_mode = 2
-script = ExtResource("2_lyb30")
-text = "Start Game"
-label_settings = ExtResource("3_0b5q6")
-horizontal_alignment = 1
-vertical_alignment = 1
-margin_left = 4
-margin_top = 4
-margin_right = 4
-margin_bottom = 4
-metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
+size_flags_vertical = 3
+texture_normal = ExtResource("3_p4fbl")
+texture_pressed = ExtResource("3_p4fbl")
+texture_hover = ExtResource("4_aideg")
+texture_disabled = ExtResource("3_p4fbl")
+texture_focused = ExtResource("4_aideg")
+ignore_texture_size = true
+stretch_mode = 5
 
-[node name="SettingsButton" type="PanelContainer" parent="VBoxContainer" unique_id=2000300990]
+[node name="SettingsButton" type="TextureButton" parent="VBoxContainer" unique_id=603414062]
 layout_mode = 2
-script = ExtResource("2_lyb30")
-text = "Settings"
-label_settings = ExtResource("3_0b5q6")
-horizontal_alignment = 1
-vertical_alignment = 1
-margin_left = 4
-margin_top = 4
-margin_right = 4
-margin_bottom = 4
-metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
+size_flags_vertical = 3
+texture_normal = ExtResource("5_krji7")
+texture_pressed = ExtResource("5_krji7")
+texture_hover = ExtResource("6_x20ja")
+texture_disabled = ExtResource("5_krji7")
+texture_focused = ExtResource("6_x20ja")
+ignore_texture_size = true
+stretch_mode = 5
 
-[node name="QuitGameButton" type="PanelContainer" parent="VBoxContainer" unique_id=1464690996]
+[node name="QuitGameButton" type="TextureButton" parent="VBoxContainer" unique_id=70430897]
 layout_mode = 2
-script = ExtResource("2_lyb30")
-text = "Quit Game"
-label_settings = ExtResource("3_0b5q6")
-horizontal_alignment = 1
-vertical_alignment = 1
-margin_left = 4
-margin_top = 4
-margin_right = 4
-margin_bottom = 4
-metadata/_custom_type_script = "uid://cgk0ds34wj3gt"
+size_flags_vertical = 3
+texture_normal = ExtResource("7_q10v6")
+texture_pressed = ExtResource("7_q10v6")
+texture_hover = ExtResource("8_tx102")
+texture_disabled = ExtResource("7_q10v6")
+texture_focused = ExtResource("8_tx102")
+ignore_texture_size = true
+stretch_mode = 5
 
 [connection signal="pressed" from="VBoxContainer/StartGameButton" to="." method="_on_start_game_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
