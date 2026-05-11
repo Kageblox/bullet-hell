@@ -62,11 +62,30 @@ func get_room_aabb(room_id: int) -> AABB:
 	var r = generator.rooms[room_id]
 	var offset_x: float = -generator.MapWidth * tile_size * 0.5
 	var offset_z: float = -generator.MapHeight * tile_size * 0.5
-	var min_x: float = offset_x + r.x * tile_size - tile_size * 0.5
-	var min_z: float = offset_z + r.y * tile_size - tile_size * 0.5
-	var size_x: float = r.w * tile_size
-	var size_z: float = r.h * tile_size
+	var min_x: float = offset_x + (r.x + 1) * tile_size - tile_size * 0.5
+	var min_z: float = offset_z + (r.y + 1) * tile_size - tile_size * 0.5
+	var size_x: float = (r.w - 2) * tile_size
+	var size_z: float = (r.h - 2) * tile_size
 	return AABB(Vector3(min_x, 0.0, min_z), Vector3(size_x, tile_size * 2.0, size_z))
+
+func random_position_in_room(room_id: int) -> Vector3:
+	var aabb: AABB = get_room_aabb(room_id)
+	if aabb.size.x <= 0.0 or aabb.size.z <= 0.0:
+		return aabb.position
+	for attempt in range(16):
+		var p: Vector3 = Vector3(
+			randf_range(aabb.position.x, aabb.position.x + aabb.size.x),
+			aabb.position.y,
+			randf_range(aabb.position.z, aabb.position.z + aabb.size.z)
+		)
+		if room_index_at(p) != room_id:
+			continue
+		var ch: String = tile_at(p)
+		if ch != "." and ch != "c" and ch != "C" and ch != "v" and ch != "h":
+			continue
+		return p
+	return aabb.position + aabb.size * 0.5
+
 
 func get_generator() -> Gen.LayoutGenerator:
 	return generator
@@ -266,7 +285,7 @@ void fragment() {
 					var x: float = offset_x + i * tile_size
 					var z: float = offset_z + j * tile_size
 					var quad: int = (i & 1) | ((j & 1) << 1)
-					if ch == '.' or ch == 'c' or ch == 'C' or ch == 'v' or ch == 'h':
+					if ch == '.' or ch == 'c' or ch == 'C' or ch == 'v' or ch == 'h' or ch == 'P':
 						floor_sts[quad].append_from(floor_mesh, 0, Transform3D(Basis(), Vector3(x, floor_y_offset, z)))
 						floor_counts[quad] += 1
 					elif ch == '|' or ch == '-':
@@ -281,12 +300,12 @@ void fragment() {
 						wall_count += 1
 						wall_top_st.append_from(wall_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size * 2.5, z)))
 						wall_top_count += 1
-					elif ch == "P":
-						floor_sts[quad].append_from(floor_mesh, 0, Transform3D(Basis(), Vector3(x, floor_y_offset, z)))
-						for k in range(3):
-							wall_st.append_from(column_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size * (0.5 + k), z)))
-						floor_counts[quad] += 1
-						wall_count += 1
+					# elif ch == "P":
+					# 	floor_sts[quad].append_from(floor_mesh, 0, Transform3D(Basis(), Vector3(x, floor_y_offset, z)))
+					# 	for k in range(3):
+					# 		wall_st.append_from(column_mesh, 0, Transform3D(Basis(), Vector3(x, tile_size * (0.5 + k), z)))
+					# 	floor_counts[quad] += 1
+					# 	wall_count += 1
 
 			var total_floor: int = floor_counts[0] + floor_counts[1] + floor_counts[2] + floor_counts[3]
 			if total_floor == 0 and wall_count == 0 and wall_bottom_count == 0 and wall_top_count == 0:
