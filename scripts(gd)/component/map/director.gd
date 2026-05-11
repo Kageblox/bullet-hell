@@ -75,6 +75,35 @@ func _room_contains_subroom(main: Gen.Room) -> bool:
 			return true
 	return false
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_Z:
+		_teleport_to_boss_room()
+
+func _teleport_to_boss_room() -> void:
+	if boss_room == null:
+		return
+	var aabb: AABB = layout.get_room_aabb(boss_room.id)
+	var pos: Vector3 = aabb.position + aabb.size * 0.5
+	pos.y = player.global_position.y
+	player.global_position = pos
+	player.linear_velocity = Vector3.ZERO
+	player.angular_velocity = Vector3.ZERO
+
+func _clear_all_enemies() -> void:
+	var pools: Array[String] = []
+	pools.append_array(ENEMY_POOLS)
+	pools.append("enemy_gas_boss")
+	for pool_name in pools:
+		var used_pool: Node = SpawnManager.get_node_or_null(pool_name + "/used")
+		if used_pool == null:
+			continue
+		for child in used_pool.get_children():
+			if child is EntityInstance:
+				(child as EntityInstance).set_unused()
+	for room_id in rooms.keys():
+		rooms[room_id]["alive"] = 0
+		_set_room_locked(room_id, false)
+
 func _process(_delta: float) -> void:
 	var current_id: int = _player_room()
 	# if current_id > 0 and layout.generator.mainRooms.has(current_id):
@@ -118,10 +147,11 @@ func _commit_room(room_id: int) -> void:
 	rooms[room_id] = dup
 
 	@warning_ignore("integer_division")
-	var spawn_count: int = max(2, min(rooms.size(), 8))
+	var is_boss: bool = boss_room != null and room_id == boss_room.id
+	var spawn_count: int = 1 if is_boss else max(1, min(rooms.size(), 4))
 	_set_room_locked(room_id, true)
 	for k in range(spawn_count):
-		var pool_name: String = ENEMY_POOLS[randi() % ENEMY_POOLS.size()]
+		var pool_name: String = "enemy_gas_boss" if is_boss else ENEMY_POOLS[randi() % ENEMY_POOLS.size()]
 		var drone: Node3D = SpawnManager.get_from_pool(pool_name)
 		if drone == null:
 			printerr("No enemy in pool: ", pool_name)
