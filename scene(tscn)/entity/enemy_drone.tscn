@@ -69,11 +69,11 @@ metadata/_custom_type_script = "uid://by1u3602we537"
 [node name="AutomaticSpawnerWeapon" type="Node3D" parent="DroneBody/DroneAim" unique_id=2008915372 node_paths=PackedStringArray("spawner_component")]
 script = ExtResource("7_8ryxc")
 spawner_component = NodePath("WeaponSpawnerComponent")
-cooldown = 0.5
 projectile_pool_name = "enemy_projectile"
 projectile_speed = 5.0
 projectile_lifetime = 2.0
-damage = 100.0
+cooldown = 0.5
+damage = 10.0
 
 [node name="WeaponSpawnerComponent" type="Node3D" parent="DroneBody/DroneAim/AutomaticSpawnerWeapon" unique_id=83087319]
 script = ExtResource("8_vfryu")
@@ -84,7 +84,6 @@ height = 0.5
 radius = 1.25
 avoidance_layers = 33
 avoidance_mask = 33
-debug_enabled = true
 script = ExtResource("9_wv4am")
 metadata/_custom_type_script = "uid://dy4ooeu54ph26"
 
